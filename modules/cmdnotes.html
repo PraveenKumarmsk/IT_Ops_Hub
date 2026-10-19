@@ -351,7 +351,7 @@ body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body
 @media print{aside,header.top,.fab,.acts,.mobtabs,.bar .seg{display:none!important}body{overflow:visible;background:#fff;color:#000}main{overflow:visible}}
 </style>
 <style id="hub-embed-css">
-html.hub-embed .brand,html.hub-embed #installBtn,html.hub-embed #moreInstall,html.hub-embed #iosBanner{display:none!important;}
+html.hub-embed .brand,html.hub-embed #installBtn,html.hub-embed #moreInstall,html.hub-embed #iosBanner,html.hub-embed #secBtn,html.hub-embed #moreSec,html.hub-embed #lock{display:none!important;}
 </style>
 </head>
 <body>
@@ -743,6 +743,7 @@ function hideLock() {
 }
 function lockApp() { if (!AUTH.on || !AUTH.token) return; showLock("unlock"); }
 function authExpired() {
+  if (window.__HUB) { AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); hubAuthNeeded(); return; }
   if (AUTH.locked && AUTH.mode === "login") return;
   AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); AUTH.on = true; lsSet(LS.auth, "1");
   showLock("login", "Please log in (session ended or a new login is needed)");
@@ -857,7 +858,7 @@ setInterval(function () { if (!document.hidden && navigator.onLine !== false && 
 setInterval(refreshLive, 5000);
 document.addEventListener("visibilitychange", function () {
   if (document.hidden) { AUTH.hiddenAt = Date.now(); return; }
-  if (AUTH.on && AUTH.token && !AUTH.locked && AUTH.hiddenAt) {
+  if (AUTH.on && AUTH.token && !AUTH.locked && AUTH.hiddenAt && !window.__HUB) {
     var mins = Number(lsGet(LS.lockmin) || 1), away = Date.now() - AUTH.hiddenAt;
     if (mins >= 0 && away >= mins * 60000) { lockApp(); return; }
   }
@@ -946,6 +947,7 @@ function card(i, idx) {
     "</article>";
 }
 var shown = [];
+function hubAuthNeeded() { try { parent.postMessage({ hub: true, module: "cmd", type: "authExpired" }, location.origin); } catch (e) {} }
 var VBY = {
   list:{view:"list"}, expanded:{view:"list", all:true}, cards:{view:"grid"},
   compact:{view:"grid", f:"f-cmd"}, purpose:{view:"grid", f:"f-pu"}, example:{view:"grid", f:"f-ex"},
@@ -1309,6 +1311,7 @@ function startApp() {
   if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
 }
 if (!gasUrl()) { renderAll(); showSetup(false); }
+else if (AUTH.on && window.__HUB) { if (AUTH.token) startApp(); else hubAuthNeeded(); }
 else if (AUTH.on) {                                    // PIN / fingerprint se unlock hone tak data chhupa rehta hai
   renderAll();
   if (AUTH.token) showLock("unlock");
