@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>IT Ops Center · Network Engineer Workspace</title>
-<meta name="description" content="Network engineer workspace: Cisco & Linux commands, subnet tools, knowledge base and interview practice.">
+<meta name="description" content="Network engineer workspace: network tools, troubleshooting, CCNA notes, interview practice and projects.">
 <meta name="theme-color" content="#1e40af">
 <script>(function(){try{var a=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;if(a)document.documentElement.classList.add('is-app');}catch(e){}})();</script>
 <meta name="mobile-web-app-capable" content="yes">
@@ -145,9 +145,6 @@ tr:hover td{background:var(--surface-light);}
 .cable-row:last-child{border-bottom:none;}
 .cable-use{color:var(--text-secondary);font-size:.78rem;margin-top:2px;}
 .cable-wiring{font-size:.75rem;margin-top:4px;line-height:1.5;}
-.glossary-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem;}
-.glossary-row:last-child{border-bottom:none;}
-.glossary-def{color:var(--text-secondary);font-size:.78rem;margin-top:3px;}
 .kb-tag{cursor:pointer;transition:var(--transition);}
 .kb-tag.active,.kb-tag:hover{background:var(--accent);color:#fff;}
 
@@ -293,12 +290,9 @@ html.hub-embed body.light-mode{--accent:#0d9a6e;--accent-glow:#0d9a6e40;--bg:#f2
   <div class="nav-item active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</div>
   <div class="nav-item" data-page="networking"><i class="fas fa-sitemap"></i> CCNA / Networking</div>
   <div class="nav-item" data-page="tools"><i class="fas fa-calculator"></i> Network Tools</div>
-  <div class="nav-item" data-page="cisco"><i class="fas fa-terminal"></i> Cisco Commands</div>
   <div class="nav-item" data-page="troubleshoot"><i class="fas fa-search"></i> Troubleshooting</div>
-  <div class="nav-item" data-page="linux"><i class="fab fa-linux"></i> Linux</div>
   <div class="nav-section">Workspace</div>
   <div class="nav-item" data-page="interview"><i class="fas fa-question-circle"></i> Interview Prep &amp; Subnet Game</div>
-  <div class="nav-item" data-page="knowledge"><i class="fas fa-book"></i> Knowledge Base</div>
   <div class="nav-item" data-page="projects"><i class="fas fa-briefcase"></i> Projects</div>
   <div class="nav-section">AI</div>
   <div class="nav-item" data-page="assistant"><i class="fas fa-robot"></i> IT Assistant</div>
@@ -328,7 +322,6 @@ html.hub-embed body.light-mode{--accent:#0d9a6e;--accent-glow:#0d9a6e40;--bg:#f2
   <button class="bn-item active" data-page="dashboard"><i class="fas fa-th-large"></i><span>Home</span></button>
   <button class="bn-item" data-page="tools"><i class="fas fa-calculator"></i><span>Tools</span></button>
   <button class="bn-item" data-page="interview"><i class="fas fa-bolt"></i><span>Practice</span></button>
-  <button class="bn-item" data-page="cisco"><i class="fas fa-terminal"></i><span>Cisco</span></button>
   <button class="bn-item" id="bnMore"><i class="fas fa-ellipsis-h"></i><span>More</span></button>
 </nav>
 <div class="sheet-backdrop" id="sheetBackdrop"></div>
@@ -352,358 +345,7 @@ html.hub-embed body.light-mode{--accent:#0d9a6e;--accent-glow:#0d9a6e40;--bg:#f2
 /* ============================================================
    DATA STORES (persisted via localStorage)
    ============================================================ */
-const defaultCiscoCmds = [
-  // Basic Device Config
-  {cat:'Basic',cmd:'enable',purpose:'Enter privileged EXEC mode',example:'Router> enable',use:'Full command access'},
-  {cat:'Basic',cmd:'configure terminal',purpose:'Enter global configuration mode',example:'Router# configure terminal',use:'Change device settings'},
-  {cat:'Basic',cmd:'hostname <name>',purpose:'Set device hostname',example:'Router(config)# hostname R1',use:'Shown in CLI prompt'},
-  {cat:'Basic',cmd:'enable secret <pwd>',purpose:'Set encrypted privileged password',example:'R1(config)# enable secret Cisco123',use:'Secure privileged mode'},
-  {cat:'Basic',cmd:'service password-encryption',purpose:'Encrypt clear-text passwords',example:'R1(config)# service password-encryption',use:'Security hardening'},
-  {cat:'Basic',cmd:'banner motd # <msg> #',purpose:'Display login banner',example:'R1(config)# banner motd #Authorized Only#',use:'Legal warning'},
-  // Interface Config
-  {cat:'Interface',cmd:'interface <type> <num>',purpose:'Enter interface configuration',example:'R1(config)# interface gi0/1',use:'Configure port'},
-  {cat:'Interface',cmd:'ip address <ip> <mask>',purpose:'Assign IPv4 address',example:'R1(config-if)# ip address 10.0.0.1 255.255.255.0',use:'Layer 3 addressing'},
-  {cat:'Interface',cmd:'no shutdown',purpose:'Enable interface',example:'R1(config-if)# no shutdown',use:'Administratively up'},
-  {cat:'Interface',cmd:'description <text>',purpose:'Add interface label',example:'R1(config-if)# description Link-to-SW1',use:'Documentation'},
-  {cat:'Interface',cmd:'speed / duplex',purpose:'Set speed and duplex',example:'SW1(config-if)# speed 100 / duplex full',use:'Override auto-negotiation'},
-  {cat:'Interface',cmd:'interface range <range>',purpose:'Configure multiple interfaces',example:'SW1(config)# interface range fa0/1-24',use:'Bulk config'},
-  // VLAN
-  {cat:'VLAN',cmd:'vlan <id>',purpose:'Create VLAN',example:'SW1(config)# vlan 10',use:'VLAN creation'},
-  {cat:'VLAN',cmd:'name <vlan-name>',purpose:'Name the VLAN',example:'SW1(config-vlan)# name SALES',use:'Descriptive name'},
-  {cat:'VLAN',cmd:'switchport mode access',purpose:'Set port to access mode',example:'SW1(config-if)# switchport mode access',use:'Single VLAN untagged'},
-  {cat:'VLAN',cmd:'switchport access vlan <id>',purpose:'Assign access port to VLAN',example:'SW1(config-if)# switchport access vlan 10',use:'VLAN membership'},
-  {cat:'VLAN',cmd:'vtp domain <name>',purpose:'Set VTP domain',example:'SW1(config)# vtp domain CORP',use:'VLAN synchronization'},
-  {cat:'VLAN',cmd:'show vlan brief',purpose:'Display all VLANs',example:'SW1# show vlan brief',use:'Verify VLANs'},
-  // Trunking
-  {cat:'Trunk',cmd:'switchport mode trunk',purpose:'Set trunk mode',example:'SW1(config-if)# switchport mode trunk',use:'Multi-VLAN link'},
-  {cat:'Trunk',cmd:'switchport trunk encapsulation dot1q',purpose:'Select 802.1Q tagging',example:'SW1(config-if)# switchport trunk encapsulation dot1q',use:'Standard tagging'},
-  {cat:'Trunk',cmd:'switchport trunk allowed vlan <list>',purpose:'Restrict VLANs on trunk',example:'SW1(config-if)# switchport trunk allowed vlan 10,20,30',use:'Limit traffic'},
-  {cat:'Trunk',cmd:'switchport trunk native vlan <id>',purpose:'Set native VLAN',example:'SW1(config-if)# switchport trunk native vlan 99',use:'Untagged VLAN'},
-  {cat:'Trunk',cmd:'switchport nonegotiate',purpose:'Disable DTP',example:'SW1(config-if)# switchport nonegotiate',use:'Best practice'},
-  {cat:'Trunk',cmd:'show interfaces trunk',purpose:'Display trunk ports',example:'SW1# show interfaces trunk',use:'Verify trunk'},
-  // STP
-  {cat:'STP',cmd:'spanning-tree mode rapid-pvst',purpose:'Enable Rapid PVST+',example:'SW1(config)# spanning-tree mode rapid-pvst',use:'Fast convergence'},
-  {cat:'STP',cmd:'spanning-tree vlan <id> priority <val>',purpose:'Set bridge priority',example:'SW1(config)# spanning-tree vlan 1 priority 4096',use:'Root bridge election'},
-  {cat:'STP',cmd:'spanning-tree portfast',purpose:'Enable PortFast',example:'SW1(config-if)# spanning-tree portfast',use:'Immediate forwarding'},
-  {cat:'STP',cmd:'spanning-tree bpduguard enable',purpose:'Enable BPDU Guard',example:'SW1(config-if)# spanning-tree bpduguard enable',use:'Block rogue switches'},
-  {cat:'STP',cmd:'show spanning-tree',purpose:'Show STP topology',example:'SW1# show spanning-tree vlan 10',use:'Verify root/roles'},
-  // Inter-VLAN
-  {cat:'Inter-VLAN',cmd:'ip routing',purpose:'Enable Layer-3 routing',example:'SW1(config)# ip routing',use:'Multilayer switch'},
-  {cat:'Inter-VLAN',cmd:'interface vlan <id>',purpose:'Create SVI',example:'SW1(config)# interface vlan 10',use:'VLAN gateway'},
-  {cat:'Inter-VLAN',cmd:'ip address <ip> <mask>',purpose:'Assign gateway IP to SVI',example:'SW1(config-if)# ip address 10.10.10.1 255.255.255.0',use:'SVI addressing'},
-  {cat:'Inter-VLAN',cmd:'encapsulation dot1Q <id>',purpose:'Tag sub-interface for VLAN',example:'R1(config-subif)# encapsulation dot1Q 10',use:'Router-on-a-stick'},
-  {cat:'Inter-VLAN',cmd:'interface <if>.<subif>',purpose:'Create logical sub-interface',example:'R1(config)# interface gi0/0.10',use:'Sub-interface creation'},
-  // Static Routing
-  {cat:'Routing',cmd:'ip route <net> <mask> <next-hop>',purpose:'Add static route',example:'R1(config)# ip route 10.20.0.0 255.255.255.0 192.168.1.2',use:'Manual path'},
-  {cat:'Routing',cmd:'ip route 0.0.0.0 0.0.0.0 <next-hop>',purpose:'Default route',example:'R1(config)# ip route 0.0.0.0 0.0.0.0 192.168.1.1',use:'Gateway of last resort'},
-  {cat:'Routing',cmd:'show ip route',purpose:'Display routing table',example:'R1# show ip route',use:'Verify routes'},
-  {cat:'Routing',cmd:'show ip interface brief',purpose:'List interfaces and status',example:'R1# show ip interface brief',use:'Check up/down'},
-  {cat:'Routing',cmd:'ping / traceroute <ip>',purpose:'Test reachability',example:'R1# ping 10.20.0.5',use:'Connectivity test'},
-  // OSPF
-  {cat:'OSPF',cmd:'router ospf <process-id>',purpose:'Start OSPF process',example:'R1(config)# router ospf 1',use:'Link-state IGP'},
-  {cat:'OSPF',cmd:'router-id <id>',purpose:'Set OSPF Router ID',example:'R1(config-router)# router-id 1.1.1.1',use:'Manual RID'},
-  {cat:'OSPF',cmd:'network <net> <wildcard> area <id>',purpose:'Enable OSPF on interfaces',example:'R1(config-router)# network 10.0.0.0 0.0.0.255 area 0',use:'Area assignment'},
-  {cat:'OSPF',cmd:'passive-interface <if>',purpose:'Stop OSPF Hellos',example:'R1(config-router)# passive-interface gi0/1',use:'Suppress updates'},
-  {cat:'OSPF',cmd:'show ip ospf neighbor',purpose:'Display neighbor states',example:'R1# show ip ospf neighbor',use:'Verify adjacency'},
-  {cat:'OSPF',cmd:'show ip protocols',purpose:'Summarize routing protocol',example:'R1# show ip protocols',use:'Timers/networks'},
-  // EIGRP
-  {cat:'EIGRP',cmd:'router eigrp <as-number>',purpose:'Start EIGRP',example:'R1(config)# router eigrp 100',use:'Advanced distance-vector'},
-  {cat:'EIGRP',cmd:'network <network> [wildcard]',purpose:'Enable EIGRP on interfaces',example:'R1(config-router)# network 10.0.0.0 0.0.0.255',use:'Advertise network'},
-  {cat:'EIGRP',cmd:'no auto-summary',purpose:'Disable classful summarization',example:'R1(config-router)# no auto-summary',use:'Modern IOS default'},
-  {cat:'EIGRP',cmd:'eigrp router-id <id>',purpose:'Set EIGRP RID',example:'R1(config-router)# eigrp router-id 1.1.1.1',use:'Manual RID'},
-  {cat:'EIGRP',cmd:'show ip eigrp neighbors',purpose:'List EIGRP neighbors',example:'R1# show ip eigrp neighbors',use:'Verify adjacency'},
-  {cat:'EIGRP',cmd:'show ip eigrp topology',purpose:'Show EIGRP topology',example:'R1# show ip eigrp topology',use:'Successor/feasible'},
-  // BGP
-  {cat:'BGP',cmd:'router bgp <as-number>',purpose:'Start BGP process',example:'R1(config)# router bgp 65001',use:'Inter-AS routing'},
-  {cat:'BGP',cmd:'neighbor <ip> remote-as <as>',purpose:'Define BGP peer',example:'R1(config-router)# neighbor 203.0.113.2 remote-as 65002',use:'iBGP/eBGP'},
-  {cat:'BGP',cmd:'network <net> mask <mask>',purpose:'Advertise network',example:'R1(config-router)# network 192.168.1.0 mask 255.255.255.0',use:'Must exist in RIB'},
-  {cat:'BGP',cmd:'neighbor <ip> next-hop-self',purpose:'Force next-hop self',example:'R1(config-router)# neighbor 10.1.1.2 next-hop-self',use:'iBGP peering'},
-  {cat:'BGP',cmd:'show ip bgp summary',purpose:'Display BGP neighbors',example:'R1# show ip bgp summary',use:'Peer state/prefixes'},
-  {cat:'BGP',cmd:'show ip bgp',purpose:'Display BGP table',example:'R1# show ip bgp',use:'Paths/attributes'},
-  // ACL
-  {cat:'ACL',cmd:'access-list <1-99> permit/deny <src> <wc>',purpose:'Standard numbered ACL',example:'R1(config)# access-list 10 permit 192.168.1.0 0.0.0.255',use:'Source-based filtering'},
-  {cat:'ACL',cmd:'access-list <100-199> permit/deny <proto> ...',purpose:'Extended numbered ACL',example:'R1(config)# access-list 101 permit tcp any any eq 80',use:'Filter on src/dst/port'},
-  {cat:'ACL',cmd:'ip access-list extended <name>',purpose:'Create named extended ACL',example:'R1(config)# ip access-list extended BLOCK-TELNET',use:'Easy editing'},
-  {cat:'ACL',cmd:'ip access-group <acl> in|out',purpose:'Apply ACL to interface',example:'R1(config-if)# ip access-group 101 in',use:'Traffic direction'},
-  {cat:'ACL',cmd:'show access-lists',purpose:'Display ACLs with hit counters',example:'R1# show access-lists',use:'Verify matches'},
-  // NAT
-  {cat:'NAT',cmd:'ip nat inside / ip nat outside',purpose:'Designate NAT interfaces',example:'R1(config-if)# ip nat inside',use:'Inside/outside'},
-  {cat:'NAT',cmd:'ip nat inside source list <acl> interface <if> overload',purpose:'Configure PAT (overload)',example:'R1(config)# ip nat inside source list 1 interface gi0/0 overload',use:'Many-to-one NAT'},
-  {cat:'NAT',cmd:'ip nat inside source static <local> <global>',purpose:'Static NAT mapping',example:'R1(config)# ip nat inside source static 10.0.0.5 203.0.113.5',use:'One-to-one'},
-  {cat:'NAT',cmd:'ip nat pool <name> <start> <end> netmask <mask>',purpose:'Define NAT pool',example:'R1(config)# ip nat pool PUB 203.0.113.10 203.0.113.20 netmask 255.255.255.0',use:'Dynamic NAT pool'},
-  {cat:'NAT',cmd:'show ip nat translations',purpose:'Display NAT table',example:'R1# show ip nat translations',use:'Active translations'},
-  // DHCP
-  {cat:'DHCP',cmd:'ip dhcp pool <name>',purpose:'Create DHCP pool',example:'R1(config)# ip dhcp pool LAN-POOL',use:'DHCP server'},
-  {cat:'DHCP',cmd:'network <net> <mask>',purpose:'Define pool scope',example:'R1(dhcp-config)# network 10.0.0.0 255.255.255.0',use:'Address range'},
-  {cat:'DHCP',cmd:'default-router <ip>',purpose:'Set default gateway',example:'R1(dhcp-config)# default-router 10.0.0.1',use:'Client gateway'},
-  {cat:'DHCP',cmd:'dns-server <ip>',purpose:'Set DNS server',example:'R1(dhcp-config)# dns-server 8.8.8.8',use:'Client DNS'},
-  {cat:'DHCP',cmd:'ip dhcp excluded-address <start> <end>',purpose:'Reserve addresses',example:'R1(config)# ip dhcp excluded-address 10.0.0.1 10.0.0.10',use:'Static devices'},
-  {cat:'DHCP',cmd:'show ip dhcp binding',purpose:'List DHCP bindings',example:'R1# show ip dhcp binding',use:'Lease info'},
-  // HSRP
-  {cat:'HSRP',cmd:'standby <group> ip <vip>',purpose:'Set virtual IP',example:'R1(config-if)# standby 1 ip 10.0.0.1',use:'Shared gateway'},
-  {cat:'HSRP',cmd:'standby <group> priority <val>',purpose:'Set priority',example:'R1(config-if)# standby 1 priority 110',use:'Active election'},
-  {cat:'HSRP',cmd:'standby <group> preempt',purpose:'Enable preempt',example:'R1(config-if)# standby 1 preempt',use:'Reclaim Active'},
-  {cat:'HSRP',cmd:'standby <group> timers <hello> <hold>',purpose:'Tune timers',example:'R1(config-if)# standby 1 timers 1 4',use:'Faster failover'},
-  {cat:'HSRP',cmd:'show standby brief',purpose:'Show HSRP summary',example:'R1# show standby brief',use:'Group states'},
-  // Port Security
-  {cat:'Port Security',cmd:'switchport port-security',purpose:'Enable port security',example:'SW1(config-if)# switchport port-security',use:'MAC restriction'},
-  {cat:'Port Security',cmd:'switchport port-security maximum <n>',purpose:'Set max MAC addresses',example:'SW1(config-if)# switchport port-security maximum 2',use:'Limit MACs'},
-  {cat:'Port Security',cmd:'switchport port-security violation <action>',purpose:'Set violation action',example:'SW1(config-if)# switchport port-security violation shutdown',use:'protect/restrict/shutdown'},
-  // VPN
-  {cat:'VPN',cmd:'crypto isakmp policy <#>',purpose:'Define IKE Phase 1 policy',example:'R1(config)# crypto isakmp policy 10',use:'Auth/encryption/DH'},
-  {cat:'VPN',cmd:'crypto ipsec transform-set <name> ...',purpose:'Define Phase 2 transform-set',example:'R1(config)# crypto ipsec transform-set TSET esp-aes esp-sha-hmac',use:'Data protection'},
-  {cat:'VPN',cmd:'show crypto isakmp sa',purpose:'Verify Phase 1 SA',example:'R1# show crypto isakmp sa',use:'ISAKMP status'},
-  // Troubleshooting / Show
-  {cat:'Troubleshooting',cmd:'show running-config',purpose:'Display active config',example:'R1# show running-config',use:'Current config'},
-  {cat:'Troubleshooting',cmd:'show version',purpose:'Show IOS version/uptime',example:'R1# show version',use:'Hardware/license'},
-  {cat:'Troubleshooting',cmd:'show cdp neighbors detail',purpose:'List CDP neighbors',example:'R1# show cdp neighbors detail',use:'Topology discovery'},
-  {cat:'Troubleshooting',cmd:'copy running-config startup-config',purpose:'Save config to NVRAM',example:'R1# copy running-config startup-config',use:'Persist config'},
-  {cat:'Troubleshooting',cmd:'erase startup-config',purpose:'Delete saved config',example:'R1# erase startup-config',use:'Factory reset'},
-  {cat:'Troubleshooting',cmd:'debug ip routing',purpose:'Real-time routing changes',example:'R1# debug ip routing',use:'Use sparingly'},
-  // DNS
-  {cat:'DNS',cmd:'ip name-server <ip>',purpose:'Configure DNS server',example:'R1(config)# ip name-server 8.8.8.8',use:'Name resolution'},
-  {cat:'DNS',cmd:'ip domain-lookup',purpose:'Enable DNS lookup',example:'R1(config)# ip domain-lookup',use:'Enable DNS'},
-  {cat:'DNS',cmd:'show hosts',purpose:'Display DNS cache',example:'R1# show hosts',use:'Verify DNS'},
-  // UDP
-  {cat:'UDP',cmd:'show udp',purpose:'Display UDP statistics',example:'R1# show udp',use:'UDP info'},
-  // VRRP
-  {cat:'VRRP',cmd:'vrrp <group> ip <vip>',purpose:'Set VRRP virtual IP',example:'R1(config-if)# vrrp 1 ip 10.0.0.1',use:'Open standard FHRP'},
-  {cat:'VRRP',cmd:'vrrp <group> priority <val>',purpose:'Set VRRP priority',example:'R1(config-if)# vrrp 1 priority 110',use:'Master election'},
-  {cat:'VRRP',cmd:'show vrrp brief',purpose:'Show VRRP summary',example:'R1# show vrrp brief',use:'VRRP state'},
-  // GLBP
-  {cat:'GLBP',cmd:'glbp <group> ip <vip>',purpose:'Set GLBP virtual IP',example:'R1(config-if)# glbp 1 ip 10.0.0.1',use:'Load balancing FHRP'},
-  {cat:'GLBP',cmd:'glbp <group> priority <val>',purpose:'Set GLBP priority',example:'R1(config-if)# glbp 1 priority 120',use:'AVG election'},
-  {cat:'GLBP',cmd:'glbp <group> preempt',purpose:'Enable GLBP preempt',example:'R1(config-if)# glbp 1 preempt',use:'Reclaim AVG'},
-  // EtherChannel
-  {cat:'EtherChannel',cmd:'channel-group <n> mode active',purpose:'LACP EtherChannel',example:'SW1(config-if-range)# channel-group 1 mode active',use:'Link aggregation'},
-  {cat:'EtherChannel',cmd:'channel-group <n> mode desirable',purpose:'PAgP EtherChannel',example:'SW1(config-if-range)# channel-group 1 mode desirable',use:'Cisco aggregation'},
-  {cat:'EtherChannel',cmd:'show etherchannel summary',purpose:'Show EtherChannel status',example:'SW1# show etherchannel summary',use:'Verify bundle'},
-  // IPv6
-  {cat:'IPv6',cmd:'ipv6 unicast-routing',purpose:'Enable IPv6 routing',example:'R1(config)# ipv6 unicast-routing',use:'IPv6 routing'},
-  {cat:'IPv6',cmd:'ipv6 address <addr>/<prefix>',purpose:'Assign IPv6 address',example:'R1(config-if)# ipv6 address 2001:db8::1/64',use:'IPv6 addressing'},
-  {cat:'IPv6',cmd:'ipv6 address autoconfig',purpose:'Enable SLAAC',example:'R1(config-if)# ipv6 address autoconfig',use:'Stateless autoconfig'},
-  {cat:'IPv6',cmd:'show ipv6 interface brief',purpose:'Show IPv6 interfaces',example:'R1# show ipv6 interface brief',use:'Verify IPv6'},
-  {cat:'IPv6',cmd:'show ipv6 route',purpose:'Show IPv6 routing table',example:'R1# show ipv6 route',use:'Verify IPv6 routes'},
-  // SDN / Automation
-  {cat:'SDN',cmd:'show running-config | include api',purpose:'Check API config',example:'R1# show running-config | include api',use:'Automation check'},
-  {cat:'SDN',cmd:'show netconf-yang sessions',purpose:'Show NETCONF sessions',example:'R1# show netconf-yang sessions',use:'Model-driven'},
-  // More Show Commands
-  {cat:'Show',cmd:'show ip route',purpose:'Routing table',example:'R1# show ip route',use:'Verify routes'},
-  {cat:'Show',cmd:'show vlan brief',purpose:'VLAN list',example:'SW1# show vlan brief',use:'Verify VLANs'},
-  {cat:'Show',cmd:'show interfaces trunk',purpose:'Trunk status',example:'SW1# show int trunk',use:'Verify trunk'},
-  {cat:'Show',cmd:'show mac address-table',purpose:'MAC address table',example:'SW1# show mac address-table',use:'Verify MAC learning'},
-  {cat:'Show',cmd:'show cdp neighbors',purpose:'CDP neighbors',example:'R1# show cdp neighbors',use:'Topology discovery'},
-  {cat:'Show',cmd:'show lldp neighbors',purpose:'LLDP neighbors',example:'R1# show lldp neighbors',use:'Vendor-neutral discovery'},
-  {cat:'Show',cmd:'show ip interface brief',purpose:'Interface summary',example:'R1# show ip interface brief',use:'Check status'},
-  {cat:'Show',cmd:'show ip protocols',purpose:'Routing protocol info',example:'R1# show ip protocols',use:'Verify routing'},
-  {cat:'Show',cmd:'show ip ospf neighbor',purpose:'OSPF neighbors',example:'R1# show ip ospf neighbor',use:'Verify OSPF'},
-  {cat:'Show',cmd:'show ip bgp summary',purpose:'BGP summary',example:'R1# show ip bgp summary',use:'Verify BGP'},
-  {cat:'Show',cmd:'show standby brief',purpose:'HSRP summary',example:'R1# show standby brief',use:'Verify HSRP'},
-  {cat:'Show',cmd:'show vrrp brief',purpose:'VRRP summary',example:'R1# show vrrp brief',use:'Verify VRRP'},
-  {cat:'Show',cmd:'show glbp brief',purpose:'GLBP summary',example:'R1# show glbp brief',use:'Verify GLBP'},
-  {cat:'Show',cmd:'show etherchannel summary',purpose:'EtherChannel summary',example:'SW1# show etherchannel summary',use:'Verify bundle'},
-  {cat:'Show',cmd:'show port-security',purpose:'Port security status',example:'SW1# show port-security',use:'Verify security'},
-  {cat:'Show',cmd:'show access-lists',purpose:'ACL information',example:'R1# show access-lists',use:'Verify ACLs'},
-  {cat:'Show',cmd:'show ip nat translations',purpose:'NAT translations',example:'R1# show ip nat translations',use:'Verify NAT'},
-  {cat:'Show',cmd:'show ip dhcp binding',purpose:'DHCP bindings',example:'R1# show ip dhcp binding',use:'Verify DHCP'},
-  {cat:'Show',cmd:'show crypto isakmp sa',purpose:'IPsec Phase 1 SA',example:'R1# show crypto isakmp sa',use:'Verify VPN'},
-  {cat:'Show',cmd:'show crypto ipsec sa',purpose:'IPsec Phase 2 SA',example:'R1# show crypto ipsec sa',use:'Verify VPN'},
-];
 
-const defaultLinuxCmds = [
-  // 1. System Information
-  {cat:'System Info',cmd:'uname -a',purpose:'OS/kernel information',example:'uname -a'},
-  {cat:'System Info',cmd:'uname -r',purpose:'Kernel version',example:'uname -r'},
-  {cat:'System Info',cmd:'cat /etc/redhat-release',purpose:'Red Hat version',example:'cat /etc/redhat-release'},
-  {cat:'System Info',cmd:'hostname',purpose:'System hostname',example:'hostname'},
-  {cat:'System Info',cmd:'hostnamectl',purpose:'Hostname + OS/system details',example:'hostnamectl'},
-  {cat:'System Info',cmd:'uptime',purpose:'System running time/load',example:'uptime'},
-  {cat:'System Info',cmd:'whoami',purpose:'Current logged-in user',example:'whoami'},
-  {cat:'System Info',cmd:'id',purpose:'User ID and group information',example:'id'},
-  {cat:'System Info',cmd:'who',purpose:'Currently logged-in users',example:'who'},
-  // 2. CPU & Memory
-  {cat:'CPU/Memory',cmd:'top',purpose:'Live CPU/process monitoring',example:'top'},
-  {cat:'CPU/Memory',cmd:'htop',purpose:'Easy process/CPU monitoring',example:'htop'},
-  {cat:'CPU/Memory',cmd:'free -h',purpose:'RAM usage in readable format',example:'free -h'},
-  {cat:'CPU/Memory',cmd:'free -m',purpose:'RAM usage in MB',example:'free -m'},
-  {cat:'CPU/Memory',cmd:'vmstat',purpose:'CPU, memory and system performance',example:'vmstat'},
-  // 3. File & Directory Management
-  {cat:'File Mgmt',cmd:'pwd',purpose:'Current directory',example:'pwd'},
-  {cat:'File Mgmt',cmd:'ls',purpose:'Files/directories list',example:'ls'},
-  {cat:'File Mgmt',cmd:'ls -l',purpose:'Detailed file list',example:'ls -l'},
-  {cat:'File Mgmt',cmd:'ls -la',purpose:'Detailed + hidden files',example:'ls -la'},
-  {cat:'File Mgmt',cmd:'cd',purpose:'Change directory',example:'cd /etc'},
-  {cat:'File Mgmt',cmd:'cd ..',purpose:'One directory back',example:'cd ..'},
-  {cat:'File Mgmt',cmd:'mkdir',purpose:'Create directory',example:'mkdir test'},
-  {cat:'File Mgmt',cmd:'mkdir -p',purpose:'Create nested directories',example:'mkdir -p /data/backup'},
-  {cat:'File Mgmt',cmd:'touch',purpose:'Create empty file',example:'touch test.txt'},
-  {cat:'File Mgmt',cmd:'cp',purpose:'Copy file',example:'cp test.txt /tmp/'},
-  {cat:'File Mgmt',cmd:'cp -r',purpose:'Copy directory',example:'cp -r folder /tmp/'},
-  {cat:'File Mgmt',cmd:'mv',purpose:'Move/rename file',example:'mv old.txt new.txt'},
-  {cat:'File Mgmt',cmd:'rm',purpose:'Delete file',example:'rm test.txt'},
-  {cat:'File Mgmt',cmd:'rm -r',purpose:'Delete directory',example:'rm -r folder'},
-  {cat:'File Mgmt',cmd:'rm -rf',purpose:'Force delete directory',example:'rm -rf folder'},
-  // 4. File Reading & Searching
-  {cat:'File Reading',cmd:'cat',purpose:'Display file content',example:'cat /etc/hosts'},
-  {cat:'File Reading',cmd:'less',purpose:'Read large file',example:'less /var/log/messages'},
-  {cat:'File Reading',cmd:'head',purpose:'First lines of file',example:'head file.txt'},
-  {cat:'File Reading',cmd:'tail',purpose:'Last lines of file',example:'tail file.txt'},
-  {cat:'File Reading',cmd:'tail -f',purpose:'Live log monitoring',example:'tail -f /var/log/messages'},
-  {cat:'File Reading',cmd:'grep',purpose:'Search text',example:'grep "error" /var/log/messages'},
-  {cat:'File Reading',cmd:'grep -i',purpose:'Case-insensitive search',example:'grep -i "error" file.txt'},
-  {cat:'File Reading',cmd:'find',purpose:'Find files/directories',example:'find /var -name "*.log"'},
-  {cat:'File Reading',cmd:'locate',purpose:'Quickly find files',example:'locate httpd.conf'},
-  // 5. Process Management
-  {cat:'Process',cmd:'ps aux',purpose:'Show running processes',example:'ps aux'},
-  {cat:'Process',cmd:'ps aux | grep',purpose:'Find specific process',example:'ps aux | grep sshd'},
-  {cat:'Process',cmd:'pgrep',purpose:'Find process PID',example:'pgrep sshd'},
-  {cat:'Process',cmd:'kill PID',purpose:'Stop process normally',example:'kill 1234'},
-  {cat:'Process',cmd:'kill -9 PID',purpose:'Force stop process',example:'kill -9 1234'},
-  {cat:'Process',cmd:'pkill',purpose:'Kill process by name',example:'pkill processname'},
-  // 6. Network Commands
-  {cat:'Network',cmd:'ip a',purpose:'Check IP address',example:'ip a'},
-  {cat:'Network',cmd:'ip link',purpose:'Check network interfaces',example:'ip link'},
-  {cat:'Network',cmd:'ip route',purpose:'Check routing table',example:'ip route'},
-  {cat:'Network',cmd:'ping',purpose:'Test network connectivity',example:'ping 8.8.8.8'},
-  {cat:'Network',cmd:'ping -c 4',purpose:'Send 4 ping packets',example:'ping -c 4 8.8.8.8'},
-  {cat:'Network',cmd:'ss -tuln',purpose:'Check listening TCP/UDP ports',example:'ss -tuln'},
-  {cat:'Network',cmd:'ss -tulpn',purpose:'Ports + process information',example:'ss -tulpn'},
-  {cat:'Network',cmd:'hostname -I',purpose:'Show system IP',example:'hostname -I'},
-  {cat:'Network',cmd:'nslookup',purpose:'DNS resolution test',example:'nslookup google.com'},
-  {cat:'Network',cmd:'dig',purpose:'Detailed DNS query',example:'dig google.com'},
-  {cat:'Network',cmd:'traceroute',purpose:'Trace network path',example:'traceroute 8.8.8.8'},
-  // 7. SSH
-  {cat:'SSH',cmd:'ssh user@IP',purpose:'Remote Linux login',example:'ssh root@192.168.1.10'},
-  {cat:'SSH',cmd:'ssh -p PORT user@IP',purpose:'SSH using custom port',example:'ssh -p 2222 user@192.168.1.10'},
-  {cat:'SSH',cmd:'exit',purpose:'Close SSH session',example:'exit'},
-  {cat:'SSH',cmd:'systemctl status sshd',purpose:'Check SSH service',example:'systemctl status sshd'},
-  {cat:'SSH',cmd:'systemctl restart sshd',purpose:'Restart SSH service',example:'systemctl restart sshd'},
-  // 8. SCP
-  {cat:'SCP',cmd:'scp file user@IP:/path',purpose:'Local → remote copy',example:'scp test.txt root@192.168.1.10:/tmp/'},
-  {cat:'SCP',cmd:'scp user@IP:/path file',purpose:'Remote → local copy',example:'scp root@192.168.1.10:/tmp/test.txt .'},
-  {cat:'SCP',cmd:'scp -r folder user@IP:/path',purpose:'Copy directory',example:'scp -r backup root@192.168.1.10:/tmp/'},
-  // 9. Users
-  {cat:'Users',cmd:'useradd',purpose:'Create user',example:'useradd john'},
-  {cat:'Users',cmd:'useradd -m',purpose:'Create user with home',example:'useradd -m john'},
-  {cat:'Users',cmd:'passwd',purpose:'Set/change password',example:'passwd john'},
-  {cat:'Users',cmd:'usermod',purpose:'Modify user',example:'usermod -aG wheel john'},
-  {cat:'Users',cmd:'userdel',purpose:'Delete user',example:'userdel john'},
-  {cat:'Users',cmd:'userdel -r',purpose:'Delete user + home',example:'userdel -r john'},
-  {cat:'Users',cmd:'su',purpose:'Switch user',example:'su - john'},
-  {cat:'Users',cmd:'sudo',purpose:'Run command as privileged',example:'sudo systemctl restart sshd'},
-  // 10. Groups
-  {cat:'Groups',cmd:'groupadd',purpose:'Create group',example:'groupadd admins'},
-  {cat:'Groups',cmd:'groupdel',purpose:'Delete group',example:'groupdel admins'},
-  {cat:'Groups',cmd:'usermod -aG',purpose:'Add user to group',example:'usermod -aG admins john'},
-  {cat:'Groups',cmd:'groups',purpose:'Show user groups',example:'groups john'},
-  {cat:'Groups',cmd:'id username',purpose:'Show UID/GID/groups',example:'id john'},
-  // 11. Permissions
-  {cat:'Permissions',cmd:'ls -l',purpose:'Check permissions',example:'ls -l file.txt'},
-  {cat:'Permissions',cmd:'chmod',purpose:'Change permissions',example:'chmod 755 script.sh'},
-  {cat:'Permissions',cmd:'chown',purpose:'Change owner',example:'chown john file.txt'},
-  {cat:'Permissions',cmd:'chgrp',purpose:'Change group',example:'chgrp admins file.txt'},
-  {cat:'Permissions',cmd:'chown user:group',purpose:'Change owner + group',example:'chown john:admins file.txt'},
-  // 12. DNF/YUM
-  {cat:'Package',cmd:'dnf install',purpose:'Install package',example:'dnf install httpd'},
-  {cat:'Package',cmd:'dnf remove',purpose:'Remove package',example:'dnf remove httpd'},
-  {cat:'Package',cmd:'dnf update',purpose:'Update packages',example:'dnf update'},
-  {cat:'Package',cmd:'dnf search',purpose:'Search package',example:'dnf search nginx'},
-  {cat:'Package',cmd:'dnf info',purpose:'Package information',example:'dnf info httpd'},
-  {cat:'Package',cmd:'rpm -qa',purpose:'List installed RPM packages',example:'rpm -qa'},
-  {cat:'Package',cmd:'rpm -qa | grep',purpose:'Search installed package',example:'rpm -qa | grep httpd'},
-  {cat:'Package',cmd:'yum install',purpose:'Install on older RHEL',example:'yum install httpd'},
-  {cat:'Package',cmd:'yum update',purpose:'Update on older RHEL',example:'yum update'},
-  // 13. systemctl
-  {cat:'systemctl',cmd:'systemctl status',purpose:'Check service',example:'systemctl status sshd'},
-  {cat:'systemctl',cmd:'systemctl start',purpose:'Start service',example:'systemctl start httpd'},
-  {cat:'systemctl',cmd:'systemctl stop',purpose:'Stop service',example:'systemctl stop httpd'},
-  {cat:'systemctl',cmd:'systemctl restart',purpose:'Restart service',example:'systemctl restart httpd'},
-  {cat:'systemctl',cmd:'systemctl reload',purpose:'Reload configuration',example:'systemctl reload httpd'},
-  {cat:'systemctl',cmd:'systemctl enable',purpose:'Start service at boot',example:'systemctl enable httpd'},
-  {cat:'systemctl',cmd:'systemctl disable',purpose:'Disable startup',example:'systemctl disable httpd'},
-  {cat:'systemctl',cmd:'systemctl is-active',purpose:'Check active status',example:'systemctl is-active httpd'},
-  {cat:'systemctl',cmd:'systemctl is-enabled',purpose:'Check boot status',example:'systemctl is-enabled httpd'},
-  // 14. journalctl
-  {cat:'journalctl',cmd:'journalctl',purpose:'View system logs',example:'journalctl'},
-  {cat:'journalctl',cmd:'journalctl -f',purpose:'Live logs',example:'journalctl -f'},
-  {cat:'journalctl',cmd:'journalctl -n 50',purpose:'Last 50 log entries',example:'journalctl -n 50'},
-  {cat:'journalctl',cmd:'journalctl -b',purpose:'Current boot logs',example:'journalctl -b'},
-  {cat:'journalctl',cmd:'journalctl -u',purpose:'Specific service logs',example:'journalctl -u sshd'},
-  {cat:'journalctl',cmd:'journalctl -p err',purpose:'Error-level logs',example:'journalctl -p err'},
-  {cat:'journalctl',cmd:'journalctl --since',purpose:'Logs from specific time',example:'journalctl --since "1 hour ago"'},
-  // 15. Disk
-  {cat:'Disk',cmd:'lsblk',purpose:'Show disks/partitions',example:'lsblk'},
-  {cat:'Disk',cmd:'lsblk -f',purpose:'Show filesystem information',example:'lsblk -f'},
-  {cat:'Disk',cmd:'df -h',purpose:'Disk space usage',example:'df -h'},
-  {cat:'Disk',cmd:'df -Th',purpose:'Disk + filesystem type',example:'df -Th'},
-  {cat:'Disk',cmd:'du -sh',purpose:'Directory size',example:'du -sh /var'},
-  {cat:'Disk',cmd:'du -sh *',purpose:'Size of items in current dir',example:'du -sh *'},
-  {cat:'Disk',cmd:'fdisk -l',purpose:'Show partition information',example:'fdisk -l'},
-  // 16. Mount
-  {cat:'Mount',cmd:'mount',purpose:'Show mounted filesystems',example:'mount'},
-  {cat:'Mount',cmd:'mount /dev/sdb1 /mnt',purpose:'Mount partition',example:'mount /dev/sdb1 /mnt'},
-  {cat:'Mount',cmd:'umount /mnt',purpose:'Unmount filesystem',example:'umount /mnt'},
-  {cat:'Mount',cmd:'findmnt',purpose:'Show mount information',example:'findmnt'},
-  // 17. Samba
-  {cat:'Samba',cmd:'dnf install samba',purpose:'Install Samba',example:'dnf install samba'},
-  {cat:'Samba',cmd:'systemctl status smb',purpose:'Check Samba',example:'systemctl status smb'},
-  {cat:'Samba',cmd:'systemctl start smb',purpose:'Start Samba',example:'systemctl start smb'},
-  {cat:'Samba',cmd:'systemctl enable smb',purpose:'Enable Samba at boot',example:'systemctl enable smb'},
-  {cat:'Samba',cmd:'systemctl restart smb',purpose:'Restart Samba',example:'systemctl restart smb'},
-  {cat:'Samba',cmd:'testparm',purpose:'Test Samba configuration',example:'testparm'},
-  {cat:'Samba',cmd:'smbclient -L localhost',purpose:'List Samba shares',example:'smbclient -L localhost'},
-  // 18. VI
-  {cat:'vi',cmd:'vi file.txt',purpose:'Open file',example:'vi file.txt'},
-  {cat:'vi',cmd:'i',purpose:'Insert/edit mode',example:'i'},
-  {cat:'vi',cmd:'Esc',purpose:'Exit editing mode',example:'Esc'},
-  {cat:'vi',cmd:':w',purpose:'Save',example:':w'},
-  {cat:'vi',cmd:':q',purpose:'Quit',example:':q'},
-  {cat:'vi',cmd:':wq',purpose:'Save + quit',example:':wq'},
-  {cat:'vi',cmd:':q!',purpose:'Quit without saving',example:':q!'},
-  {cat:'vi',cmd:'/text',purpose:'Search text',example:'/error'},
-  // 19. Firewall
-  {cat:'Firewall',cmd:'systemctl status firewalld',purpose:'Check firewall',example:'systemctl status firewalld'},
-  {cat:'Firewall',cmd:'systemctl start firewalld',purpose:'Start firewall',example:'systemctl start firewalld'},
-  {cat:'Firewall',cmd:'systemctl enable firewalld',purpose:'Enable at boot',example:'systemctl enable firewalld'},
-  {cat:'Firewall',cmd:'firewall-cmd --state',purpose:'Check firewall state',example:'firewall-cmd --state'},
-  {cat:'Firewall',cmd:'firewall-cmd --get-active-zones',purpose:'Show active zones',example:'firewall-cmd --get-active-zones'},
-  {cat:'Firewall',cmd:'firewall-cmd --list-all',purpose:'Show firewall rules',example:'firewall-cmd --list-all'},
-  {cat:'Firewall',cmd:'firewall-cmd --list-services',purpose:'Show allowed services',example:'firewall-cmd --list-services'},
-  {cat:'Firewall',cmd:'firewall-cmd --permanent --add-service=http',purpose:'Allow HTTP',example:'firewall-cmd --permanent --add-service=http'},
-  {cat:'Firewall',cmd:'firewall-cmd --reload',purpose:'Apply permanent changes',example:'firewall-cmd --reload'},
-  // 20. SELinux
-  {cat:'SELinux',cmd:'getenforce',purpose:'Check SELinux mode',example:'getenforce'},
-  {cat:'SELinux',cmd:'sestatus',purpose:'Detailed SELinux status',example:'sestatus'},
-  {cat:'SELinux',cmd:'setenforce 0',purpose:'Temporarily Permissive',example:'setenforce 0'},
-  {cat:'SELinux',cmd:'setenforce 1',purpose:'Temporarily Enforcing',example:'setenforce 1'},
-  {cat:'SELinux',cmd:'ls -Z',purpose:'Show SELinux context',example:'ls -Z'},
-  {cat:'SELinux',cmd:'restorecon',purpose:'Restore correct context',example:'restorecon -Rv /var/www/html'},
-  // 21. Cron
-  {cat:'Cron',cmd:'crontab -e',purpose:"Edit user's cron jobs",example:'crontab -e'},
-  {cat:'Cron',cmd:'crontab -l',purpose:'View cron jobs',example:'crontab -l'},
-  {cat:'Cron',cmd:'crontab -r',purpose:"Remove user's cron jobs",example:'crontab -r'},
-  {cat:'Cron',cmd:'systemctl status crond',purpose:'Cron service status',example:'systemctl status crond'},
-  {cat:'Cron',cmd:'systemctl enable --now crond',purpose:'Enable + start crond',example:'systemctl enable --now crond'},
-  // 22. Archive
-  {cat:'Archive',cmd:'tar -cvf',purpose:'Create tar archive',example:'tar -cvf backup.tar /data'},
-  {cat:'Archive',cmd:'tar -xvf',purpose:'Extract tar',example:'tar -xvf backup.tar'},
-  {cat:'Archive',cmd:'tar -czvf',purpose:'Create compressed archive',example:'tar -czvf backup.tar.gz /data'},
-  {cat:'Archive',cmd:'tar -xzvf',purpose:'Extract .tar.gz',example:'tar -xzvf backup.tar.gz'},
-  {cat:'Archive',cmd:'gzip',purpose:'Compress file',example:'gzip file.txt'},
-  {cat:'Archive',cmd:'gunzip',purpose:'Decompress gzip',example:'gunzip file.txt.gz'},
-  // 23. Important System Files
-  {cat:'System Files',cmd:'/etc/hosts',purpose:'Local hostname mapping',example:'cat /etc/hosts'},
-  {cat:'System Files',cmd:'/etc/resolv.conf',purpose:'DNS configuration',example:'cat /etc/resolv.conf'},
-  {cat:'System Files',cmd:'/etc/hostname',purpose:'Hostname',example:'cat /etc/hostname'},
-  {cat:'System Files',cmd:'/etc/passwd',purpose:'User account information',example:'cat /etc/passwd'},
-  {cat:'System Files',cmd:'/etc/group',purpose:'Group information',example:'cat /etc/group'},
-  {cat:'System Files',cmd:'/etc/shadow',purpose:'Password/security information',example:'sudo cat /etc/shadow'},
-  {cat:'System Files',cmd:'/etc/fstab',purpose:'Permanent mounts',example:'cat /etc/fstab'},
-  {cat:'System Files',cmd:'/etc/ssh/sshd_config',purpose:'SSH server configuration',example:'vi /etc/ssh/sshd_config'},
-  {cat:'System Files',cmd:'/etc/samba/smb.conf',purpose:'Samba configuration',example:'vi /etc/samba/smb.conf'},
-  {cat:'System Files',cmd:'/var/log/',purpose:'Log files directory',example:'ls /var/log/'},
-  {cat:'System Files',cmd:'/etc/cron*',purpose:'Cron configuration',example:'ls /etc/cron*'},
-];
 
 const ports = [
   {service:'SSH',port:'22',proto:'TCP',desc:'Secure Shell'},
@@ -762,22 +404,10 @@ const troubleshootData = [
 /* ============================================================
    APP STATE
    ============================================================ */
-let ciscoCommands = JSON.parse(localStorage.getItem('ciscoCommands')) || [...defaultCiscoCmds];
-let linuxCommands = JSON.parse(localStorage.getItem('linuxCommands')) || [...defaultLinuxCmds];
 let vlans = JSON.parse(localStorage.getItem('vlans')) || [
   {id:10,name:'Sales',net:'192.168.10.0/24'},
   {id:20,name:'Engineering',net:'192.168.20.0/24'},
   {id:30,name:'Management',net:'192.168.30.0/24'}
-];
-let knowledgeNotes = JSON.parse(localStorage.getItem('knowledgeNotes')) || [
-  {id:1,title:'OSPF Neighbor States',content:'Down → Init → 2-Way → ExStart → Exchange → Loading → Full.',tags:['CCNA','OSPF'],date:'2024-03-01'},
-  {id:2,title:'VLAN Trunk 802.1Q',content:'802.1Q encapsulation; native VLAN untagged. Allowed VLANs control traffic.',tags:['CCNA','VLAN'],date:'2024-03-05'},
-  {id:3,title:'Linux Firewall Commands',content:'firewall-cmd --list-all to view rules. --permanent then --reload to apply.',tags:['Linux','Firewall'],date:'2024-03-10'},
-  {id:4,title:'DHCP DORA Process',content:'Discover, Offer, Request, Acknowledge. UDP 67/68. Use ip helper-address for relay.',tags:['CCNA','DHCP'],date:'2024-03-12'},
-  {id:5,title:'BGP Path Selection',content:'Weight > Local Preference > AS-Path > Origin > MED. eBGP AD=20, iBGP AD=200.',tags:['CCNP','BGP'],date:'2024-03-14'},
-  {id:6,title:'STP Root Bridge',content:'Lowest Bridge ID (Priority + MAC). Default priority 32768. Set manually for control.',tags:['CCNA','STP'],date:'2024-03-15'},
-  {id:7,title:'IPsec VPN Phases',content:'Phase 1: IKE SA (ISAKMP) - authentication/key exchange. Phase 2: IPsec SA - data protection.',tags:['Security','VPN'],date:'2024-03-18'},
-  {id:8,title:'SDN Architecture',content:'Control plane separated from data plane. Northbound APIs (REST), Southbound APIs (NETCONF/RESTCONF).',tags:['CCNP','SDN'],date:'2024-03-20'},
 ];
 let projects = JSON.parse(localStorage.getItem('projects')) || [
   {id:1,name:'Enterprise VLAN Design',desc:'Multi-switch VLAN, trunk, VTP, STP tuning.',tech:['Cisco','VLAN','STP'],github:'https://github.com/PraveenKumarmsk',demo:'',skills:['Network Design','Switching']},
@@ -1288,37 +918,6 @@ Infrastructure as Code:
 };
 
 /* ============================================================
-   GLOSSARY (searchable acronyms)
-   ============================================================ */
-const glossaryTerms = [
-  {term:'OSPF',full:'Open Shortest Path First',def:'Link-state IGP using Dijkstra SPF, AD 110.'},
-  {term:'BGP',full:'Border Gateway Protocol',def:'Path-vector EGP for inter-AS routing, TCP/179.'},
-  {term:'EIGRP',full:'Enhanced Interior Gateway Routing Protocol',def:'Cisco advanced distance-vector, AD 90.'},
-  {term:'VTP',full:'VLAN Trunking Protocol',def:'Synchronizes VLAN database across switches.'},
-  {term:'DTP',full:'Dynamic Trunking Protocol',def:'Auto-negotiates trunk/access mode on a link.'},
-  {term:'STP',full:'Spanning Tree Protocol',def:'Prevents Layer-2 loops, 802.1D.'},
-  {term:'RSTP',full:'Rapid Spanning Tree Protocol',def:'Faster-converging STP, 802.1w.'},
-  {term:'HSRP',full:'Hot Standby Router Protocol',def:'Cisco FHRP for gateway redundancy.'},
-  {term:'VRRP',full:'Virtual Router Redundancy Protocol',def:'Open-standard FHRP, alternative to HSRP.'},
-  {term:'GLBP',full:'Gateway Load Balancing Protocol',def:'Cisco FHRP with active load balancing.'},
-  {term:'NAT',full:'Network Address Translation',def:'Translates private to public IP addresses.'},
-  {term:'PAT',full:'Port Address Translation',def:'NAT overload — many-to-one via port mapping.'},
-  {term:'ACL',full:'Access Control List',def:'Ordered rules that permit/deny traffic.'},
-  {term:'VLSM',full:'Variable Length Subnet Masking',def:'Subnetting into unequal-sized blocks.'},
-  {term:'CIDR',full:'Classless Inter-Domain Routing',def:'Prefix-based addressing, enables summarization.'},
-  {term:'SLAAC',full:'Stateless Address Autoconfiguration',def:'IPv6 clients self-generate addresses from RA prefix.'},
-  {term:'DHCP',full:'Dynamic Host Configuration Protocol',def:'Automatic IP assignment via DORA, UDP 67/68.'},
-  {term:'ARP',full:'Address Resolution Protocol',def:'Resolves IP address to MAC address.'},
-  {term:'LACP',full:'Link Aggregation Control Protocol',def:'IEEE 802.3ad EtherChannel negotiation.'},
-  {term:'PAgP',full:'Port Aggregation Protocol',def:'Cisco-proprietary EtherChannel negotiation.'},
-  {term:'IPsec',full:'Internet Protocol Security',def:'Encrypted tunnel framework; IKE Phase 1/2, ESP/AH.'},
-  {term:'SVI',full:'Switch Virtual Interface',def:'Layer-3 gateway interface for a VLAN on an L3 switch.'},
-  {term:'SDN',full:'Software-Defined Networking',def:'Separates control plane from data plane, centralized controller.'},
-  {term:'MED',full:'Multi-Exit Discriminator',def:'BGP attribute suggesting preferred entry point (lower wins).'},
-  {term:'AD',full:'Administrative Distance',def:'Trustworthiness rating of a routing source (lower = preferred).'},
-];
-
-/* ============================================================
    CABLE TYPE REFERENCE
    ============================================================ */
 const cableTypes = [
@@ -1343,11 +942,8 @@ function navigateTo(page){
   if(page==='dashboard')renderDashboard();
   else if(page==='networking')renderNetworking();
   else if(page==='tools')renderTools();
-  else if(page==='cisco')renderCisco();
   else if(page==='troubleshoot')renderTroubleshoot();
-  else if(page==='linux')renderLinux();
   else if(page==='interview')renderInterview();
-  else if(page==='knowledge')renderKnowledge();
   else if(page==='projects')renderProjects();
   else if(page==='assistant')renderAssistant();
 }
@@ -1364,50 +960,20 @@ document.addEventListener('click',e=>{
    DASHBOARD
    ============================================================ */
 function renderDashboard(){
-  const totalCmds=ciscoCommands.length+linuxCommands.length;
   contentDiv.innerHTML=`
     <div class="page-title">IT Engineer Command Center <small><i class="fas fa-circle" style="color:var(--success);font-size:.5rem;"></i> Online</small></div>
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Commands</div><div class="stat-value">${totalCmds}</div><div class="stat-sub">Cisco + Linux</div></div>
-      <div class="stat-card"><div class="stat-label">Notes</div><div class="stat-value">${knowledgeNotes.length}</div><div class="stat-sub">Knowledge base</div></div>
       <div class="stat-card"><div class="stat-label">Projects</div><div class="stat-value">${projects.length}</div><div class="stat-sub">Portfolio items</div></div>
       <div class="stat-card"><div class="stat-label">Learning Progress</div><div class="stat-value">68%</div><div class="stat-sub">CCNA 200-301</div></div>
     </div>
 
     <div class="dashboard-grid">
-      <div class="dash-card" data-goto="tools"><div class="dash-icon"><i class="fas fa-calculator"></i></div><div class="dash-title">Network Tools</div><div class="dash-desc">IP/Subnet calculators, VLAN planner, port reference</div></div>
-      <div class="dash-card" data-goto="cisco"><div class="dash-icon"><i class="fas fa-terminal"></i></div><div class="dash-title">Cisco Commands</div><div class="dash-desc">${ciscoCommands.length} CLI commands with copy & examples</div></div>
-      <div class="dash-card" data-goto="linux"><div class="dash-icon"><i class="fab fa-linux"></i></div><div class="dash-title">Linux Commands</div><div class="dash-desc">${linuxCommands.length} commands for sysadmin</div></div>
+      <div class="dash-card" data-goto="tools"><div class="dash-icon"><i class="fas fa-calculator"></i></div><div class="dash-title">Network Tools</div><div class="dash-desc">VLAN planner, port reference, cable guide</div></div>
       <div class="dash-card" data-goto="troubleshoot"><div class="dash-icon"><i class="fas fa-search"></i></div><div class="dash-title">Troubleshooting</div><div class="dash-desc">${troubleshootData.length} network problem workflows</div></div>
-      <div class="dash-card" data-goto="knowledge"><div class="dash-icon"><i class="fas fa-book"></i></div><div class="dash-title">Knowledge Base</div><div class="dash-desc">${knowledgeNotes.length} notes · searchable · glossary</div></div>
       <div class="dash-card" data-goto="interview"><div class="dash-icon"><i class="fas fa-question-circle"></i></div><div class="dash-title">Interview Prep &amp; Subnet Game</div><div class="dash-desc">MCQ, port quiz, 60-second subnetting game</div></div>
       <div class="dash-card" data-goto="projects"><div class="dash-icon"><i class="fas fa-briefcase"></i></div><div class="dash-title">Projects</div><div class="dash-desc">${projects.length} portfolio items</div></div>
     </div>
-
-    <div class="section">
-      <div class="section-header"><h2><i class="fas fa-bolt"></i> Quick Tools</h2><span class="badge">Live</span></div>
-      <div class="tools-grid">
-        <div class="tool-card">
-          <h3><i class="fas fa-network-wired"></i> IP Calculator</h3>
-          <div class="form-group"><label>IP Address</label><input id="quickIp" value="192.168.1.10"></div>
-          <div class="form-group"><label>CIDR</label><input id="quickCidr" value="24"></div>
-          <button class="btn btn-primary" onclick="quickCalc()">Calculate</button>
-          <div class="result-box" id="quickResult">—</div>
-        </div>
-        <div class="tool-card">
-          <h3><i class="fas fa-search"></i> Port Lookup</h3>
-          <div class="form-group"><label>Search port / service</label><input id="quickPortSearch" placeholder="e.g. SSH, 443" oninput="quickPortSearch()"></div>
-          <div id="quickPortResult" style="font-size:.8rem;color:var(--text-secondary);">Type to search...</div>
-        </div>
-        <div class="tool-card">
-          <h3><i class="fas fa-terminal"></i> Command Search</h3>
-          <div class="form-group"><label>Search Cisco/Linux command</label><input id="quickCmdSearch" placeholder="e.g. vlan, systemctl" oninput="quickCmdSearch()"></div>
-          <div id="quickCmdResult" style="font-size:.8rem;color:var(--text-secondary);">Type to search...</div>
-        </div>
-      </div>
-    </div>
   `;
-  quickCalc();quickPortSearch();quickCmdSearch();
 }
 
 /* ============================================================
@@ -1528,23 +1094,8 @@ function showTopic(topic){
    ============================================================ */
 function renderTools(){
   contentDiv.innerHTML=`
-    <div class="page-title">Network Tools <small>IP · Subnet · VLAN · Ports</small></div>
+    <div class="page-title">Network Tools <small>VLAN · Ports · Cables</small></div>
     <div class="tools-grid">
-      <div class="tool-card">
-        <h3><i class="fas fa-network-wired"></i> IP Calculator</h3>
-        <div class="form-group"><label>IP Address</label><input id="toolIp" value="192.168.1.10"></div>
-        <div class="form-group"><label>CIDR</label><input id="toolCidr" value="24"></div>
-        <button class="btn btn-primary" onclick="toolCalc()">Calculate</button>
-        <div class="result-box" id="toolResult">—</div>
-      </div>
-      <div class="tool-card">
-        <h3><i class="fas fa-sitemap"></i> VLSM Calculator</h3>
-        <div class="form-group"><label>Base Network</label><input id="vlsmBase" value="192.168.1.0/24"></div>
-        <div class="form-group"><label>Required Hosts (comma separated)</label><input id="vlsmHosts" value="50,20,10"></div>
-        <button class="btn btn-primary" onclick="vlsmCalc()">Calculate VLSM</button>
-        <div id="vlsmResult" class="result-box vlsm-result">—</div>
-        <div class="hint-line">Need routing config, topology diagram and supernetting too? Use <a href="#" onclick="event.preventDefault();window.hubOpen&&hubOpen('planner','plan')">Network Planner Pro</a> (open it from the sidebar).</div>
-      </div>
       <div class="tool-card">
         <h3><i class="fas fa-layer-group"></i> VLAN Planner</h3>
         <div class="form-group"><label>VLAN ID</label><input id="vlanId" value="40"></div>
@@ -1564,79 +1115,12 @@ function renderTools(){
       </div>
     </div>
   `;
-  portSearch();renderVlanList();toolCalc();renderCableRef();
+  portSearch();renderVlanList();renderCableRef();
 }
 function renderCableRef(){
   const el=document.getElementById('cableRefList');if(!el)return;
   el.innerHTML=cableTypes.map(c=>`<div class="cable-row"><strong>${c.name}</strong><div class="cable-use">${c.use}</div><div class="cable-wiring">${c.wiring}</div></div>`).join('');
 }
-window.toolCalc=function(){
-  const ip=document.getElementById('toolIp').value.trim();
-  const cidr=parseInt(document.getElementById('toolCidr').value.trim());
-  if(!ip||isNaN(cidr)||cidr<0||cidr>32){document.getElementById('toolResult').innerHTML='Invalid input';return;}
-  const r=calcIP(ip,cidr);
-  document.getElementById('toolResult').innerHTML=`
-    <strong>Network:</strong> ${r.network}/${cidr}<br>
-    <strong>Broadcast:</strong> ${r.broadcast}<br>
-    <strong>First usable:</strong> ${r.first}<br>
-    <strong>Last usable:</strong> ${r.last}<br>
-    <strong>Total hosts:</strong> ${r.totalHosts}<br>
-    <strong>Usable hosts:</strong> ${r.usableHosts}<br>
-    <strong>Wildcard:</strong> ${r.wildcard}<br>
-    <strong>Class:</strong> ${r.ipClass}<br>
-    <strong>Binary:</strong> ${r.binary}
-  `;
-};
-/* Fixed VLSM Calculator — correctly aligns each block to its own boundary
-   (rounds pointer UP to the next multiple of the block size) instead of
-   just masking the raw pointer, which used to produce overlapping /
-   incorrect subnets. */
-window.vlsmCalc=function(){
-  const resultEl=document.getElementById('vlsmResult');
-  const base=document.getElementById('vlsmBase').value.trim();
-  const hostsStr=document.getElementById('vlsmHosts').value.trim();
-  if(!base.includes('/')){resultEl.innerHTML='<span style="color:var(--danger);">Base must include /CIDR, e.g. 192.168.1.0/24</span>';return;}
-  const[baseIp,baseCidrStr]=base.split('/');
-  const baseCidr=parseInt(baseCidrStr);
-  const baseLong=ipToInt(baseIp);
-  if(isNaN(baseCidr)||baseCidr<1||baseCidr>30||isNaN(baseLong)){resultEl.innerHTML='<span style="color:var(--danger);">Invalid base network</span>';return;}
-  const hosts=hostsStr.split(',').map(h=>parseInt(h.trim())).filter(h=>!isNaN(h)&&h>0);
-  if(hosts.length===0){resultEl.innerHTML='<span style="color:var(--danger);">Enter at least one host count</span>';return;}
-
-  const baseSize=Math.pow(2,32-baseCidr);
-  const baseNet=baseLong-(baseLong%baseSize);
-  const baseEnd=baseNet+baseSize-1;
-
-  // Largest requirement first — standard VLSM allocation order
-  const ordered=hosts.map((h,i)=>({h,origIdx:i})).sort((a,b)=>b.h-a.h);
-  let pointer=baseNet;
-  const rowsOut=[];
-  let overflow=null;
-  ordered.forEach(item=>{
-    if(overflow)return;
-    const neededBits=Math.max(2,Math.ceil(Math.log2(item.h+2)));
-    const blockSize=Math.pow(2,neededBits);
-    const aligned=Math.ceil(pointer/blockSize)*blockSize;   // <-- the actual fix
-    const network=aligned;
-    const broadcast=network+blockSize-1;
-    if(broadcast>baseEnd){overflow={h:item.h,blockSize};return;}
-    const newCidr=32-neededBits;
-    rowsOut.push({
-      origIdx:item.origIdx,hosts:item.h,network,broadcast,cidr:newCidr,
-      first:network+1,last:broadcast-1
-    });
-    pointer=broadcast+1;
-  });
-
-  if(overflow){
-    resultEl.innerHTML=`<span style="color:var(--danger);">Base ${intToIp(baseNet)}/${baseCidr} (${baseSize} addresses) is too small — "${overflow.h} hosts" needs ${overflow.blockSize} addresses but there's no room left. Use a bigger base network (smaller CIDR) or fewer/smaller host groups.</span>`;
-    return;
-  }
-  rowsOut.sort((a,b)=>a.origIdx-b.origIdx);
-  resultEl.innerHTML=`<table class="mini-table"><tr><th>Req. Hosts</th><th>Subnet</th><th>Usable Range</th><th>Broadcast</th></tr>${
-    rowsOut.map(r=>`<tr><td>${r.hosts}</td><td>${intToIp(r.network)}/${r.cidr}</td><td>${intToIp(r.first)} – ${intToIp(r.last)}</td><td>${intToIp(r.broadcast)}</td></tr>`).join('')
-  }</table>`;
-};
 window.addVlan=function(){
   const id=parseInt(document.getElementById('vlanId').value);
   const name=document.getElementById('vlanName').value;
@@ -1676,212 +1160,6 @@ window.portSearch=function(){
   const results=ports.filter(p=>p.service.toLowerCase().includes(q)||p.port.includes(q));
   const div=document.getElementById('portResults');if(!div)return;
   div.innerHTML=results.map(p=>`<div style="padding:4px 0;border-bottom:1px solid var(--border);"><strong>${p.service}</strong> — ${p.port}/${p.proto} <span style="color:var(--text-secondary);">${p.desc}</span></div>`).join('');
-};
-window.quickCalc=function(){
-  const ip=document.getElementById('quickIp')?.value.trim();
-  const cidr=parseInt(document.getElementById('quickCidr')?.value.trim());
-  if(!ip||isNaN(cidr))return;
-  const r=calcIP(ip,cidr);
-  const el=document.getElementById('quickResult');
-  if(el)el.innerHTML=`<strong>Network:</strong> ${r.network}/${cidr}<br><strong>Broadcast:</strong> ${r.broadcast}<br><strong>Hosts:</strong> ${r.usableHosts}`;
-};
-window.quickPortSearch=function(){
-  const q=document.getElementById('quickPortSearch')?.value.toLowerCase()||'';
-  const results=ports.filter(p=>p.service.toLowerCase().includes(q)||p.port.includes(q));
-  const div=document.getElementById('quickPortResult');if(!div)return;
-  div.innerHTML=results.slice(0,5).map(p=>`<div style="padding:3px 0;"><strong>${p.service}</strong> — ${p.port}/${p.proto}</div>`).join('')||'No results';
-};
-window.quickCmdSearch=function(){
-  const q=document.getElementById('quickCmdSearch')?.value.toLowerCase()||'';
-  const all=[...ciscoCommands,...linuxCommands];
-  const results=all.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q));
-  const div=document.getElementById('quickCmdResult');if(!div)return;
-  div.innerHTML=results.slice(0,5).map(c=>`<div style="padding:3px 0;"><code style="color:var(--accent);">${c.cmd}</code> — ${c.purpose}</div>`).join('')||'No results';
-};
-
-/* ============================================================
-   CISCO COMMAND CENTER
-   ============================================================ */
-function renderCisco(){
-  contentDiv.innerHTML=`
-    <div class="page-title">Cisco Command Center <small>${ciscoCommands.length} commands</small></div>
-    <div class="section">
-      <div class="section-header">
-        <h2><i class="fas fa-terminal"></i> Command Library</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <input type="text" id="ciscoSearch" placeholder="Search commands..." style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);" oninput="filterCisco()">
-          <button class="btn btn-primary" onclick="showAddCiscoModal()"><i class="fas fa-plus"></i> Add Command</button>
-        </div>
-      </div>
-      <div class="table-wrapper">
-        <table>
-          <thead><tr><th>Command</th><th>Category</th><th>Purpose</th><th>Example</th><th>Use</th><th></th></tr></thead>
-          <tbody id="ciscoTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  `;
-  renderCiscoTable(ciscoCommands);
-}
-function renderCiscoTable(cmds){
-  const tbody=document.getElementById('ciscoTableBody');if(!tbody)return;
-  tbody.innerHTML=cmds.map((c)=>{
-    const i=ciscoCommands.indexOf(c);
-    return `
-    <tr>
-      <td><code style="color:var(--accent);">${c.cmd}</code></td>
-      <td><span class="badge">${c.cat}</span></td>
-      <td>${c.purpose}</td>
-      <td><code style="font-size:.75rem;">${c.example}</code></td>
-      <td>${c.use}</td>
-      <td style="display:flex;gap:4px;">
-        <button class="copy-btn" onclick="copyText('${c.example.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
-        <button class="copy-btn" onclick="editCisco(${i})"><i class="fas fa-edit"></i></button>
-        <button class="copy-btn" style="color:var(--danger);" onclick="deleteCisco(${i})"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `;}).join('');
-}
-window.filterCisco=function(){
-  const q=document.getElementById('ciscoSearch').value.toLowerCase();
-  const filtered=ciscoCommands.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q)||c.cat.toLowerCase().includes(q));
-  renderCiscoTable(filtered);
-};
-window.deleteCisco=function(idx){
-  confirmDelete(ciscoCommands[idx].cmd,()=>{ciscoCommands.splice(idx,1);save('ciscoCommands',ciscoCommands);renderCisco();showToast('Command deleted','danger');});
-};
-window.showAddCiscoModal=function(){
-  openModal(`
-    <h3 style="margin-bottom:16px;">Add Cisco Command</h3>
-    <div class="form-group"><label>Category</label><input id="newCiscoCat" value="Basic"></div>
-    <div class="form-group"><label>Command</label><input id="newCiscoCmd" placeholder="e.g. show ip route"></div>
-    <div class="form-group"><label>Purpose</label><input id="newCiscoPurpose" placeholder="What it does"></div>
-    <div class="form-group"><label>Example</label><input id="newCiscoExample" placeholder="R1# show ip route"></div>
-    <div class="form-group"><label>Use</label><input id="newCiscoUse" placeholder="When to use"></div>
-    <button class="btn btn-primary" onclick="addCiscoCmd()">Add Command</button>
-  `);
-};
-window.addCiscoCmd=function(){
-  const cat=document.getElementById('newCiscoCat').value;
-  const cmd=document.getElementById('newCiscoCmd').value;
-  const purpose=document.getElementById('newCiscoPurpose').value;
-  const example=document.getElementById('newCiscoExample').value;
-  const use=document.getElementById('newCiscoUse').value;
-  if(!cmd||!purpose)return showToast('Fill required fields','danger');
-  ciscoCommands.push({cat,cmd,purpose,example,use});
-  save('ciscoCommands',ciscoCommands);closeModal();renderCisco();showToast('Command added');
-};
-window.editCisco=function(idx){
-  const c=ciscoCommands[idx];
-  openModal(`
-    <h3 style="margin-bottom:16px;">Edit Cisco Command</h3>
-    <div class="form-group"><label>Category</label><input id="editCiscoCat" value="${escAttr(c.cat)}"></div>
-    <div class="form-group"><label>Command</label><input id="editCiscoCmd" value="${escAttr(c.cmd)}"></div>
-    <div class="form-group"><label>Purpose</label><input id="editCiscoPurpose" value="${escAttr(c.purpose)}"></div>
-    <div class="form-group"><label>Example</label><input id="editCiscoExample" value="${escAttr(c.example)}"></div>
-    <div class="form-group"><label>Use</label><input id="editCiscoUse" value="${escAttr(c.use)}"></div>
-    <button class="btn btn-primary" onclick="updateCiscoCmd(${idx})">Save Changes</button>
-  `);
-};
-window.updateCiscoCmd=function(idx){
-  ciscoCommands[idx]={
-    cat:document.getElementById('editCiscoCat').value,
-    cmd:document.getElementById('editCiscoCmd').value,
-    purpose:document.getElementById('editCiscoPurpose').value,
-    example:document.getElementById('editCiscoExample').value,
-    use:document.getElementById('editCiscoUse').value
-  };
-  save('ciscoCommands',ciscoCommands);closeModal();renderCisco();showToast('Command updated');
-};
-
-/* ============================================================
-   LINUX COMMAND CENTER
-   ============================================================ */
-function renderLinux(){
-  contentDiv.innerHTML=`
-    <div class="page-title">Linux Command Center <small>${linuxCommands.length} commands</small></div>
-    <div class="section">
-      <div class="section-header">
-        <h2><i class="fab fa-linux"></i> Command Library</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <input type="text" id="linuxSearch" placeholder="Search commands..." style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);" oninput="filterLinux()">
-          <button class="btn btn-primary" onclick="showAddLinuxModal()"><i class="fas fa-plus"></i> Add Command</button>
-        </div>
-      </div>
-      <div class="table-wrapper">
-        <table>
-          <thead><tr><th>Command</th><th>Category</th><th>Purpose</th><th>Example</th><th></th></tr></thead>
-          <tbody id="linuxTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  `;
-  renderLinuxTable(linuxCommands);
-}
-function renderLinuxTable(cmds){
-  const tbody=document.getElementById('linuxTableBody');if(!tbody)return;
-  tbody.innerHTML=cmds.map((c)=>{
-    const i=linuxCommands.indexOf(c);
-    return `
-    <tr>
-      <td><code style="color:var(--accent);">${c.cmd}</code></td>
-      <td><span class="badge">${c.cat}</span></td>
-      <td>${c.purpose}</td>
-      <td><code style="font-size:.75rem;">${c.example}</code></td>
-      <td style="display:flex;gap:4px;">
-        <button class="copy-btn" onclick="copyText('${c.example.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
-        <button class="copy-btn" onclick="editLinux(${i})"><i class="fas fa-edit"></i></button>
-        <button class="copy-btn" style="color:var(--danger);" onclick="deleteLinux(${i})"><i class="fas fa-trash"></i></button>
-      </td>
-    </tr>
-  `;}).join('');
-}
-window.filterLinux=function(){
-  const q=document.getElementById('linuxSearch').value.toLowerCase();
-  const filtered=linuxCommands.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q)||c.cat.toLowerCase().includes(q));
-  renderLinuxTable(filtered);
-};
-window.deleteLinux=function(idx){
-  confirmDelete(linuxCommands[idx].cmd,()=>{linuxCommands.splice(idx,1);save('linuxCommands',linuxCommands);renderLinux();showToast('Command deleted','danger');});
-};
-window.showAddLinuxModal=function(){
-  openModal(`
-    <h3 style="margin-bottom:16px;">Add Linux Command</h3>
-    <div class="form-group"><label>Category</label><input id="newLinuxCat" value="File Mgmt"></div>
-    <div class="form-group"><label>Command</label><input id="newLinuxCmd" placeholder="e.g. ls -la"></div>
-    <div class="form-group"><label>Purpose</label><input id="newLinuxPurpose" placeholder="What it does"></div>
-    <div class="form-group"><label>Example</label><input id="newLinuxExample" placeholder="ls -la /var/log"></div>
-    <button class="btn btn-primary" onclick="addLinuxCmd()">Add Command</button>
-  `);
-};
-window.addLinuxCmd=function(){
-  const cat=document.getElementById('newLinuxCat').value;
-  const cmd=document.getElementById('newLinuxCmd').value;
-  const purpose=document.getElementById('newLinuxPurpose').value;
-  const example=document.getElementById('newLinuxExample').value;
-  if(!cmd||!purpose)return showToast('Fill required fields','danger');
-  linuxCommands.push({cat,cmd,purpose,example});
-  save('linuxCommands',linuxCommands);closeModal();renderLinux();showToast('Command added');
-};
-window.editLinux=function(idx){
-  const c=linuxCommands[idx];
-  openModal(`
-    <h3 style="margin-bottom:16px;">Edit Linux Command</h3>
-    <div class="form-group"><label>Category</label><input id="editLinuxCat" value="${escAttr(c.cat)}"></div>
-    <div class="form-group"><label>Command</label><input id="editLinuxCmd" value="${escAttr(c.cmd)}"></div>
-    <div class="form-group"><label>Purpose</label><input id="editLinuxPurpose" value="${escAttr(c.purpose)}"></div>
-    <div class="form-group"><label>Example</label><input id="editLinuxExample" value="${escAttr(c.example)}"></div>
-    <button class="btn btn-primary" onclick="updateLinuxCmd(${idx})">Save Changes</button>
-  `);
-};
-window.updateLinuxCmd=function(idx){
-  linuxCommands[idx]={
-    cat:document.getElementById('editLinuxCat').value,
-    cmd:document.getElementById('editLinuxCmd').value,
-    purpose:document.getElementById('editLinuxPurpose').value,
-    example:document.getElementById('editLinuxExample').value
-  };
-  save('linuxCommands',linuxCommands);closeModal();renderLinux();showToast('Command updated');
 };
 
 /* ============================================================
@@ -2093,115 +1371,6 @@ function endSubnetGame(){
 }
 
 /* ============================================================
-   KNOWLEDGE BASE (search + tag filter + glossary)
-   ============================================================ */
-let kbSearchTerm='';
-let kbActiveTag=null;
-function renderKnowledge(){
-  const allTags=[...new Set(knowledgeNotes.flatMap(n=>n.tags))];
-  contentDiv.innerHTML=`
-    <div class="page-title">Knowledge Base <small>${knowledgeNotes.length} notes</small></div>
-    <div class="section">
-      <div class="section-header">
-        <h2><i class="fas fa-book"></i> Notes & Commands</h2>
-        <button class="btn btn-primary" onclick="showAddNoteModal()"><i class="fas fa-plus"></i> Add Note</button>
-      </div>
-      <div class="form-group" style="max-width:400px;">
-        <input type="text" id="kbSearchInput" placeholder="🔍 Search notes..." oninput="kbSearchTerm=this.value;renderNotes();">
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
-        <span class="badge kb-tag ${!kbActiveTag?'active':''}" onclick="kbActiveTag=null;renderKnowledge();">All</span>
-        ${allTags.map(t=>`<span class="badge kb-tag ${kbActiveTag===t?'active':''}" onclick="kbActiveTag='${t}';renderKnowledge();">${t}</span>`).join('')}
-      </div>
-      <div id="notesList"></div>
-    </div>
-    <div class="section">
-      <div class="section-header"><h2><i class="fas fa-spell-check"></i> Glossary / Acronyms</h2></div>
-      <div class="form-group" style="max-width:400px;">
-        <input type="text" id="glossarySearch" placeholder="🔍 Search acronyms..." oninput="renderGlossary()">
-      </div>
-      <div id="glossaryList"></div>
-    </div>
-  `;
-  renderNotes();
-  renderGlossary();
-}
-function renderNotes(){
-  const div=document.getElementById('notesList');if(!div)return;
-  const q=kbSearchTerm.toLowerCase();
-  const filtered=knowledgeNotes.filter(n=>{
-    const matchesTag=!kbActiveTag||n.tags.includes(kbActiveTag);
-    const matchesSearch=!q||n.title.toLowerCase().includes(q)||n.content.toLowerCase().includes(q)||n.tags.some(t=>t.toLowerCase().includes(q));
-    return matchesTag&&matchesSearch;
-  });
-  if(!filtered.length){div.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-secondary);">No notes match.</div>';return;}
-  div.innerHTML=filtered.map((n)=>{
-    const i=knowledgeNotes.indexOf(n);
-    return `
-    <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div>
-          <strong style="font-size:.95rem;">${n.title}</strong>
-          <div style="font-size:.75rem;color:var(--text-secondary);margin:4px 0;">${n.date} · ${n.tags.map(t=>`<span class="badge" style="font-size:.65rem;">${t}</span>`).join(' ')}</div>
-        </div>
-        <div style="display:flex;gap:4px;">
-          <button class="copy-btn" onclick="copyNoteContent(${i})"><i class="fas fa-copy"></i></button>
-          <button class="copy-btn" onclick="editNote(${i})"><i class="fas fa-edit"></i></button>
-          <button class="copy-btn" style="color:var(--danger);" onclick="deleteNote(${i})"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>
-      <div style="font-size:.85rem;line-height:1.6;margin-top:6px;">${n.content}</div>
-    </div>
-  `;}).join('');
-}
-function renderGlossary(){
-  const el=document.getElementById('glossaryList');if(!el)return;
-  const q=(document.getElementById('glossarySearch')?.value||'').toLowerCase();
-  const filtered=glossaryTerms.filter(g=>!q||g.term.toLowerCase().includes(q)||g.full.toLowerCase().includes(q)||g.def.toLowerCase().includes(q));
-  el.innerHTML=filtered.map(g=>`<div class="glossary-row"><strong>${g.term}</strong> — ${g.full}<div class="glossary-def">${g.def}</div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--text-secondary);">No matches.</div>';
-}
-window.copyNoteContent=function(i){
-  const n=knowledgeNotes[i];if(!n)return;
-  copyText(`${n.title}\n${n.content}`);
-};
-window.deleteNote=function(i){
-  confirmDelete(knowledgeNotes[i].title,()=>{knowledgeNotes.splice(i,1);save('knowledgeNotes',knowledgeNotes);renderKnowledge();showToast('Note deleted','danger');});
-};
-window.editNote=function(i){
-  const n=knowledgeNotes[i];
-  openModal(`
-    <h3 style="margin-bottom:16px;">Edit Note</h3>
-    <div class="form-group"><label>Title</label><input id="editNoteTitle" value="${n.title}"></div>
-    <div class="form-group"><label>Content</label><textarea id="editNoteContent" rows="4">${n.content}</textarea></div>
-    <div class="form-group"><label>Tags (comma separated)</label><input id="editNoteTags" value="${n.tags.join(', ')}"></div>
-    <button class="btn btn-primary" onclick="updateNote(${i})">Update Note</button>
-  `);
-};
-window.updateNote=function(i){
-  knowledgeNotes[i].title=document.getElementById('editNoteTitle').value;
-  knowledgeNotes[i].content=document.getElementById('editNoteContent').value;
-  knowledgeNotes[i].tags=document.getElementById('editNoteTags').value.split(',').map(t=>t.trim()).filter(t=>t);
-  save('knowledgeNotes',knowledgeNotes);closeModal();renderKnowledge();showToast('Note updated');
-};
-window.showAddNoteModal=function(){
-  openModal(`
-    <h3 style="margin-bottom:16px;">Add Note</h3>
-    <div class="form-group"><label>Title</label><input id="newNoteTitle" placeholder="e.g. OSPF Neighbor States"></div>
-    <div class="form-group"><label>Content</label><textarea id="newNoteContent" rows="4" placeholder="Write your note..."></textarea></div>
-    <div class="form-group"><label>Tags (comma separated)</label><input id="newNoteTags" placeholder="CCNA, OSPF, Networking"></div>
-    <button class="btn btn-primary" onclick="addNote()">Add Note</button>
-  `);
-};
-window.addNote=function(){
-  const title=document.getElementById('newNoteTitle').value;
-  const content=document.getElementById('newNoteContent').value;
-  const tags=document.getElementById('newNoteTags').value.split(',').map(t=>t.trim()).filter(t=>t);
-  if(!title||!content)return showToast('Title and content required','danger');
-  knowledgeNotes.push({id:Date.now(),title,content,tags,date:new Date().toISOString().split('T')[0]});
-  save('knowledgeNotes',knowledgeNotes);closeModal();renderKnowledge();showToast('Note added');
-};
-
-/* ============================================================
    PROJECTS
    ============================================================ */
 function renderProjects(){
@@ -2377,12 +1546,8 @@ window.askAssistantFull=function(){
    ============================================================ */
 function buildSearchIndex(){
   const idx=[];
-  ciscoCommands.forEach(c=>idx.push({type:'Cisco cmd',label:c.cmd,sub:c.purpose,page:'cisco'}));
-  linuxCommands.forEach(c=>idx.push({type:'Linux cmd',label:c.cmd,sub:c.purpose,page:'linux'}));
-  knowledgeNotes.forEach(n=>idx.push({type:'Note',label:n.title,sub:n.content.slice(0,60),page:'knowledge'}));
   ports.forEach(p=>idx.push({type:'Port',label:`${p.service} — ${p.port}/${p.proto}`,sub:p.desc,page:'tools'}));
   projects.forEach(p=>idx.push({type:'Project',label:p.name,sub:p.desc,page:'projects'}));
-  glossaryTerms.forEach(g=>idx.push({type:'Glossary',label:`${g.term} — ${g.full}`,sub:g.def,page:'knowledge'}));
   return idx;
 }
 function runGlobalSearch(q){
@@ -2414,7 +1579,7 @@ document.addEventListener('click',(e)=>{
    ============================================================ */
 function exportBackup(){
   const backup={
-    ciscoCommands,linuxCommands,vlans,knowledgeNotes,
+    vlans,
     projects,quizStats,subnetGameStats,
     exportedAt:new Date().toISOString(),version:1
   };
@@ -2430,10 +1595,7 @@ function importBackup(file){
   reader.onload=(e)=>{
     try{
       const data=JSON.parse(e.target.result);
-      if(data.ciscoCommands){ciscoCommands=data.ciscoCommands;save('ciscoCommands',ciscoCommands);}
-      if(data.linuxCommands){linuxCommands=data.linuxCommands;save('linuxCommands',linuxCommands);}
       if(data.vlans){vlans=data.vlans;save('vlans',vlans);}
-      if(data.knowledgeNotes){knowledgeNotes=data.knowledgeNotes;save('knowledgeNotes',knowledgeNotes);}
       if(data.projects){projects=data.projects;save('projects',projects);}
       if(data.quizStats){quizStats=data.quizStats;save('quizStats',quizStats);}
       if(data.subnetGameStats){subnetGameStats=data.subnetGameStats;save('subnetGameStats',subnetGameStats);}
@@ -2447,7 +1609,7 @@ window.exportBackup=exportBackup;
 document.getElementById('backupBtn').addEventListener('click',()=>{
   openModal(`
     <h3 style="margin-bottom:16px;"><i class="fas fa-database"></i> Export / Import Backup</h3>
-    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:16px;">All commands, notes, projects and quiz stats live in your browser's localStorage. Export a JSON snapshot to move to another browser, or import one to restore.</p>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:16px;">All VLANs, projects and quiz stats live in your browser's localStorage. Export a JSON snapshot to move to another browser, or import one to restore.</p>
     <button class="btn btn-primary" onclick="exportBackup()" style="width:100%;margin-bottom:10px;"><i class="fas fa-download"></i> Export All Data (JSON)</button>
     <label class="btn" style="width:100%;justify-content:center;cursor:pointer;">
       <i class="fas fa-upload"></i> Import Backup File
@@ -2466,10 +1628,6 @@ document.addEventListener('keydown',(e)=>{
   }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){
     e.preventDefault();
     navigateTo('dashboard');
-  }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){
-    e.preventDefault();
-    navigateTo('knowledge');
-    setTimeout(()=>window.showAddNoteModal&&window.showAddNoteModal(),150);
   }else if(e.key==='Escape'){
     closeModal();
     document.getElementById('globalSearchResults')?.classList.remove('active');
@@ -2501,7 +1659,7 @@ document.getElementById('modalOverlay')?.addEventListener('click',e=>{
 (function(){
   const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
   const isMobile=()=>window.matchMedia('(max-width:900px)').matches;
-  const mainPages=['dashboard','tools','interview','cisco'];
+  const mainPages=['dashboard','tools','interview'];
   const labels={};
   document.querySelectorAll('.sidebar .nav-item').forEach(n=>{labels[n.dataset.page]=n.textContent.trim();});
   const sheet=document.getElementById('moreSheet');
@@ -2613,7 +1771,7 @@ document.getElementById('modalOverlay')?.addEventListener('click',e=>{
   const params=new URLSearchParams(location.search);
   const page=params.get('page');
   const section=params.get('section');
-  const valid=['dashboard','networking','tools','cisco','troubleshoot','linux','interview','knowledge','projects','assistant'];
+  const valid=['dashboard','networking','tools','cisco','troubleshoot','interview','projects','assistant'];
   if(page&&valid.includes(page)){
     navigateTo(page);
     if(page==='interview'){
