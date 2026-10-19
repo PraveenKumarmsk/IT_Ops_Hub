@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IT Ops Hub</title>
+<meta name="description" content="Network Planner Pro (IPv4 + IPv6), CMD Notes (Google Sheet) and IT Ops Center in one app.">
+<meta name="theme-color" content="#0b1114">
+<meta name="application-name" content="IT Ops Hub">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="IT Ops Hub">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<style>
+:root{
+  --bg:#0b1114;--panel:#121b20;--panel2:#17232a;--line:#223139;--text:#e6eef1;--mute:#8da2ab;--faint:#5c727b;
+  --accent:#3dd6c6;--accent2:#5fd9aa;--accent-ink:#04211d;--accent-soft:rgba(61,214,198,.12);--danger:#ef6b7b;--warn:#f0b35a;--ok:#4cd68a;
+  --shadow:0 18px 50px rgba(0,0,0,.5);--sab:env(safe-area-inset-bottom,0px);--sat:env(safe-area-inset-top,0px);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+html[data-theme="light"]{
+  --bg:#f2f5f6;--panel:#ffffff;--panel2:#f6f9fa;--line:#dbe3e6;--text:#14232a;--mute:#566d77;--faint:#7a8f98;
+  --accent:#0b9e90;--accent2:#0d9a6e;--accent-ink:#ffffff;--accent-soft:rgba(11,158,144,.1);--shadow:0 18px 50px rgba(20,35,42,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.5;overflow:hidden;overscroll-behavior:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input,select{font:inherit;color:var(--text)}
+a{color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+#app{display:grid;grid-template-columns:268px 1fr;height:100vh;height:100dvh}
+/* ---------- sidebar ---------- */
+#side{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;z-index:40}
+.brand{display:flex;align-items:center;gap:11px;padding:calc(16px + var(--sat)) 18px 14px;cursor:pointer}
+.brand img{width:34px;height:34px;border-radius:9px}
+.brand b{font-size:1.05rem;letter-spacing:.2px;display:block;line-height:1.15}
+.brand small{color:var(--faint);font-size:.72rem}
+#nav{overflow-y:auto;padding:4px 10px 14px;flex:1;scrollbar-width:thin}
+.grp{margin-top:14px}
+.grp-h{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:var(--faint);font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;border-radius:8px}
+.grp-h .ic{font-size:.95rem;filter:grayscale(.2)}
+.grp-h .chev{margin-left:auto;transition:transform .2s;font-size:.6rem}
+.grp.shut .chev{transform:rotate(-90deg)}
+.grp.shut .grp-items{display:none}
+.it{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px 8px 14px;border-radius:9px;color:var(--mute);font-size:.9rem;position:relative}
+.it:hover{background:var(--panel2);color:var(--text)}
+.it.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.it.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--accent)}
+.it .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;flex:none}
+.it .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-foot{border-top:1px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:2px;padding-bottom:calc(10px + var(--sab))}
+.side-foot .it{padding-left:10px}
+
+/* ---------- top bar ---------- */
+#main{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative}
+#top{display:flex;align-items:center;gap:10px;padding:calc(10px + var(--sat)) 16px 10px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:30}
+.burger{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);align-items:center;justify-content:center}
+.crumb{font-weight:700;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+.crumb small{color:var(--faint);font-weight:500;margin-right:6px}
+.search{flex:1;max-width:520px;margin-left:auto;position:relative}
+.search input{width:100%;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--bg);padding:0 40px 0 38px;outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search svg{position:absolute;left:12px;top:11px;width:18px;height:18px;color:var(--faint)}
+.search kbd{position:absolute;right:10px;top:9px;font:.7rem var(--mono);color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+#sres{position:absolute;left:0;right:0;top:46px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:none;z-index:60;max-height:70vh;overflow-y:auto}
+#sres.show{display:block}
+#sres .r{display:block;width:100%;text-align:left;padding:9px 14px;border-bottom:1px solid var(--line)}
+#sres .r:hover,#sres .r.hl{background:var(--accent-soft)}
+#sres .r b{font:600 .85rem var(--mono);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sres .r span{color:var(--mute);font-size:.78rem;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sres .act{color:var(--accent);font-weight:600;font-size:.86rem}
+.tools{display:flex;align-items:center;gap:8px}
+.ib{height:40px;min-width:40px;border-radius:10px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 11px;color:var(--mute);font-size:.84rem;font-weight:600;white-space:nowrap}
+.ib:hover{color:var(--text);border-color:var(--faint)}
+.ib svg{width:18px;height:18px}
+.ib.pri{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--accent-ink);border-color:transparent}
+.ib .lbl{display:inline}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--faint);display:inline-block}
+.pill.ok i{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.pill.warn i{background:var(--warn)}
+.pill.bad i{background:var(--danger)}
+
+/* ---------- views ---------- */
+#views{flex:1;min-height:0;position:relative}
+#frames,#home{position:absolute;inset:0}
+#frames iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);display:none}
+#frames iframe.on{display:block}
+#home{overflow-y:auto;padding:26px clamp(16px,3vw,40px) 60px}
+#home.hide{display:none}
+.hero h1{font-size:clamp(1.5rem,3vw,2.1rem);margin:0 0 4px;letter-spacing:-.4px}
+.hero p{margin:0;color:var(--mute)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat .k{color:var(--faint);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.stat .v{font:700 1.25rem var(--mono);margin-top:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.mod{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.mod:hover{border-color:var(--accent)}
+.mod h2{margin:0;font-size:1.12rem;display:flex;align-items:center;gap:10px}
+.mod h2 .em{width:38px;height:38px;border-radius:11px;background:var(--accent-soft);display:inline-flex;align-items:center;justify-content:center;font-size:1.2rem}
+.mod p{margin:0;color:var(--mute);font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--mute);background:var(--panel2)}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.new{border-color:var(--accent);color:var(--accent)}
+.mod .go{margin-top:auto;align-self:flex-start}
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--line);font-weight:600;font-size:.88rem;background:var(--panel2)}
+.btn:hover{border-color:var(--faint)}
+.btn.pri{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--accent-ink);border-color:transparent}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:default}
+h3.sec{margin:30px 0 12px;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.recent{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- overlays ---------- */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px;z-index:200}
+.ov.show{display:flex}
+.dlg{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:22px}
+.dlg h2{margin:0 0 4px;font-size:1.15rem}
+.dlg .sub{color:var(--mute);font-size:.86rem;margin:0 0 16px}
+.dlg h4{margin:20px 0 8px;font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld label{font-size:.78rem;color:var(--mute);font-weight:600}
+.fld input,.fld select{height:42px;border-radius:10px;border:1px solid var(--line);background:var(--bg);padding:0 12px;outline:none;width:100%}
+.fld input:focus,.fld select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.sp{justify-content:space-between}
+.msg{font-size:.84rem;margin:8px 0;padding:9px 12px;border-radius:10px;display:none}
+.msg.show{display:block}
+.msg.ok{background:rgba(76,214,138,.12);color:var(--ok)}
+.msg.bad{background:rgba(239,107,123,.12);color:var(--danger)}
+.msg.warn{background:rgba(240,179,90,.12);color:var(--warn)}
+.sw{position:relative;width:46px;height:26px;border-radius:999px;background:var(--line);flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--accent)}.sw.on::after{left:23px}
+.line{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.line small{display:block;color:var(--mute);font-size:.78rem}
+code{font-family:var(--mono);background:var(--panel2);padding:1px 6px;border-radius:5px;font-size:.84em}
+
+/* ---------- lock ---------- */
+#lock{position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at 30% 0%,rgba(61,214,198,.12),transparent 55%),var(--bg);display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+#lock.show{display:flex}
+.lk{width:100%;max-width:340px;text-align:center}
+.lk img{width:68px;height:68px;border-radius:18px;margin-bottom:12px}
+.lk h1{font-size:1.3rem;margin:0 0 4px}
+.lk p{color:var(--mute);margin:0 0 18px;font-size:.9rem;min-height:1.4em}
+.dots{display:flex;justify-content:center;gap:12px;margin-bottom:10px;min-height:16px}
+.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--faint)}
+.dots i.f{background:var(--accent);border-color:var(--accent)}
+#lkPin{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.pad button{height:60px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font:600 1.4rem var(--mono)}
+.pad button:active{background:var(--accent-soft);border-color:var(--accent)}
+.pad button.sm{font-size:.9rem;font-family:var(--sans);color:var(--mute)}
+#lkMsg{min-height:1.4em;font-size:.86rem;color:var(--danger);margin-bottom:6px}
+#lkMsg.ok{color:var(--ok)}
+.lk .links{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.lk .links button{color:var(--mute);font-size:.86rem;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- install banner / toast ---------- */
+#iosBanner{position:fixed;left:50%;bottom:calc(18px + var(--sab));transform:translate(-50%,170%);width:calc(100% - 32px);max-width:440px;z-index:500;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+#iosBanner.show{transform:translate(-50%,0)}
+#iosBanner b{display:block;margin-bottom:4px}#iosBanner p{margin:0 0 12px;color:var(--mute);font-size:.86rem}
+#toast{position:fixed;left:50%;bottom:calc(24px + var(--sab));transform:translate(-50%,30px);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:900;font-size:.88rem;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#scrim{display:none}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  #app{grid-template-columns:1fr}
+  #side{position:fixed;left:0;top:0;bottom:0;width:min(300px,86vw);transform:translateX(-102%);transition:transform .25s;box-shadow:var(--shadow)}
+  #side.open{transform:none}
+  #scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
+  .burger{display:inline-flex}
+  .crumb{max-width:26vw}
+  .ib .lbl{display:none}
+  .search kbd{display:none}
+  .search{max-width:none}
+}
+@media(max-width:560px){
+  .crumb{display:none}
+  .tools{gap:6px}
+  #pillSheet .t{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side" aria-label="Main navigation">
+    <div class="brand" id="brand"><img src="icons/icon-192.png" alt=""><div><b>IT Ops Hub</b><small>Plan · Notes · Operate</small></div></div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <button class="it" id="sbSheet" type="button"><span class="dot"></span><span class="nm">Google Sheet link</span></button>
+      <button class="it" id="sbSettings" type="button"><span class="dot"></span><span class="nm">Settings &amp; app lock</span></button>
+      <button class="it" id="sbInstall" type="button" hidden><span class="dot"></span><span class="nm">Install app</span></button>
+    </div>
+  </aside>
+  <div id="scrim"></div>
+
+  <div id="main">
+    <header id="top">
+      <button class="burger" id="burger" type="button" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="crumb" id="crumb"></div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="gq" type="search" placeholder="Search everything — commands, tools…" autocomplete="off" spellcheck="false" aria-label="Global search">
+        <kbd id="kbdHint">Ctrl K</kbd>
+        <div id="sres" role="listbox"></div>
+      </div>
+      <div class="tools">
+        <button class="ib" id="pillSheet" type="button" title="Google Sheet"><span class="pill" id="sheetPill"><i></i><span class="t" id="sheetTxt">Sheet</span></span></button>
+        <button class="ib pri" id="btnInstall" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg><span class="lbl">Install</span></button>
+        <button class="ib" id="btnTheme" type="button" aria-label="Toggle theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <button class="ib" id="btnLock" type="button" aria-label="Lock app" title="Lock app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span class="lbl">Lock</span></button>
+      </div>
+    </header>
+    <div id="views">
+      <section id="home"></section>
+      <div id="frames"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LOCK SCREEN ================= -->
+<div id="lock" role="dialog" aria-modal="true" aria-label="App lock">
+  <div class="lk">
+    <img src="icons/icon-192.png" alt="">
+    <h1 id="lkTitle">IT Ops Hub is locked</h1>
+    <p id="lkSub">Enter your PIN</p>
+    <div class="dots" id="lkDots"></div>
+    <input id="lkPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">
+    <div id="lkMsg"></div>
+    <div class="pad" id="lkPad">
+      <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+      <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+      <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+      <button type="button" class="sm" data-k="del">⌫</button><button type="button" data-k="0">0</button><button type="button" class="sm" data-k="go">OK</button>
+    </div>
+    <div class="links">
+      <button type="button" id="lkBio" hidden>👆 Use fingerprint / face</button>
+      <button type="button" id="lkSkip" hidden>Skip for now</button>
+      <button type="button" id="lkForgot" hidden>Forgot PIN? Reset the app lock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SHEET DIALOG ================= -->
+<div class="ov" id="ovSheet">
+  <div class="dlg">
+    <h2>Google Sheet link</h2>
+    <p class="sub">CMD Notes ka data aapki Google Sheet me rehta hai. Apps Script ka <code>/exec</code> URL yahan paste karo.</p>
+    <div class="fld"><label for="shUrl">Apps Script Web App URL</label><input id="shUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false"></div>
+    <div class="msg" id="shMsg"></div>
+    <div class="row">
+      <button class="btn" id="shTest" type="button">Test connection</button>
+      <button class="btn pri" id="shSave" type="button">Save &amp; connect</button>
+      <a class="btn" id="shOpen" href="#" target="_blank" rel="noopener" hidden>Open Google Sheet ↗</a>
+    </div>
+    <h4>Setup (ek baar)</h4>
+    <ol style="margin:0;padding-left:18px;color:var(--mute);font-size:.86rem">
+      <li>Google Sheet kholo → Extensions → Apps Script → <code>Code.gs</code> me is project ka <b>Code.gs</b> paste karo, <code>SHEET_ID</code> apni sheet ka ID rakho.</li>
+      <li>Deploy → New deployment → Web app → Execute as <b>Me</b> · Access <b>Anyone</b> → Deploy → URL copy.</li>
+      <li>URL yahan paste → Test → Save. Code badalne par Deploy → Manage deployments → ✏️ → <b>New version</b>.</li>
+    </ol>
+    <div class="row sp" style="margin-top:18px">
+      <button class="btn danger" id="shOff" type="button">Disconnect</button>
+      <button class="btn" data-close type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SETTINGS DIALOG ================= -->
+<div class="ov" id="ovSet">
+  <div class="dlg">
+    <h2>Settings</h2>
+    <p class="sub">App lock, fingerprint, auto-lock aur install.</p>
+
+    <h4>App lock</h4>
+    <div class="line"><div>App lock (PIN)<small id="stLockTxt">Off</small></div><button class="sw" id="swLock" type="button" aria-label="Toggle app lock"></button></div>
+    <div id="lockOpts" style="display:none">
+      <div class="line" id="bioRow"><div>Fingerprint / face unlock<small id="stBioTxt">Off</small></div><button class="sw" id="swBio" type="button" aria-label="Toggle fingerprint"></button></div>
+      <div class="fld" style="margin-top:12px"><label for="stAuto">Auto-lock when app is in background</label>
+        <select id="stAuto"><option value="0">Immediately</option><option value="1">After 1 minute</option><option value="5">After 5 minutes</option><option value="15">After 15 minutes</option><option value="never">Never (only at app start)</option></select></div>
+      <h4>Change PIN</h4>
+      <div class="fld"><label for="pOld">Current PIN</label><input id="pOld" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></div>
+      <div class="fld"><label for="pNew">New PIN (4–8 digits)</label><input id="pNew" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></div>
+      <div class="fld"><label for="pNew2">Repeat new PIN</label><input id="pNew2" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></div>
+      <button class="btn" id="pChange" type="button">Change PIN</button>
+    </div>
+    <div class="msg" id="stMsg"></div>
+
+    <h4>Install</h4>
+    <div class="line"><div>Install as app<small id="stInstTxt"></small></div><button class="btn pri" id="stInstall" type="button">Install</button></div>
+
+    <div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn" data-close type="button">Close</button></div>
+  </div>
+</div>
+
+<div id="iosBanner" role="dialog" aria-label="Install on iPhone">
+  <b>📲 Install IT Ops Hub</b>
+  <p>Safari me <b>Share ⬆️</b> dabao → <b>Add to Home Screen</b> → Add. App seedha home screen se khulega.</p>
+  <button class="btn pri" id="iosOk" type="button">Got it</button>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+"use strict";
+var $ = function (id) { return document.getElementById(id); };
+function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+var toastT;
+function toast(m, ms) { var t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove("show"); }, ms || 2600); }
+
+/* =====================================================================
+   MODULES + NAVIGATION
+   ===================================================================== */
+var DEFAULT_CMD_TABS = ["Windows", "Linux", "CCNA_CCNP", "Others", "Troubleshooting"];
+var MODS = {
+  planner: { name: "Network Planner Pro", icon: "🧭", src: "modules/planner.html",
+    desc: "VLSM IP plan, topology, Cisco config, supernetting, subnet calculator — ab IPv6 plan ke saath.",
+    items: [["plan", "IP Plan (IPv4)"], ["topo", "Topology"], ["cmds", "Cisco Config"], ["supernet", "Supernetting"], ["calc", "Subnet Calc"], ["v6", "IPv6 Plan"]], fresh: "v6" },
+  cmd: { name: "CMD Notes", icon: "⌨️", src: "modules/cmdnotes.html",
+    desc: "Commands ka reference — Google Sheet se live, search, copy, favourites aur 'View by'.",
+    items: null },
+  ops: { name: "IT Ops Center", icon: "🛠️", src: "modules/ops.html",
+    desc: "CCNA notes, network tools, troubleshooting, Linux, interview prep, knowledge base, projects, assistant.",
+    items: [["dashboard", "Dashboard"], ["networking", "CCNA / Networking"], ["tools", "Network Tools"], ["cisco", "Cisco Commands"], ["troubleshoot", "Troubleshooting"], ["linux", "Linux"], ["interview", "Interview Prep & Subnet Game"], ["knowledge", "Knowledge Base"], ["projects", "Projects"], ["assistant", "IT Assistant"]] }
+};
+var ORDER = ["planner", "cmd", "ops"];
+var cur = { mod: "home", item: "" };
+var frames = {};     // mod -> {el, ready, queue:[], item}
+var booted = false;
+
+function cmdCache() { try { return JSON.parse(ls("cmdn_cache") || "null"); } catch (e) { return null; } }
+function cmdItems() {
+  var out = [["__all", "All commands"], ["__fav", "⭐ Favourites"]], seen = {}, c = cmdCache(), names = DEFAULT_CMD_TABS.slice();
+  if (c && c.tabs && c.tabs.length) names = c.tabs.map(function (t) { return t.name; });
+  names.forEach(function (n) { if (!seen[n]) { seen[n] = 1; out.push([n, n.replace(/_/g, " ")]); } });
+  return out;
+}
+function itemsOf(m) { return m === "cmd" ? cmdItems() : MODS[m].items; }
+function labelOf(m, item) {
+  var l = itemsOf(m).filter(function (x) { return x[0] === item; })[0];
+  return l ? l[1] : item;
+}
+
+function renderNav() {
+  var shut = {}; try { shut = JSON.parse(ls("hub_shut") || "{}"); } catch (e) {}
+  var h = '<div class="grp"><div class="grp-items"><button class="it' + (cur.mod === "home" ? " on" : "") + '" data-go="home"><span class="dot"></span><span class="nm">Dashboard</span></button></div></div>';
+  ORDER.forEach(function (m) {
+    var M = MODS[m];
+    h += '<div class="grp' + (shut[m] ? " shut" : "") + '" data-g="' + m + '"><button class="grp-h" data-tog="' + m + '"><span class="ic">' + M.icon + '</span>' + esc(M.name) + '<span class="chev">▼</span></button><div class="grp-items">';
+    itemsOf(m).forEach(function (x) {
+      h += '<button class="it' + (cur.mod === m && cur.item === x[0] ? " on" : "") + '" data-go="' + m + '" data-item="' + esc(x[0]) + '"><span class="dot"></span><span class="nm">' + esc(x[1]) + '</span></button>';
+    });
+    h += "</div></div>";
+  });
+  $("nav").innerHTML = h;
+}
+$("nav").addEventListener("click", function (e) {
+  var t = e.target.closest("[data-tog]");
+  if (t) { var k = t.getAttribute("data-tog"), s = {}; try { s = JSON.parse(ls("hub_shut") || "{}"); } catch (x) {} s[k] = !s[k]; lsSet("hub_shut", JSON.stringify(s)); t.parentNode.classList.toggle("shut", !!s[k]); return; }
+  var g = e.target.closest("[data-go]");
+  if (g) { go(g.getAttribute("data-go"), g.getAttribute("data-item") || ""); closeDrawer(); }
+});
+$("brand").onclick = function () { go("home"); closeDrawer(); };
+
+function setCrumb() {
+  if (cur.mod === "home") { $("crumb").textContent = "Dashboard"; document.title = "IT Ops Hub"; return; }
+  var lab = labelOf(cur.mod, cur.item);
+  $("crumb").innerHTML = "<small>" + esc(MODS[cur.mod].name) + " ›</small>" + esc(lab || "");
+  document.title = (lab ? lab + " · " : "") + MODS[cur.mod].name + " · IT Ops Hub";
+}
+function theme() { return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark"; }
+
+function ensureFrame(m) {
+  if (frames[m]) return frames[m];
+  var el = document.createElement("iframe");
+  el.title = MODS[m].name; el.setAttribute("allow", "clipboard-write; clipboard-read; fullscreen"); el.setAttribute("loading", "eager");
+  el.src = MODS[m].src;
+  $("frames").appendChild(el);
+  frames[m] = { el: el, ready: false, queue: [], item: "" };
+  return frames[m];
+}
+function send(m, msg) {
+  var f = ensureFrame(m), full = Object.assign({ hub: true }, msg);
+  if (f.ready && f.el.contentWindow) f.el.contentWindow.postMessage(full, location.origin); else f.queue.push(full);
+}
+function go(mod, item, opts) {
+  opts = opts || {};
+  if (!booted) return;
+  if (!MODS[mod]) mod = "home";
+  if (mod === "home") {
+    cur = { mod: "home", item: "" };
+    $("home").classList.remove("hide"); Object.keys(frames).forEach(function (k) { frames[k].el.classList.remove("on"); });
+    renderHome();
+  } else {
+    if (!item) item = frames[mod] && frames[mod].item ? frames[mod].item : itemsOf(mod)[0][0];
+    cur = { mod: mod, item: item };
+    $("home").classList.add("hide");
+    var f = ensureFrame(mod);
+    Object.keys(frames).forEach(function (k) { frames[k].el.classList.toggle("on", k === mod); });
+    if (!opts.fromModule) { f.item = item; send(mod, { type: f.sent ? "goto" : "init", item: item, theme: theme() }); f.sent = true; }
+    else f.item = item;
+    rememberRecent(mod, item);
+  }
+  renderNav(); setCrumb();
+  if (!opts.noHash) { var h = mod === "home" ? "#/home" : "#/" + mod + "/" + encodeURIComponent(item); if (location.hash !== h) { try { history.replaceState(null, "", h); } catch (e) { location.hash = h; } } }
+}
+window.addEventListener("hashchange", function () { var r = parseHash(); go(r.mod, r.item, { noHash: true }); });
+function parseHash() {
+  var m = /^#\/([a-z]+)(?:\/(.*))?$/.exec(location.hash || "");
+  if (!m) return { mod: "home", item: "" };
+  var item = ""; try { item = decodeURIComponent(m[2] || ""); } catch (e) { item = m[2] || ""; }
+  return { mod: m[1], item: item };
+}
+window.addEventListener("message", function (e) {
+  if (e.origin !== location.origin) return;
+  var d = e.data; if (!d || !d.hub || !d.module || !frames[d.module] || e.source !== frames[d.module].el.contentWindow) return;
+  var f = frames[d.module];
+  if (d.type === "ready") {
+    f.ready = true;
+    if (!f.sent && f.item) { f.queue.unshift({ hub: true, type: "init", item: f.item, theme: theme() }); f.sent = true; }
+    else if (!f.sent) { f.queue.unshift({ hub: true, type: "init", theme: theme() }); f.sent = true; }
+    var q = f.queue; f.queue = []; q.forEach(function (m) { f.el.contentWindow.postMessage(m, location.origin); });
+  } else if (d.type === "state") {
+    f.item = d.item;
+    if (cur.mod === d.module && cur.item !== d.item) { go(d.module, d.item, { fromModule: true }); }
+    if (d.module === "cmd") renderNav();
+  } else if (d.type === "open" && MODS[d.target]) { go(d.target, d.item || ""); }
+});
+
+/* recent */
+function rememberRecent(mod, item) {
+  var r = []; try { r = JSON.parse(ls("hub_recent") || "[]"); } catch (e) {}
+  r = r.filter(function (x) { return !(x[0] === mod && x[1] === item); }); r.unshift([mod, item]); lsSet("hub_recent", JSON.stringify(r.slice(0, 6)));
+}
+
+/* =====================================================================
+   DASHBOARD
+   ===================================================================== */
+function sheetUrlSaved() { return (ls("cmdn_url") || "").trim(); }
+function renderHome() {
+  var c = cmdCache(), n = c && c.items ? c.items.length : 0, url = sheetUrlSaved();
+  var lockOn = ls("hub_lock_on") === "1";
+  var h = '<div class="hero"><h1>IT Ops Hub</h1><p>Plan, note, operate — teeno tools ek hi app me.</p></div>';
+  h += '<div class="stats">' +
+    '<div class="stat"><div class="k">Google Sheet</div><div class="v">' + (url ? "Linked" : "Not linked") + "</div></div>" +
+    '<div class="stat"><div class="k">Commands (synced)</div><div class="v">' + n + "</div></div>" +
+    '<div class="stat"><div class="k">App lock</div><div class="v">' + (lockOn ? "On" : "Off") + "</div></div>" +
+    '<div class="stat"><div class="k">Install</div><div class="v">' + (isStandalone() ? "Installed" : "Browser") + "</div></div></div>";
+  h += '<div class="cards">';
+  ORDER.forEach(function (m) {
+    var M = MODS[m], its = itemsOf(m);
+    h += '<div class="mod"><h2><span class="em">' + M.icon + "</span>" + esc(M.name) + "</h2><p>" + esc(M.desc) + '</p><div class="chips">';
+    its.slice(0, 8).forEach(function (x) { h += '<button class="chip' + (M.fresh === x[0] ? " new" : "") + '" data-go="' + m + '" data-item="' + esc(x[0]) + '">' + esc(x[1]) + (M.fresh === x[0] ? " · new" : "") + "</button>"; });
+    h += '</div><button class="btn pri go" data-go="' + m + '">Open ' + esc(M.name) + " →</button></div>";
+  });
+  h += "</div>";
+  var r = []; try { r = JSON.parse(ls("hub_recent") || "[]"); } catch (e) {}
+  r = r.filter(function (x) { return MODS[x[0]]; });
+  if (r.length) {
+    h += '<h3 class="sec">Recent</h3><div class="recent">';
+    r.forEach(function (x) { h += '<button class="chip" data-go="' + x[0] + '" data-item="' + esc(x[1]) + '">' + esc(MODS[x[0]].name) + " › " + esc(labelOf(x[0], x[1])) + "</button>"; });
+    h += "</div>";
+  }
+  $("home").innerHTML = h;
+}
+$("home").addEventListener("click", function (e) { var g = e.target.closest("[data-go]"); if (g) go(g.getAttribute("data-go"), g.getAttribute("data-item") || ""); });
+
+/* =====================================================================
+   THEME
+   ===================================================================== */
+function setTheme(t, silent) {
+  document.documentElement.setAttribute("data-theme", t); lsSet("hub_theme", t);
+  var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0b1114" : "#f2f5f6";
+  if (!silent) Object.keys(frames).forEach(function (k) { send(k, { type: "theme", theme: t }); });
+}
+$("btnTheme").onclick = function () { setTheme(theme() === "dark" ? "light" : "dark"); };
+
+/* =====================================================================
+   DRAWER
+   ===================================================================== */
+function openDrawer() { $("side").classList.add("open"); $("scrim").classList.add("show"); }
+function closeDrawer() { $("side").classList.remove("open"); $("scrim").classList.remove("show"); }
+$("burger").onclick = openDrawer; $("scrim").onclick = closeDrawer;
+
+/* =====================================================================
+   GLOBAL SEARCH
+   ===================================================================== */
+var hl = -1;
+function runSearch(q) {
+  var box = $("sres"); q = q.trim();
+  if (!q) { box.classList.remove("show"); box.innerHTML = ""; return; }
+  var terms = q.toLowerCase().split(/\s+/), c = cmdCache(), out = [], h = "";
+  if (c && c.items) {
+    c.items.forEach(function (i) {
+      if (out.length >= 7) return;
+      var hay = ((i.cmd || "") + " " + (i.category || "") + " " + (i.tag || "") + " " + (i.purpose || "") + " " + (i.tab || "")).toLowerCase();
+      if (terms.every(function (t) { return hay.indexOf(t) >= 0; })) out.push(i);
+    });
+  }
+  out.forEach(function (i) { h += '<button class="r" data-q="' + esc(q) + '" data-tab="' + esc(i.tab || "__all") + '"><b>' + esc(i.cmd) + "</b><span>" + esc((i.tab || "").replace(/_/g, " ") + (i.purpose ? " · " + i.purpose : "")) + "</span></button>"; });
+  var tools = [];
+  ["planner", "ops"].forEach(function (m) { itemsOf(m).forEach(function (x) { if (terms.every(function (t) { return (MODS[m].name + " " + x[1]).toLowerCase().indexOf(t) >= 0; })) tools.push([m, x]); }); });
+  tools.slice(0, 5).forEach(function (t) { h += '<button class="r" data-go="' + t[0] + '" data-item="' + esc(t[1][0]) + '"><b>' + esc(t[1][1]) + "</b><span>" + esc(MODS[t[0]].name) + "</span></button>"; });
+  h += '<button class="r act" data-all="cmd">🔎 Search “' + esc(q) + '” in CMD Notes</button>';
+  h += '<button class="r act" data-all="ops">🔎 Search “' + esc(q) + '” in IT Ops Center</button>';
+  box.innerHTML = h; box.classList.add("show"); hl = -1;
+}
+function doSearchIn(mod, q, tab) {
+  go(mod, mod === "cmd" ? (tab && tab !== "__all" ? tab : "__all") : "dashboard");
+  send(mod, { type: "search", q: q });
+  $("sres").classList.remove("show");
+}
+$("gq").addEventListener("input", function () { runSearch(this.value); });
+$("gq").addEventListener("focus", function () { if (this.value.trim()) runSearch(this.value); });
+$("gq").addEventListener("keydown", function (e) {
+  var rs = Array.prototype.slice.call($("sres").querySelectorAll(".r"));
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); if (!rs.length) return; hl = (hl + (e.key === "ArrowDown" ? 1 : -1) + rs.length) % rs.length; rs.forEach(function (r, i) { r.classList.toggle("hl", i === hl); }); }
+  else if (e.key === "Enter") { e.preventDefault(); if (hl >= 0 && rs[hl]) rs[hl].click(); else if (this.value.trim()) doSearchIn(cur.mod === "ops" ? "ops" : "cmd", this.value.trim()); }
+  else if (e.key === "Escape") { $("sres").classList.remove("show"); this.blur(); }
+});
+$("sres").addEventListener("click", function (e) {
+  var r = e.target.closest(".r"); if (!r) return;
+  if (r.dataset.all) return doSearchIn(r.dataset.all, $("gq").value.trim());
+  if (r.dataset.go) { go(r.dataset.go, r.dataset.item || ""); $("sres").classList.remove("show"); return; }
+  doSearchIn("cmd", r.dataset.q, r.dataset.tab);
+});
+document.addEventListener("click", function (e) { if (!e.target.closest(".search")) $("sres").classList.remove("show"); });
+document.addEventListener("keydown", function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("gq").focus(); $("gq").select(); }
+});
+if (/Mac|iPhone|iPad/.test(navigator.platform)) $("kbdHint").textContent = "⌘ K";
+
+/* =====================================================================
+   GOOGLE SHEET LINK
+   ===================================================================== */
+var URL_RE = /^https:\/\/script\.google\.com\/(?:a\/(?:macros\/)?[^\/]+\/)?macros\/s\/[^\/\s]+\/exec$/;
+function msg(el, kind, txt) { el.className = "msg show " + kind; el.textContent = txt; }
+function sheetLinkFromCache() { var c = cmdCache(); return c && c.sheetUrl ? c.sheetUrl : ""; }
+function renderSheetPill() {
+  var url = sheetUrlSaved(), p = $("sheetPill");
+  p.className = "pill " + (url ? "ok" : "warn");
+  $("sheetTxt").textContent = url ? "Sheet linked" : "Link Sheet";
+  var link = sheetLinkFromCache(), a = $("shOpen");
+  if (url && link) { a.href = link; a.hidden = false; } else a.hidden = true;
+}
+function pingServer(url) {
+  return fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "ping" }), redirect: "follow" })
+    .then(function (r) { return r.text(); })
+    .then(function (t) { var j; try { j = JSON.parse(t); } catch (e) { throw new Error("BADREPLY"); } return j; });
+}
+function testSheet() {
+  var url = $("shUrl").value.trim(), m = $("shMsg");
+  if (!URL_RE.test(url)) { msg(m, "bad", "URL galat hai. Format: https://script.google.com/macros/s/…/exec (Web app ka /exec link, /dev nahi)."); return Promise.resolve(false); }
+  msg(m, "warn", "Testing…");
+  return pingServer(url).then(function (j) {
+    if (!j || j.ok !== true) { msg(m, "bad", "Server ne error diya: " + ((j && j.error) || "unknown")); return false; }
+    if (j.v !== 3) { msg(m, "warn", "Connected, par Code.gs purana hai. Naya Code.gs paste karke Deploy → New version karo, warna tags/sections/login nahi chalenge."); return true; }
+    msg(m, "ok", "✅ Connected · Code.gs v3 · login " + (j.auth ? "ON (_Users tab)" : "OFF"));
+    return true;
+  }).catch(function (e) {
+    msg(m, "bad", e.message === "BADREPLY" ? "Reply samajh nahi aaya. Deploy 'New version' kiya? Access = Anyone?" : "Server tak nahi pahunch paya. Internet, Deploy (Access: Anyone) aur /exec URL check karo.");
+    return false;
+  });
+}
+function openSheet() { $("shUrl").value = sheetUrlSaved(); $("shMsg").className = "msg"; renderSheetPill(); show("ovSheet"); }
+$("shTest").onclick = testSheet;
+$("shSave").onclick = function () {
+  testSheet().then(function (ok) {
+    var url = $("shUrl").value.trim();
+    if (!URL_RE.test(url)) return;
+    if (!ok && !confirm("Test pass nahi hua. Phir bhi save karna hai?")) return;
+    if (url !== sheetUrlSaved()) lsDel("cmdn_cache");
+    lsSet("cmdn_url", url); lsDel("cmdn_ver");
+    reloadCmd(); renderSheetPill(); renderNav(); if (cur.mod === "home") renderHome();
+    toast("Google Sheet linked ✓"); hide("ovSheet"); go("cmd", "__all");
+  });
+};
+$("shOff").onclick = function () {
+  if (!sheetUrlSaved()) return hide("ovSheet");
+  if (!confirm("Google Sheet link hata dein? (Is device ka cached data bhi hat jayega; Sheet me kuch delete nahi hota.)")) return;
+  ["cmdn_url", "cmdn_cache", "cmdn_tok", "cmdn_ver", "cmdn_bio", "cmdn_auth"].forEach(lsDel);
+  reloadCmd(); renderSheetPill(); renderNav(); if (cur.mod === "home") renderHome(); hide("ovSheet"); toast("Sheet disconnected");
+};
+function reloadCmd() { if (frames.cmd) { frames.cmd.ready = false; frames.cmd.sent = false; frames.cmd.queue = []; frames.cmd.el.src = MODS.cmd.src + "?r=" + Date.now(); } }
+$("pillSheet").onclick = openSheet; $("sbSheet").onclick = function () { openSheet(); closeDrawer(); };
+
+/* =====================================================================
+   OVERLAY helpers
+   ===================================================================== */
+function show(id) { $(id).classList.add("show"); }
+function hide(id) { $(id).classList.remove("show"); }
+document.querySelectorAll(".ov").forEach(function (o) {
+  o.addEventListener("mousedown", function (e) { if (e.target === o) o.classList.remove("show"); });
+  o.querySelectorAll("[data-close]").forEach(function (b) { b.onclick = function () { o.classList.remove("show"); }; });
+});
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); });
+
+/* =====================================================================
+   APP LOCK  (PIN + optional fingerprint/face, auto-lock)
+   Keys: hub_lock_on, hub_lock {s,h,i}, hub_bio {id}, hub_autolock, hub_lock_skip
+   ===================================================================== */
+var LK = { mode: "unlock", tmp: "", fails: 0, until: 0, hiddenAt: 0, locked: false, fromSettings: false };
+function lockOn() { return ls("hub_lock_on") === "1" && !!lockRec(); }
+function lockRec() { try { return JSON.parse(ls("hub_lock") || "null"); } catch (e) { return null; } }
+function b64(buf) { var s = ""; new Uint8Array(buf).forEach(function (c) { s += String.fromCharCode(c); }); return btoa(s); }
+function unb64(s) { var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+var HAS_SUBTLE = !!(window.crypto && crypto.subtle);
+function hashPin(pin, salt, iter) {
+  if (HAS_SUBTLE) {
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]).then(function (k) {
+      return crypto.subtle.deriveBits({ name: "PBKDF2", salt: unb64(salt), iterations: iter || 120000, hash: "SHA-256" }, k, 256);
+    }).then(b64);
+  }
+  var h = 5381, s = salt + "|" + pin; for (var i = 0; i < 20000; i++) { h = ((h << 5) + h + s.charCodeAt(i % s.length)) | 0; } return Promise.resolve("w" + h);
+}
+function newSalt() { return b64(crypto.getRandomValues(new Uint8Array(16))); }
+function savePin(pin) {
+  var salt = newSalt();
+  return hashPin(pin, salt, 120000).then(function (h) { lsSet("hub_lock", JSON.stringify({ s: salt, h: h, i: 120000 })); lsSet("hub_lock_on", "1"); });
+}
+function checkPin(pin) {
+  var r = lockRec(); if (!r) return Promise.resolve(false);
+  return hashPin(pin, r.s, r.i).then(function (h) { return h === r.h; });
+}
+function bioSupported() { return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext); }
+function bioInfo() { try { return JSON.parse(ls("hub_bio") || "null"); } catch (e) { return null; } }
+function bioAvailable() {
+  if (!bioSupported() || !PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return Promise.resolve(false);
+  return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function () { return false; });
+}
+function bioEnable() {
+  var uid = crypto.getRandomValues(new Uint8Array(16)), ch = crypto.getRandomValues(new Uint8Array(32));
+  return navigator.credentials.create({ publicKey: {
+    challenge: ch, rp: { name: "IT Ops Hub" }, user: { id: uid, name: "ithub", displayName: "IT Ops Hub" },
+    pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+    authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000, attestation: "none"
+  } }).then(function (c) { lsSet("hub_bio", JSON.stringify({ id: b64(c.rawId) })); });
+}
+function bioUnlock() {
+  var b = bioInfo(); if (!b) return Promise.reject(new Error("no bio"));
+  return navigator.credentials.get({ publicKey: { challenge: crypto.getRandomValues(new Uint8Array(32)), allowCredentials: [{ type: "public-key", id: unb64(b.id) }], userVerification: "required", timeout: 60000 } });
+}
+
+function lkDots() {
+  var v = $("lkPin").value, h = "", n = Math.max(4, v.length);
+  for (var i = 0; i < n; i++) h += "<i" + (i < v.length ? ' class="f"' : "") + "></i>";
+  $("lkDots").innerHTML = h;
+}
+function lkMsg(t, ok) { var m = $("lkMsg"); m.textContent = t || ""; m.className = ok ? "ok" : ""; }
+function lkSet(mode, opts) {
+  opts = opts || {};
+  LK.mode = mode; $("lkPin").value = ""; lkDots(); lkMsg("");
+  var T = { unlock: ["IT Ops Hub is locked", "Enter your PIN"], new: ["Set an app PIN", "4–8 digits — ye app ko lock karega"], confirm: ["Confirm PIN", "Wahi PIN dobara daalo"], bio: ["Fingerprint unlock?", "Is device ka fingerprint / face use karna hai?"] }[mode];
+  $("lkTitle").textContent = T[0]; $("lkSub").textContent = opts.sub || T[1];
+  $("lkPad").style.display = mode === "bio" ? "none" : "";
+  $("lkDots").style.display = mode === "bio" ? "none" : "";
+  $("lkSkip").hidden = !(mode === "new" || mode === "bio");
+  $("lkSkip").textContent = mode === "bio" ? "Not now" : (LK.fromSettings ? "Cancel" : "Skip for now");
+  $("lkForgot").hidden = mode !== "unlock";
+  var showBio = (mode === "unlock" && !!bioInfo() && bioSupported()) || mode === "bio";
+  $("lkBio").hidden = !showBio; $("lkBio").textContent = mode === "bio" ? "👆 Enable fingerprint / face" : "👆 Use fingerprint / face";
+}
+function showLock(mode, fromSettings) {
+  LK.locked = true; LK.fromSettings = !!fromSettings;
+  closeDrawer(); document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); $("sres").classList.remove("show");
+  $("lock").classList.add("show"); lkSet(mode);
+  if (mode === "unlock" && bioInfo()) setTimeout(function () { tryBio(true); }, 250);
+}
+function hideLock() {
+  LK.locked = false; $("lock").classList.remove("show"); $("lkPin").value = "";
+  if (!booted) boot();
+}
+function cooling() {
+  var left = Math.ceil((LK.until - Date.now()) / 1000);
+  if (left > 0) { lkMsg("Too many wrong PINs — wait " + left + "s"); $("lkPin").value = ""; lkDots(); return true; }
+  return false;
+}
+function tryBio(auto) {
+  if (!bioInfo()) return;
+  bioUnlock().then(function () { hideLock(); }).catch(function (e) { if (!auto) lkMsg(e && e.name === "NotAllowedError" ? "Cancelled — use your PIN." : "Fingerprint failed — use your PIN."); });
+}
+function submitPin() {
+  var pin = $("lkPin").value.trim();
+  if (LK.mode === "unlock") {
+    if (cooling()) return;
+    if (pin.length < 4) return lkMsg("Enter your PIN.");
+    return checkPin(pin).then(function (ok) {
+      if (ok) { LK.fails = 0; hideLock(); return; }
+      LK.fails++; if (LK.fails >= 5) { LK.until = Date.now() + 30000; LK.fails = 0; }
+      $("lkPin").value = ""; lkDots(); lkMsg("Wrong PIN."); if (navigator.vibrate) navigator.vibrate(80);
+    });
+  }
+  if (LK.mode === "new") {
+    if (!/^[0-9]{4,8}$/.test(pin)) return lkMsg("PIN 4 se 8 digits ka hona chahiye.");
+    LK.tmp = pin; return lkSet("confirm");
+  }
+  if (LK.mode === "confirm") {
+    if (pin !== LK.tmp) { LK.tmp = ""; lkSet("new"); return lkMsg("PIN match nahi hua — dobara try karo."); }
+    return savePin(pin).then(function () {
+      LK.tmp = ""; refreshSettings(); if (cur.mod === "home") renderHome();
+      return bioAvailable().then(function (ok) { if (ok && !bioInfo()) lkSet("bio"); else finishSetup(); });
+    });
+  }
+}
+function finishSetup() { hideLock(); toast("App lock on ✓"); refreshSettings(); }
+$("lkPad").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-k]"); if (!b) return; var k = b.getAttribute("data-k"), el = $("lkPin");
+  if (k === "del") el.value = el.value.slice(0, -1); else if (k === "go") submitPin(); else if (el.value.length < 8) el.value += k;
+  lkDots();
+  if (k !== "go" && k !== "del" && LK.mode === "unlock" && el.value.length === 8) submitPin();
+});
+document.addEventListener("keydown", function (e) {
+  if (!LK.locked || LK.mode === "bio") return;
+  if (/^[0-9]$/.test(e.key)) { var el = $("lkPin"); if (el.value.length < 8) el.value += e.key; lkDots(); }
+  else if (e.key === "Backspace") { var el2 = $("lkPin"); el2.value = el2.value.slice(0, -1); lkDots(); }
+  else if (e.key === "Enter") submitPin();
+});
+$("lkBio").onclick = function () {
+  if (LK.mode === "bio") { bioEnable().then(function () { finishSetup(); toast("Fingerprint unlock on ✓"); }).catch(function (e) { lkMsg((e && e.name === "NotAllowedError") ? "Cancelled." : "Could not enable on this device."); }); }
+  else tryBio(false);
+};
+$("lkSkip").onclick = function () {
+  if (LK.mode === "bio") return finishSetup();
+  if (!LK.fromSettings) lsSet("hub_lock_skip", "1");
+  LK.locked = false; $("lock").classList.remove("show"); if (!booted) boot(); refreshSettings();
+};
+$("lkForgot").onclick = function () {
+  if (!confirm("Forgot PIN? App lock hata diya jayega (aapka planner/notes/ops ka data nahi hatega, par is device ke Sheet login aur fingerprint settings reset honge). Continue?")) return;
+  ["hub_lock", "hub_lock_on", "hub_bio", "hub_lock_skip", "cmdn_tok", "cmdn_ver", "cmdn_bio"].forEach(lsDel);
+  LK.locked = false; $("lock").classList.remove("show"); if (!booted) boot(); refreshSettings(); toast("App lock reset");
+};
+$("btnLock").onclick = function () {
+  if (lockOn()) showLock("unlock");
+  else { LK.fromSettings = true; showLock("new", true); }
+};
+function autoMin() { var v = ls("hub_autolock"); return v == null ? "1" : v; }
+document.addEventListener("visibilitychange", function () {
+  if (!lockOn()) return;
+  if (document.hidden) { LK.hiddenAt = Date.now(); return; }
+  var m = autoMin(); if (m === "never" || LK.locked || !LK.hiddenAt) return;
+  var mins = Number(m); if (Date.now() - LK.hiddenAt >= mins * 60000) showLock("unlock");
+});
+
+/* ---- settings dialog ---- */
+function refreshSettings() {
+  var on = lockOn();
+  $("swLock").classList.toggle("on", on); $("stLockTxt").textContent = on ? "On — PIN needed to open the app" : "Off";
+  $("lockOpts").style.display = on ? "" : "none";
+  var b = !!bioInfo(); $("swBio").classList.toggle("on", b); $("stBioTxt").textContent = b ? "On" : "Off";
+  $("stAuto").value = autoMin();
+  bioAvailable().then(function (ok) { $("bioRow").style.display = ok ? "" : "none"; });
+  var inst = isStandalone();
+  $("stInstTxt").textContent = inst ? "Already running as an installed app" : "Home screen / desktop se seedha khulega, offline bhi chalega";
+  $("stInstall").style.display = inst ? "none" : "";
+}
+function openSettings() { $("stMsg").className = "msg"; ["pOld", "pNew", "pNew2"].forEach(function (i) { $(i).value = ""; }); refreshSettings(); show("ovSet"); }
+$("sbSettings").onclick = function () { openSettings(); closeDrawer(); };
+$("swLock").onclick = function () {
+  if (lockOn()) {
+    var p = prompt("App lock band karne ke liye current PIN daalo:");
+    if (p == null) return;
+    checkPin(p.trim()).then(function (ok) {
+      if (!ok) return msg($("stMsg"), "bad", "Wrong PIN.");
+      ["hub_lock", "hub_lock_on", "hub_bio"].forEach(lsDel); refreshSettings(); if (cur.mod === "home") renderHome(); msg($("stMsg"), "ok", "App lock turned off.");
+    });
+  } else { hide("ovSet"); LK.fromSettings = true; showLock("new", true); }
+};
+$("swBio").onclick = function () {
+  if (bioInfo()) { lsDel("hub_bio"); refreshSettings(); return msg($("stMsg"), "ok", "Fingerprint unlock off."); }
+  bioEnable().then(function () { refreshSettings(); msg($("stMsg"), "ok", "Fingerprint unlock on ✓"); }).catch(function (e) { msg($("stMsg"), "bad", (e && e.name === "NotAllowedError") ? "Cancelled." : "Is device par fingerprint enable nahi ho paya."); });
+};
+$("stAuto").onchange = function () { lsSet("hub_autolock", this.value); msg($("stMsg"), "ok", "Auto-lock updated."); };
+$("pChange").onclick = function () {
+  var o = $("pOld").value.trim(), n = $("pNew").value.trim(), n2 = $("pNew2").value.trim(), m = $("stMsg");
+  if (!/^[0-9]{4,8}$/.test(n)) return msg(m, "bad", "New PIN 4–8 digits ka hona chahiye.");
+  if (n !== n2) return msg(m, "bad", "Dono new PIN match nahi karte.");
+  checkPin(o).then(function (ok) {
+    if (!ok) return msg(m, "bad", "Current PIN galat hai.");
+    return savePin(n).then(function () { ["pOld", "pNew", "pNew2"].forEach(function (i) { $(i).value = ""; }); msg(m, "ok", "PIN changed ✓"); });
+  });
+};
+
+/* =====================================================================
+   PWA INSTALL  +  SERVICE WORKER
+   ===================================================================== */
+var deferredPrompt = null;
+function isStandalone() { return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.navigator.standalone === true; }
+function isIOSSafari() { var ua = navigator.userAgent; return /iPad|iPhone|iPod/.test(ua) && !window.MSStream && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua); }
+function refreshInstallUi() {
+  var hid = isStandalone();
+  $("btnInstall").hidden = hid; $("sbInstall").hidden = hid;
+}
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredPrompt = e; refreshInstallUi(); refreshSettings(); });
+window.addEventListener("appinstalled", function () { deferredPrompt = null; refreshInstallUi(); refreshSettings(); toast("✅ App installed"); });
+function doInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    Promise.resolve(deferredPrompt.userChoice).catch(function () {}).then(function () { deferredPrompt = null; refreshInstallUi(); });
+    return;
+  }
+  if (isIOSSafari()) { $("iosBanner").classList.add("show"); return; }
+  toast("Browser menu (⋮) → “Install app” / “Add to Home screen”", 5000);
+}
+$("btnInstall").onclick = doInstall; $("sbInstall").onclick = function () { doInstall(); closeDrawer(); }; $("stInstall").onclick = doInstall;
+$("iosOk").onclick = function () { $("iosBanner").classList.remove("show"); };
+refreshInstallUi();
+if (isIOSSafari() && !isStandalone() && !ls("hub_ios_seen")) { setTimeout(function () { $("iosBanner").classList.add("show"); lsSet("hub_ios_seen", "1"); }, 2500); }
+
+if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+  var hadCtl = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", function () { if (hadCtl) toast("🚀 App updated — reload for the latest", 5000); hadCtl = true; });
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").then(function (reg) { setInterval(function () { reg.update(); }, 60 * 60 * 1000); }).catch(function () {});
+  });
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+function boot() {
+  if (booted) return; booted = true;
+  renderSheetPill(); refreshSettings();
+  var r = parseHash();
+  var params = new URLSearchParams(location.search);
+  if (params.get("setup") === "1") { openSheet(); }
+  go(r.mod, r.item, { noHash: !location.hash });
+  setInterval(function () { renderSheetPill(); if (cur.mod === "home") renderHome(); }, 30000);
+  window.addEventListener("storage", function (e) { if (e.key === "cmdn_cache") { renderNav(); setCrumb(); } });
+}
+setTheme(ls("hub_theme") || (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"), true);
+renderNav(); setCrumb(); renderSheetPill();
+if (lockOn()) showLock("unlock");
+else if (!ls("hub_lock_skip") && ls("hub_lock_on") !== "1" && !ls("hub_lock")) { showLock("new"); }
+else boot();
+})();
+</script>
+</body>
+</html>

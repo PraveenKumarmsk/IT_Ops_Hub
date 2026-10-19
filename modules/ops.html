@@ -1,0 +1,2660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>IT Ops Center · Network Engineer Workspace</title>
+<meta name="description" content="Network engineer workspace: Cisco & Linux commands, subnet tools, knowledge base and interview practice.">
+<meta name="theme-color" content="#1e40af">
+<script>(function(){try{var a=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;if(a)document.documentElement.classList.add('is-app');}catch(e){}})();</script>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="IT Ops">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+<script>(function(){try{if(window.self!==window.top){window.__HUB=true;document.documentElement.classList.add('hub-embed');}}catch(e){window.__HUB=true;document.documentElement.classList.add('hub-embed');}})();</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+:root{--bg:#0b0f17;--surface:#141b26;--surface-light:#1e2a3a;--border:#2a3a4e;--text:#e7edf5;--text-secondary:#9aaebf;--accent:#3b82f6;--accent-glow:#3b82f680;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--card-radius:16px;--transition:all .2s ease;--sidebar-width:260px;}
+.light-mode{--bg:#f4f7fc;--surface:#fff;--surface-light:#eef2f8;--border:#d4deeb;--text:#1e2a3a;--text-secondary:#5e6f84;--accent:#2563eb;--accent-glow:#2563eb40;--success:#059669;--warning:#d97706;--danger:#dc2626;}
+body{background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background-color .2s,color .2s;}
+.sidebar{width:var(--sidebar-width);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:20;transition:transform .2s ease;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.sidebar-header{padding:24px 18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-icon{background:var(--accent);width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;box-shadow:0 0 15px var(--accent-glow);}
+.logo-text{font-weight:700;font-size:1.1rem;letter-spacing:-.5px;}
+.logo-text span{color:var(--accent);font-weight:800;}
+.nav-section{padding:16px 12px 8px;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;margin:2px 8px;border-radius:8px;color:var(--text-secondary);transition:var(--transition);cursor:pointer;font-size:.9rem;font-weight:500;}
+.nav-item i{width:18px;text-align:center;font-size:1rem;}
+.nav-item:hover,.nav-item.active{background:var(--surface-light);color:var(--text);}
+.nav-item.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px var(--accent-glow);}
+.nav-item.active i{color:#fff;}
+.main{flex:1;margin-left:var(--sidebar-width);display:flex;flex-direction:column;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:15;gap:16px;flex-wrap:wrap;}
+.search-wrapper{flex:1;max-width:400px;position:relative;}
+.search-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:.9rem;}
+.search-wrapper input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:30px;padding:10px 18px 10px 40px;color:var(--text);font-size:.9rem;outline:none;transition:var(--transition);}
+.search-wrapper input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.top-actions{display:flex;align-items:center;gap:16px;}
+.theme-toggle,.mobile-menu-btn{background:var(--surface-light);border:1px solid var(--border);color:var(--text);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);}
+.theme-toggle:hover,.mobile-menu-btn:hover{background:var(--border);}
+.mobile-menu-btn{display:none;}
+.avatar{background:var(--accent);color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;}
+.content{padding:28px;display:flex;flex-direction:column;gap:28px;flex:1;}
+.page-title{font-size:1.8rem;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;justify-content:space-between;}
+.page-title small{font-size:.85rem;font-weight:400;color:var(--text-secondary);background:var(--surface-light);padding:6px 14px;border-radius:30px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:18px 20px;display:flex;flex-direction:column;gap:6px;transition:var(--transition);}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.stat-label{font-size:.8rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.stat-value{font-size:1.9rem;font-weight:700;line-height:1;}
+.stat-sub{font-size:.8rem;color:var(--text-secondary);}
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:20px;display:flex;flex-direction:column;gap:8px;transition:var(--transition);cursor:pointer;}
+.dash-card:hover{border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(-2px);}
+.dash-icon{width:40px;height:40px;border-radius:10px;background:var(--surface-light);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--accent);margin-bottom:6px;}
+.dash-title{font-weight:600;font-size:1rem;}
+.dash-desc{font-size:.8rem;color:var(--text-secondary);line-height:1.4;}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);padding:24px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.section-header h2{font-size:1.3rem;font-weight:700;display:flex;align-items:center;gap:10px;}
+.section-header h2 i{color:var(--accent);}
+.badge{background:var(--surface-light);padding:4px 10px;border-radius:30px;font-size:.75rem;font-weight:600;color:var(--text-secondary);}
+.btn{background:var(--surface-light);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:8px;}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn-primary:hover{background:#2563eb;box-shadow:0 4px 14px var(--accent-glow);}
+.btn:hover{background:var(--border);}
+.btn-danger{background:var(--danger);border-color:var(--danger);color:#fff;}
+.btn-danger:hover{background:#dc2626;}
+.btn-sm{padding:4px 10px;font-size:.75rem;}
+.table-wrapper{overflow-x:auto;border-radius:10px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{text-align:left;padding:12px 16px;background:var(--surface-light);color:var(--text-secondary);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+td{padding:12px 16px;border-top:1px solid var(--border);white-space:nowrap;}
+tr:hover td{background:var(--surface-light);}
+.status-badge{padding:4px 10px;border-radius:30px;font-size:.7rem;font-weight:600;text-transform:uppercase;}
+.status-open{background:#ef444420;color:#ef4444;}
+.status-progress{background:#f59e0b20;color:#f59e0b;}
+.status-resolved{background:#10b98120;color:#10b981;}
+.status-closed{background:#6b728020;color:#9aaebf;}
+.status-planned{background:#3b82f620;color:#3b82f6;}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.tool-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.tool-card h3{font-size:.95rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--accent);}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:.75rem;color:var(--text-secondary);margin-bottom:5px;font-weight:500;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:.85rem;outline:none;transition:var(--transition);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow);}
+.result-box{background:var(--surface-light);border-radius:8px;padding:14px;margin-top:12px;font-size:.82rem;line-height:1.6;word-break:break-word;}
+.result-box strong{color:var(--accent);}
+.copy-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:4px 10px;border-radius:6px;font-size:.7rem;cursor:pointer;transition:var(--transition);margin-left:8px;}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto;padding-bottom:2px;}
+.tab{padding:10px 18px;font-size:.85rem;font-weight:500;color:var(--text-secondary);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;background:none;border:none;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab:hover{color:var(--text);}
+.tab-btn{padding:10px 18px;font-size:.85rem;font-weight:500;color:var(--text-secondary);border:none;border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;background:none;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-btn:hover{color:var(--text);}
+.panel{display:none;}
+.panel.active{display:block;}
+.troubleshoot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;}
+.troubleshoot-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.82rem;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:10px;}
+.troubleshoot-item:hover{border-color:var(--accent);background:var(--surface-light);}
+.troubleshoot-item i{color:var(--warning);}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-overlay.active{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--card-radius);max-width:700px;width:100%;max-height:80vh;overflow-y:auto;padding:28px;position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--surface-light);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);}
+.modal-close:hover{background:var(--danger);color:#fff;}
+.ai-panel{background:linear-gradient(135deg,var(--surface) 0%,var(--surface-light) 100%);border:1px solid var(--border);border-radius:var(--card-radius);padding:24px;position:relative;overflow:hidden;}
+.ai-panel::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);border-radius:50%;pointer-events:none;}
+.ai-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;position:relative;}
+.ai-header i{font-size:1.5rem;color:var(--accent);}
+.ai-input-wrapper{display:flex;gap:10px;position:relative;}
+.ai-input-wrapper input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:30px;padding:12px 20px;color:var(--text);font-size:.9rem;outline:none;}
+.ai-input-wrapper input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.ai-response{margin-top:16px;padding:16px;background:var(--bg);border-radius:10px;border-left:3px solid var(--accent);font-size:.85rem;line-height:1.6;display:none;}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main{margin-left:0;}.mobile-menu-btn{display:flex;}}
+@media(max-width:600px){.content{padding:16px;}.topbar{padding:12px 16px;}.page-title{font-size:1.3rem;}.stats-grid{grid-template-columns:repeat(2,1fr);}.dashboard-grid{grid-template-columns:1fr;}}
+::-webkit-scrollbar{width:6px;height:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--text-secondary);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.section,.dash-card,.stat-card{animation:fadeIn .3s ease forwards;}
+.note-highlight{background:var(--surface-light);border-left:3px solid var(--accent);padding:12px 16px;border-radius:8px;margin:10px 0;font-size:.85rem;line-height:1.7;}
+
+/* ── Global search dropdown ───────────────────────────────────────────── */
+#globalSearchResults{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.35);max-height:360px;overflow-y:auto;z-index:50;}
+#globalSearchResults.active{display:block;}
+.gsr-item{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;}
+.gsr-item:last-child{border-bottom:none;}
+.gsr-item:hover{background:var(--surface-light);}
+.gsr-type{font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);font-weight:700;}
+.gsr-label{font-size:.85rem;font-weight:600;}
+.gsr-sub{font-size:.72rem;color:var(--text-secondary);}
+.gsr-empty{padding:14px;text-align:center;color:var(--text-secondary);font-size:.82rem;}
+
+/* ── Hint / mini-table / cable / glossary shared bits ───────────────────── */
+.hint-line{font-size:.72rem;color:var(--text-secondary);margin-top:8px;line-height:1.5;}
+.hint-line a{color:var(--accent);}
+.mini-table{width:100%;border-collapse:collapse;font-size:.75rem;margin-top:6px;}
+.mini-table th{text-align:left;padding:6px 8px;background:var(--surface-light);color:var(--text-secondary);font-weight:600;}
+.mini-table td{padding:6px 8px;border-top:1px solid var(--border);}
+.vlsm-result{overflow-x:auto;}
+.cable-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
+.cable-row:last-child{border-bottom:none;}
+.cable-use{color:var(--text-secondary);font-size:.78rem;margin-top:2px;}
+.cable-wiring{font-size:.75rem;margin-top:4px;line-height:1.5;}
+.glossary-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:.85rem;}
+.glossary-row:last-child{border-bottom:none;}
+.glossary-def{color:var(--text-secondary);font-size:.78rem;margin-top:3px;}
+.kb-tag{cursor:pointer;transition:var(--transition);}
+.kb-tag.active,.kb-tag:hover{background:var(--accent);color:#fff;}
+
+
+/* ── Shared small components (VLAN list, etc.) ── */
+.chip-toggle{display:inline-flex;align-items:center;gap:6px;background:var(--surface-light);border:1px solid var(--border);padding:7px 12px;border-radius:20px;font-size:.78rem;color:var(--text-secondary);cursor:pointer;transition:var(--transition);}
+.chip-toggle:hover{border-color:var(--accent);color:var(--text);}
+.chip-toggle input{accent-color:var(--accent);}
+.chip-toggle.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent);}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:.78rem;color:var(--text);overflow-x:auto;line-height:1.7;white-space:pre;max-height:70vh;}
+.mini-input{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:.8rem;outline:none;width:100%;}
+.mini-input:focus{border-color:var(--accent);}
+
+/* ── Print-friendly ──────────────────────────────────────────────────── */
+@media print{
+  .sidebar,.topbar,.tabs,.modal-overlay{display:none!important;}
+  .main{margin-left:0!important;}
+  body{background:#fff!important;color:#000!important;}
+  .section,.tool-card,.result-box,.code-block{border-color:#ccc!important;background:#fff!important;color:#000!important;}
+}
+
+/* ============================================================
+   PHONE-APP LAYER (PWA)  — phone/installed = app, PC browser = website
+   ============================================================ */
+html{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+body{overscroll-behavior-y:none;}
+.app-title,.bottom-nav,.more-sheet,.sheet-backdrop,.install-banner,#splash{display:none;}
+#splash{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:linear-gradient(160deg,#0b0f17 0%,#1e3a8a 100%);flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .4s ease,visibility .4s;}
+html.is-app #splash{display:flex;}
+#splash.hide{opacity:0;visibility:hidden;}
+.splash-logo{width:96px;height:96px;border-radius:28px;background:var(--accent);color:#fff;font-size:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px var(--accent-glow);animation:splashPop .6s ease both;}
+@keyframes splashPop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+.splash-name{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:-.5px;}
+.splash-name span{color:#60a5fa;}
+.splash-sub{font-size:.75rem;color:#9aaebf;letter-spacing:1.5px;text-transform:uppercase;}
+html.is-app body{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
+html.is-app input,html.is-app textarea,html.is-app select,html.is-app .code-block,html.is-app .result-box{user-select:text;-webkit-user-select:text;}
+
+@media(max-width:900px){
+  .sidebar,.mobile-menu-btn,.avatar{display:none!important;}
+  .main{margin-left:0;}
+  :root{--card-radius:20px;}
+
+  .topbar{padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 16px;background:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);border-bottom:none;border-radius:0 0 28px 28px;box-shadow:0 10px 28px rgba(37,99,235,.35);gap:12px;}
+  .app-title{display:flex;align-items:center;gap:10px;flex:1;min-width:0;color:#fff;font-size:1.3rem;font-weight:800;letter-spacing:-.4px;}
+  .app-title .logo-icon{width:36px;height:36px;font-size:16px;background:rgba(255,255,255,.2);box-shadow:none;flex-shrink:0;}
+  #appTitleText{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .top-actions{gap:10px;}
+  .theme-toggle{background:rgba(255,255,255,.2);border:none;color:#fff;width:42px;height:42px;}
+  .search-wrapper{order:3;flex:1 1 100%;max-width:none;}
+  .search-wrapper input{border:none;background:rgba(255,255,255,.96);color:#1e2a3a;height:46px;font-size:16px;}
+  .search-wrapper i{color:#5e6f84;}
+
+  .content{padding:20px 16px calc(104px + env(safe-area-inset-bottom,0px));gap:20px;}
+  .page-title{font-size:1.5rem;font-weight:800;flex-wrap:wrap;gap:8px;}
+  .section{padding:18px;border-radius:22px;}
+  .section-header h2{font-size:1.1rem;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .stat-card{padding:16px;border-radius:20px;}
+  .stat-value{font-size:1.7rem;font-weight:800;}
+  .dashboard-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  .dash-card{padding:16px;border-radius:22px;gap:6px;}
+  .dash-icon{width:50px;height:50px;border-radius:16px;font-size:1.3rem;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;box-shadow:0 6px 16px var(--accent-glow);}
+  .dash-title{font-weight:800;font-size:.95rem;}
+  .dash-desc{font-size:.72rem;}
+  .tools-grid{grid-template-columns:1fr;}
+  .tool-card{border-radius:18px;}
+  .btn{min-height:42px;border-radius:12px;font-weight:600;}
+  .btn-sm{min-height:34px;}
+  .form-group input,.form-group select,.form-group textarea,.mini-input,.ai-input-wrapper input{font-size:16px;}
+  .btn:active,.dash-card:active,.troubleshoot-item:active,.stat-card:active,.sheet-tile:active{transform:scale(.97);}
+  .troubleshoot-grid{grid-template-columns:repeat(2,1fr);}
+
+  /* modals become bottom sheets */
+  .modal-overlay{align-items:flex-end;padding:0;}
+  .modal{max-width:none;border-radius:26px 26px 0 0;max-height:90vh;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));border-bottom:none;animation:sheetUp .28s ease;}
+  @keyframes sheetUp{from{transform:translateY(100%);}to{transform:none;}}
+
+  /* toasts sit above the bottom bar */
+  body > div[style*="bottom: 20px"]{bottom:calc(100px + env(safe-area-inset-bottom,0px))!important;}
+
+  /* bottom navigation */
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));justify-content:space-around;box-shadow:0 -10px 30px rgba(0,0,0,.25);}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;background:none;border:none;color:var(--text-secondary);font-size:.68rem;font-weight:700;cursor:pointer;transition:var(--transition);}
+  .bn-item i{font-size:1.2rem;padding:6px 20px;border-radius:16px;transition:var(--transition);}
+  .bn-item.active{color:var(--accent);}
+  .bn-item.active i{background:var(--accent);color:#fff;box-shadow:0 6px 16px var(--accent-glow);}
+  .bn-item:active i{transform:scale(.9);}
+
+  /* "More" sheet */
+  .sheet-backdrop{display:block;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:40;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;}
+  .sheet-backdrop.open{opacity:1;visibility:visible;}
+  .more-sheet{display:block;position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);border-radius:28px 28px 0 0;padding:10px 18px calc(28px + env(safe-area-inset-bottom,0px));max-height:82vh;overflow-y:auto;transform:translateY(105%);transition:transform .3s ease;box-shadow:0 -12px 40px rgba(0,0,0,.4);}
+  .more-sheet.open{transform:none;}
+  .sheet-handle{width:44px;height:5px;border-radius:3px;background:var(--border);margin:6px auto 8px;}
+  .sheet-heading{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);font-weight:700;margin:16px 4px 10px;}
+  .sheet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .sheet-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px 6px;min-height:88px;border-radius:18px;background:var(--surface-light);border:1px solid var(--border);color:var(--text);font-size:.72rem;font-weight:600;text-align:center;line-height:1.25;cursor:pointer;transition:var(--transition);}
+  .sheet-tile i{font-size:1.35rem;color:var(--accent);}
+  .sheet-tile.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .sheet-tile.active i{color:#fff;}
+  .sheet-install{width:100%;margin-top:18px;min-height:48px;}
+
+  /* install banner */
+  .install-banner.show{display:flex;position:fixed;left:12px;right:12px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:35;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:20px;background:linear-gradient(135deg,#2563eb,#6366f1);color:#fff;box-shadow:0 12px 32px rgba(37,99,235,.5);animation:fadeIn .3s ease;}
+  .ib-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .ib-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .ib-text strong{font-size:.9rem;font-weight:800;}
+  .ib-text span{font-size:.72rem;opacity:.9;line-height:1.3;}
+  .ib-btn{background:#fff;color:#1e40af;border:none;border-radius:12px;padding:10px 16px;font-weight:800;font-size:.8rem;cursor:pointer;}
+  .ib-close{background:none;border:none;color:#fff;opacity:.8;width:30px;height:30px;cursor:pointer;}
+}
+</style>
+<style id="hub-embed-css">
+/* Hub embed layer: when this page runs inside the IT Ops Hub, the hub owns the sidebar, install and lock. */
+html.hub-embed{--accent:#5fd9aa;--accent-glow:#5fd9aa55;--bg:#0b1114;--surface:#121b20;--surface-light:#17232a;--border:#223139;--text:#e6eef1;--text-secondary:#8da2ab;}
+html.hub-embed body.light-mode{--accent:#0d9a6e;--accent-glow:#0d9a6e40;--bg:#f2f5f6;--surface:#ffffff;--surface-light:#f6f9fa;--border:#dbe3e6;--text:#14232a;--text-secondary:#566d77;}
+.hub-embed .sidebar,.hub-embed .bottom-nav,.hub-embed .more-sheet,.hub-embed .sheet-backdrop,.hub-embed .install-banner,.hub-embed #splash,
+.hub-embed .mobile-menu-btn,.hub-embed .app-title,.hub-embed .avatar,.hub-embed #themeToggle{display:none!important;}
+.hub-embed .main{margin-left:0!important;}
+.hub-embed .topbar{background:var(--surface)!important;border-radius:0!important;box-shadow:none!important;border-bottom:1px solid var(--border)!important;padding:12px 20px!important;}
+.hub-embed .search-wrapper{order:0!important;flex:1 1 280px!important;max-width:520px!important;}
+.hub-embed .search-wrapper input{background:var(--bg)!important;color:var(--text)!important;border:1px solid var(--border)!important;height:42px!important;}
+.hub-embed .search-wrapper i{color:var(--text-secondary)!important;}
+.hub-embed .content{padding:24px 24px 40px!important;}
+.hub-embed .btn-primary,.hub-embed .nav-item.active,.hub-embed .kb-tag.active,.hub-embed .kb-tag:hover,.hub-embed .copy-btn:hover,.hub-embed .logo-icon{color:#06241b!important;}
+.hub-embed .dash-icon{background:var(--surface-light)!important;color:var(--accent)!important;box-shadow:none!important;}
+@media(max-width:900px){.hub-embed .content{padding:16px 14px 28px!important;}.hub-embed .topbar{padding:10px 14px!important;}}
+</style>
+</head>
+<body>
+
+<!-- ========== SPLASH (installed app only) ========== -->
+<div id="splash"><div class="splash-logo"><i class="fas fa-network-wired"></i></div><div class="splash-name">IT<span>Ops</span>Center</div><div class="splash-sub">Network Engineer Workspace</div></div>
+
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-icon"><i class="fas fa-network-wired"></i></div>
+    <div class="logo-text">IT<span>Ops</span>Center</div>
+  </div>
+  <div class="nav-section">Main</div>
+  <div class="nav-item active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</div>
+  <div class="nav-item" data-page="networking"><i class="fas fa-sitemap"></i> CCNA / Networking</div>
+  <div class="nav-item" data-page="tools"><i class="fas fa-calculator"></i> Network Tools</div>
+  <div class="nav-item" data-page="cisco"><i class="fas fa-terminal"></i> Cisco Commands</div>
+  <div class="nav-item" data-page="troubleshoot"><i class="fas fa-search"></i> Troubleshooting</div>
+  <div class="nav-item" data-page="linux"><i class="fab fa-linux"></i> Linux</div>
+  <div class="nav-section">Workspace</div>
+  <div class="nav-item" data-page="interview"><i class="fas fa-question-circle"></i> Interview Prep &amp; Subnet Game</div>
+  <div class="nav-item" data-page="knowledge"><i class="fas fa-book"></i> Knowledge Base</div>
+  <div class="nav-item" data-page="projects"><i class="fas fa-briefcase"></i> Projects</div>
+  <div class="nav-section">AI</div>
+  <div class="nav-item" data-page="assistant"><i class="fas fa-robot"></i> IT Assistant</div>
+</aside>
+
+<!-- ========== MAIN ========== -->
+<div class="main">
+  <div class="topbar">
+    <div class="app-title"><div class="logo-icon"><i class="fas fa-network-wired"></i></div><span id="appTitleText">IT Ops Center</span></div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+    <div class="search-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search commands, tools, notes... (Ctrl+K)" id="globalSearch" autocomplete="off">
+      <div id="globalSearchResults"></div>
+    </div>
+    <div class="top-actions">
+      <button class="theme-toggle" id="backupBtn" title="Export / Import backup"><i class="fas fa-database"></i></button>
+      <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+      <div class="avatar">IT</div>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+
+<!-- ========== PHONE APP CHROME ========== -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bn-item active" data-page="dashboard"><i class="fas fa-th-large"></i><span>Home</span></button>
+  <button class="bn-item" data-page="tools"><i class="fas fa-calculator"></i><span>Tools</span></button>
+  <button class="bn-item" data-page="interview"><i class="fas fa-bolt"></i><span>Practice</span></button>
+  <button class="bn-item" data-page="cisco"><i class="fas fa-terminal"></i><span>Cisco</span></button>
+  <button class="bn-item" id="bnMore"><i class="fas fa-ellipsis-h"></i><span>More</span></button>
+</nav>
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="more-sheet" id="moreSheet"></div>
+<div class="install-banner" id="installBanner">
+  <div class="ib-icon"><i class="fas fa-download"></i></div>
+  <div class="ib-text"><strong>Install IT Ops Center</strong><span id="ibSub">Add to your home screen for the full app experience</span></div>
+  <button class="ib-btn" id="ibInstall">Install</button>
+  <button class="ib-close" id="ibClose" aria-label="Dismiss"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA STORES (persisted via localStorage)
+   ============================================================ */
+const defaultCiscoCmds = [
+  // Basic Device Config
+  {cat:'Basic',cmd:'enable',purpose:'Enter privileged EXEC mode',example:'Router> enable',use:'Full command access'},
+  {cat:'Basic',cmd:'configure terminal',purpose:'Enter global configuration mode',example:'Router# configure terminal',use:'Change device settings'},
+  {cat:'Basic',cmd:'hostname <name>',purpose:'Set device hostname',example:'Router(config)# hostname R1',use:'Shown in CLI prompt'},
+  {cat:'Basic',cmd:'enable secret <pwd>',purpose:'Set encrypted privileged password',example:'R1(config)# enable secret Cisco123',use:'Secure privileged mode'},
+  {cat:'Basic',cmd:'service password-encryption',purpose:'Encrypt clear-text passwords',example:'R1(config)# service password-encryption',use:'Security hardening'},
+  {cat:'Basic',cmd:'banner motd # <msg> #',purpose:'Display login banner',example:'R1(config)# banner motd #Authorized Only#',use:'Legal warning'},
+  // Interface Config
+  {cat:'Interface',cmd:'interface <type> <num>',purpose:'Enter interface configuration',example:'R1(config)# interface gi0/1',use:'Configure port'},
+  {cat:'Interface',cmd:'ip address <ip> <mask>',purpose:'Assign IPv4 address',example:'R1(config-if)# ip address 10.0.0.1 255.255.255.0',use:'Layer 3 addressing'},
+  {cat:'Interface',cmd:'no shutdown',purpose:'Enable interface',example:'R1(config-if)# no shutdown',use:'Administratively up'},
+  {cat:'Interface',cmd:'description <text>',purpose:'Add interface label',example:'R1(config-if)# description Link-to-SW1',use:'Documentation'},
+  {cat:'Interface',cmd:'speed / duplex',purpose:'Set speed and duplex',example:'SW1(config-if)# speed 100 / duplex full',use:'Override auto-negotiation'},
+  {cat:'Interface',cmd:'interface range <range>',purpose:'Configure multiple interfaces',example:'SW1(config)# interface range fa0/1-24',use:'Bulk config'},
+  // VLAN
+  {cat:'VLAN',cmd:'vlan <id>',purpose:'Create VLAN',example:'SW1(config)# vlan 10',use:'VLAN creation'},
+  {cat:'VLAN',cmd:'name <vlan-name>',purpose:'Name the VLAN',example:'SW1(config-vlan)# name SALES',use:'Descriptive name'},
+  {cat:'VLAN',cmd:'switchport mode access',purpose:'Set port to access mode',example:'SW1(config-if)# switchport mode access',use:'Single VLAN untagged'},
+  {cat:'VLAN',cmd:'switchport access vlan <id>',purpose:'Assign access port to VLAN',example:'SW1(config-if)# switchport access vlan 10',use:'VLAN membership'},
+  {cat:'VLAN',cmd:'vtp domain <name>',purpose:'Set VTP domain',example:'SW1(config)# vtp domain CORP',use:'VLAN synchronization'},
+  {cat:'VLAN',cmd:'show vlan brief',purpose:'Display all VLANs',example:'SW1# show vlan brief',use:'Verify VLANs'},
+  // Trunking
+  {cat:'Trunk',cmd:'switchport mode trunk',purpose:'Set trunk mode',example:'SW1(config-if)# switchport mode trunk',use:'Multi-VLAN link'},
+  {cat:'Trunk',cmd:'switchport trunk encapsulation dot1q',purpose:'Select 802.1Q tagging',example:'SW1(config-if)# switchport trunk encapsulation dot1q',use:'Standard tagging'},
+  {cat:'Trunk',cmd:'switchport trunk allowed vlan <list>',purpose:'Restrict VLANs on trunk',example:'SW1(config-if)# switchport trunk allowed vlan 10,20,30',use:'Limit traffic'},
+  {cat:'Trunk',cmd:'switchport trunk native vlan <id>',purpose:'Set native VLAN',example:'SW1(config-if)# switchport trunk native vlan 99',use:'Untagged VLAN'},
+  {cat:'Trunk',cmd:'switchport nonegotiate',purpose:'Disable DTP',example:'SW1(config-if)# switchport nonegotiate',use:'Best practice'},
+  {cat:'Trunk',cmd:'show interfaces trunk',purpose:'Display trunk ports',example:'SW1# show interfaces trunk',use:'Verify trunk'},
+  // STP
+  {cat:'STP',cmd:'spanning-tree mode rapid-pvst',purpose:'Enable Rapid PVST+',example:'SW1(config)# spanning-tree mode rapid-pvst',use:'Fast convergence'},
+  {cat:'STP',cmd:'spanning-tree vlan <id> priority <val>',purpose:'Set bridge priority',example:'SW1(config)# spanning-tree vlan 1 priority 4096',use:'Root bridge election'},
+  {cat:'STP',cmd:'spanning-tree portfast',purpose:'Enable PortFast',example:'SW1(config-if)# spanning-tree portfast',use:'Immediate forwarding'},
+  {cat:'STP',cmd:'spanning-tree bpduguard enable',purpose:'Enable BPDU Guard',example:'SW1(config-if)# spanning-tree bpduguard enable',use:'Block rogue switches'},
+  {cat:'STP',cmd:'show spanning-tree',purpose:'Show STP topology',example:'SW1# show spanning-tree vlan 10',use:'Verify root/roles'},
+  // Inter-VLAN
+  {cat:'Inter-VLAN',cmd:'ip routing',purpose:'Enable Layer-3 routing',example:'SW1(config)# ip routing',use:'Multilayer switch'},
+  {cat:'Inter-VLAN',cmd:'interface vlan <id>',purpose:'Create SVI',example:'SW1(config)# interface vlan 10',use:'VLAN gateway'},
+  {cat:'Inter-VLAN',cmd:'ip address <ip> <mask>',purpose:'Assign gateway IP to SVI',example:'SW1(config-if)# ip address 10.10.10.1 255.255.255.0',use:'SVI addressing'},
+  {cat:'Inter-VLAN',cmd:'encapsulation dot1Q <id>',purpose:'Tag sub-interface for VLAN',example:'R1(config-subif)# encapsulation dot1Q 10',use:'Router-on-a-stick'},
+  {cat:'Inter-VLAN',cmd:'interface <if>.<subif>',purpose:'Create logical sub-interface',example:'R1(config)# interface gi0/0.10',use:'Sub-interface creation'},
+  // Static Routing
+  {cat:'Routing',cmd:'ip route <net> <mask> <next-hop>',purpose:'Add static route',example:'R1(config)# ip route 10.20.0.0 255.255.255.0 192.168.1.2',use:'Manual path'},
+  {cat:'Routing',cmd:'ip route 0.0.0.0 0.0.0.0 <next-hop>',purpose:'Default route',example:'R1(config)# ip route 0.0.0.0 0.0.0.0 192.168.1.1',use:'Gateway of last resort'},
+  {cat:'Routing',cmd:'show ip route',purpose:'Display routing table',example:'R1# show ip route',use:'Verify routes'},
+  {cat:'Routing',cmd:'show ip interface brief',purpose:'List interfaces and status',example:'R1# show ip interface brief',use:'Check up/down'},
+  {cat:'Routing',cmd:'ping / traceroute <ip>',purpose:'Test reachability',example:'R1# ping 10.20.0.5',use:'Connectivity test'},
+  // OSPF
+  {cat:'OSPF',cmd:'router ospf <process-id>',purpose:'Start OSPF process',example:'R1(config)# router ospf 1',use:'Link-state IGP'},
+  {cat:'OSPF',cmd:'router-id <id>',purpose:'Set OSPF Router ID',example:'R1(config-router)# router-id 1.1.1.1',use:'Manual RID'},
+  {cat:'OSPF',cmd:'network <net> <wildcard> area <id>',purpose:'Enable OSPF on interfaces',example:'R1(config-router)# network 10.0.0.0 0.0.0.255 area 0',use:'Area assignment'},
+  {cat:'OSPF',cmd:'passive-interface <if>',purpose:'Stop OSPF Hellos',example:'R1(config-router)# passive-interface gi0/1',use:'Suppress updates'},
+  {cat:'OSPF',cmd:'show ip ospf neighbor',purpose:'Display neighbor states',example:'R1# show ip ospf neighbor',use:'Verify adjacency'},
+  {cat:'OSPF',cmd:'show ip protocols',purpose:'Summarize routing protocol',example:'R1# show ip protocols',use:'Timers/networks'},
+  // EIGRP
+  {cat:'EIGRP',cmd:'router eigrp <as-number>',purpose:'Start EIGRP',example:'R1(config)# router eigrp 100',use:'Advanced distance-vector'},
+  {cat:'EIGRP',cmd:'network <network> [wildcard]',purpose:'Enable EIGRP on interfaces',example:'R1(config-router)# network 10.0.0.0 0.0.0.255',use:'Advertise network'},
+  {cat:'EIGRP',cmd:'no auto-summary',purpose:'Disable classful summarization',example:'R1(config-router)# no auto-summary',use:'Modern IOS default'},
+  {cat:'EIGRP',cmd:'eigrp router-id <id>',purpose:'Set EIGRP RID',example:'R1(config-router)# eigrp router-id 1.1.1.1',use:'Manual RID'},
+  {cat:'EIGRP',cmd:'show ip eigrp neighbors',purpose:'List EIGRP neighbors',example:'R1# show ip eigrp neighbors',use:'Verify adjacency'},
+  {cat:'EIGRP',cmd:'show ip eigrp topology',purpose:'Show EIGRP topology',example:'R1# show ip eigrp topology',use:'Successor/feasible'},
+  // BGP
+  {cat:'BGP',cmd:'router bgp <as-number>',purpose:'Start BGP process',example:'R1(config)# router bgp 65001',use:'Inter-AS routing'},
+  {cat:'BGP',cmd:'neighbor <ip> remote-as <as>',purpose:'Define BGP peer',example:'R1(config-router)# neighbor 203.0.113.2 remote-as 65002',use:'iBGP/eBGP'},
+  {cat:'BGP',cmd:'network <net> mask <mask>',purpose:'Advertise network',example:'R1(config-router)# network 192.168.1.0 mask 255.255.255.0',use:'Must exist in RIB'},
+  {cat:'BGP',cmd:'neighbor <ip> next-hop-self',purpose:'Force next-hop self',example:'R1(config-router)# neighbor 10.1.1.2 next-hop-self',use:'iBGP peering'},
+  {cat:'BGP',cmd:'show ip bgp summary',purpose:'Display BGP neighbors',example:'R1# show ip bgp summary',use:'Peer state/prefixes'},
+  {cat:'BGP',cmd:'show ip bgp',purpose:'Display BGP table',example:'R1# show ip bgp',use:'Paths/attributes'},
+  // ACL
+  {cat:'ACL',cmd:'access-list <1-99> permit/deny <src> <wc>',purpose:'Standard numbered ACL',example:'R1(config)# access-list 10 permit 192.168.1.0 0.0.0.255',use:'Source-based filtering'},
+  {cat:'ACL',cmd:'access-list <100-199> permit/deny <proto> ...',purpose:'Extended numbered ACL',example:'R1(config)# access-list 101 permit tcp any any eq 80',use:'Filter on src/dst/port'},
+  {cat:'ACL',cmd:'ip access-list extended <name>',purpose:'Create named extended ACL',example:'R1(config)# ip access-list extended BLOCK-TELNET',use:'Easy editing'},
+  {cat:'ACL',cmd:'ip access-group <acl> in|out',purpose:'Apply ACL to interface',example:'R1(config-if)# ip access-group 101 in',use:'Traffic direction'},
+  {cat:'ACL',cmd:'show access-lists',purpose:'Display ACLs with hit counters',example:'R1# show access-lists',use:'Verify matches'},
+  // NAT
+  {cat:'NAT',cmd:'ip nat inside / ip nat outside',purpose:'Designate NAT interfaces',example:'R1(config-if)# ip nat inside',use:'Inside/outside'},
+  {cat:'NAT',cmd:'ip nat inside source list <acl> interface <if> overload',purpose:'Configure PAT (overload)',example:'R1(config)# ip nat inside source list 1 interface gi0/0 overload',use:'Many-to-one NAT'},
+  {cat:'NAT',cmd:'ip nat inside source static <local> <global>',purpose:'Static NAT mapping',example:'R1(config)# ip nat inside source static 10.0.0.5 203.0.113.5',use:'One-to-one'},
+  {cat:'NAT',cmd:'ip nat pool <name> <start> <end> netmask <mask>',purpose:'Define NAT pool',example:'R1(config)# ip nat pool PUB 203.0.113.10 203.0.113.20 netmask 255.255.255.0',use:'Dynamic NAT pool'},
+  {cat:'NAT',cmd:'show ip nat translations',purpose:'Display NAT table',example:'R1# show ip nat translations',use:'Active translations'},
+  // DHCP
+  {cat:'DHCP',cmd:'ip dhcp pool <name>',purpose:'Create DHCP pool',example:'R1(config)# ip dhcp pool LAN-POOL',use:'DHCP server'},
+  {cat:'DHCP',cmd:'network <net> <mask>',purpose:'Define pool scope',example:'R1(dhcp-config)# network 10.0.0.0 255.255.255.0',use:'Address range'},
+  {cat:'DHCP',cmd:'default-router <ip>',purpose:'Set default gateway',example:'R1(dhcp-config)# default-router 10.0.0.1',use:'Client gateway'},
+  {cat:'DHCP',cmd:'dns-server <ip>',purpose:'Set DNS server',example:'R1(dhcp-config)# dns-server 8.8.8.8',use:'Client DNS'},
+  {cat:'DHCP',cmd:'ip dhcp excluded-address <start> <end>',purpose:'Reserve addresses',example:'R1(config)# ip dhcp excluded-address 10.0.0.1 10.0.0.10',use:'Static devices'},
+  {cat:'DHCP',cmd:'show ip dhcp binding',purpose:'List DHCP bindings',example:'R1# show ip dhcp binding',use:'Lease info'},
+  // HSRP
+  {cat:'HSRP',cmd:'standby <group> ip <vip>',purpose:'Set virtual IP',example:'R1(config-if)# standby 1 ip 10.0.0.1',use:'Shared gateway'},
+  {cat:'HSRP',cmd:'standby <group> priority <val>',purpose:'Set priority',example:'R1(config-if)# standby 1 priority 110',use:'Active election'},
+  {cat:'HSRP',cmd:'standby <group> preempt',purpose:'Enable preempt',example:'R1(config-if)# standby 1 preempt',use:'Reclaim Active'},
+  {cat:'HSRP',cmd:'standby <group> timers <hello> <hold>',purpose:'Tune timers',example:'R1(config-if)# standby 1 timers 1 4',use:'Faster failover'},
+  {cat:'HSRP',cmd:'show standby brief',purpose:'Show HSRP summary',example:'R1# show standby brief',use:'Group states'},
+  // Port Security
+  {cat:'Port Security',cmd:'switchport port-security',purpose:'Enable port security',example:'SW1(config-if)# switchport port-security',use:'MAC restriction'},
+  {cat:'Port Security',cmd:'switchport port-security maximum <n>',purpose:'Set max MAC addresses',example:'SW1(config-if)# switchport port-security maximum 2',use:'Limit MACs'},
+  {cat:'Port Security',cmd:'switchport port-security violation <action>',purpose:'Set violation action',example:'SW1(config-if)# switchport port-security violation shutdown',use:'protect/restrict/shutdown'},
+  // VPN
+  {cat:'VPN',cmd:'crypto isakmp policy <#>',purpose:'Define IKE Phase 1 policy',example:'R1(config)# crypto isakmp policy 10',use:'Auth/encryption/DH'},
+  {cat:'VPN',cmd:'crypto ipsec transform-set <name> ...',purpose:'Define Phase 2 transform-set',example:'R1(config)# crypto ipsec transform-set TSET esp-aes esp-sha-hmac',use:'Data protection'},
+  {cat:'VPN',cmd:'show crypto isakmp sa',purpose:'Verify Phase 1 SA',example:'R1# show crypto isakmp sa',use:'ISAKMP status'},
+  // Troubleshooting / Show
+  {cat:'Troubleshooting',cmd:'show running-config',purpose:'Display active config',example:'R1# show running-config',use:'Current config'},
+  {cat:'Troubleshooting',cmd:'show version',purpose:'Show IOS version/uptime',example:'R1# show version',use:'Hardware/license'},
+  {cat:'Troubleshooting',cmd:'show cdp neighbors detail',purpose:'List CDP neighbors',example:'R1# show cdp neighbors detail',use:'Topology discovery'},
+  {cat:'Troubleshooting',cmd:'copy running-config startup-config',purpose:'Save config to NVRAM',example:'R1# copy running-config startup-config',use:'Persist config'},
+  {cat:'Troubleshooting',cmd:'erase startup-config',purpose:'Delete saved config',example:'R1# erase startup-config',use:'Factory reset'},
+  {cat:'Troubleshooting',cmd:'debug ip routing',purpose:'Real-time routing changes',example:'R1# debug ip routing',use:'Use sparingly'},
+  // DNS
+  {cat:'DNS',cmd:'ip name-server <ip>',purpose:'Configure DNS server',example:'R1(config)# ip name-server 8.8.8.8',use:'Name resolution'},
+  {cat:'DNS',cmd:'ip domain-lookup',purpose:'Enable DNS lookup',example:'R1(config)# ip domain-lookup',use:'Enable DNS'},
+  {cat:'DNS',cmd:'show hosts',purpose:'Display DNS cache',example:'R1# show hosts',use:'Verify DNS'},
+  // UDP
+  {cat:'UDP',cmd:'show udp',purpose:'Display UDP statistics',example:'R1# show udp',use:'UDP info'},
+  // VRRP
+  {cat:'VRRP',cmd:'vrrp <group> ip <vip>',purpose:'Set VRRP virtual IP',example:'R1(config-if)# vrrp 1 ip 10.0.0.1',use:'Open standard FHRP'},
+  {cat:'VRRP',cmd:'vrrp <group> priority <val>',purpose:'Set VRRP priority',example:'R1(config-if)# vrrp 1 priority 110',use:'Master election'},
+  {cat:'VRRP',cmd:'show vrrp brief',purpose:'Show VRRP summary',example:'R1# show vrrp brief',use:'VRRP state'},
+  // GLBP
+  {cat:'GLBP',cmd:'glbp <group> ip <vip>',purpose:'Set GLBP virtual IP',example:'R1(config-if)# glbp 1 ip 10.0.0.1',use:'Load balancing FHRP'},
+  {cat:'GLBP',cmd:'glbp <group> priority <val>',purpose:'Set GLBP priority',example:'R1(config-if)# glbp 1 priority 120',use:'AVG election'},
+  {cat:'GLBP',cmd:'glbp <group> preempt',purpose:'Enable GLBP preempt',example:'R1(config-if)# glbp 1 preempt',use:'Reclaim AVG'},
+  // EtherChannel
+  {cat:'EtherChannel',cmd:'channel-group <n> mode active',purpose:'LACP EtherChannel',example:'SW1(config-if-range)# channel-group 1 mode active',use:'Link aggregation'},
+  {cat:'EtherChannel',cmd:'channel-group <n> mode desirable',purpose:'PAgP EtherChannel',example:'SW1(config-if-range)# channel-group 1 mode desirable',use:'Cisco aggregation'},
+  {cat:'EtherChannel',cmd:'show etherchannel summary',purpose:'Show EtherChannel status',example:'SW1# show etherchannel summary',use:'Verify bundle'},
+  // IPv6
+  {cat:'IPv6',cmd:'ipv6 unicast-routing',purpose:'Enable IPv6 routing',example:'R1(config)# ipv6 unicast-routing',use:'IPv6 routing'},
+  {cat:'IPv6',cmd:'ipv6 address <addr>/<prefix>',purpose:'Assign IPv6 address',example:'R1(config-if)# ipv6 address 2001:db8::1/64',use:'IPv6 addressing'},
+  {cat:'IPv6',cmd:'ipv6 address autoconfig',purpose:'Enable SLAAC',example:'R1(config-if)# ipv6 address autoconfig',use:'Stateless autoconfig'},
+  {cat:'IPv6',cmd:'show ipv6 interface brief',purpose:'Show IPv6 interfaces',example:'R1# show ipv6 interface brief',use:'Verify IPv6'},
+  {cat:'IPv6',cmd:'show ipv6 route',purpose:'Show IPv6 routing table',example:'R1# show ipv6 route',use:'Verify IPv6 routes'},
+  // SDN / Automation
+  {cat:'SDN',cmd:'show running-config | include api',purpose:'Check API config',example:'R1# show running-config | include api',use:'Automation check'},
+  {cat:'SDN',cmd:'show netconf-yang sessions',purpose:'Show NETCONF sessions',example:'R1# show netconf-yang sessions',use:'Model-driven'},
+  // More Show Commands
+  {cat:'Show',cmd:'show ip route',purpose:'Routing table',example:'R1# show ip route',use:'Verify routes'},
+  {cat:'Show',cmd:'show vlan brief',purpose:'VLAN list',example:'SW1# show vlan brief',use:'Verify VLANs'},
+  {cat:'Show',cmd:'show interfaces trunk',purpose:'Trunk status',example:'SW1# show int trunk',use:'Verify trunk'},
+  {cat:'Show',cmd:'show mac address-table',purpose:'MAC address table',example:'SW1# show mac address-table',use:'Verify MAC learning'},
+  {cat:'Show',cmd:'show cdp neighbors',purpose:'CDP neighbors',example:'R1# show cdp neighbors',use:'Topology discovery'},
+  {cat:'Show',cmd:'show lldp neighbors',purpose:'LLDP neighbors',example:'R1# show lldp neighbors',use:'Vendor-neutral discovery'},
+  {cat:'Show',cmd:'show ip interface brief',purpose:'Interface summary',example:'R1# show ip interface brief',use:'Check status'},
+  {cat:'Show',cmd:'show ip protocols',purpose:'Routing protocol info',example:'R1# show ip protocols',use:'Verify routing'},
+  {cat:'Show',cmd:'show ip ospf neighbor',purpose:'OSPF neighbors',example:'R1# show ip ospf neighbor',use:'Verify OSPF'},
+  {cat:'Show',cmd:'show ip bgp summary',purpose:'BGP summary',example:'R1# show ip bgp summary',use:'Verify BGP'},
+  {cat:'Show',cmd:'show standby brief',purpose:'HSRP summary',example:'R1# show standby brief',use:'Verify HSRP'},
+  {cat:'Show',cmd:'show vrrp brief',purpose:'VRRP summary',example:'R1# show vrrp brief',use:'Verify VRRP'},
+  {cat:'Show',cmd:'show glbp brief',purpose:'GLBP summary',example:'R1# show glbp brief',use:'Verify GLBP'},
+  {cat:'Show',cmd:'show etherchannel summary',purpose:'EtherChannel summary',example:'SW1# show etherchannel summary',use:'Verify bundle'},
+  {cat:'Show',cmd:'show port-security',purpose:'Port security status',example:'SW1# show port-security',use:'Verify security'},
+  {cat:'Show',cmd:'show access-lists',purpose:'ACL information',example:'R1# show access-lists',use:'Verify ACLs'},
+  {cat:'Show',cmd:'show ip nat translations',purpose:'NAT translations',example:'R1# show ip nat translations',use:'Verify NAT'},
+  {cat:'Show',cmd:'show ip dhcp binding',purpose:'DHCP bindings',example:'R1# show ip dhcp binding',use:'Verify DHCP'},
+  {cat:'Show',cmd:'show crypto isakmp sa',purpose:'IPsec Phase 1 SA',example:'R1# show crypto isakmp sa',use:'Verify VPN'},
+  {cat:'Show',cmd:'show crypto ipsec sa',purpose:'IPsec Phase 2 SA',example:'R1# show crypto ipsec sa',use:'Verify VPN'},
+];
+
+const defaultLinuxCmds = [
+  // 1. System Information
+  {cat:'System Info',cmd:'uname -a',purpose:'OS/kernel information',example:'uname -a'},
+  {cat:'System Info',cmd:'uname -r',purpose:'Kernel version',example:'uname -r'},
+  {cat:'System Info',cmd:'cat /etc/redhat-release',purpose:'Red Hat version',example:'cat /etc/redhat-release'},
+  {cat:'System Info',cmd:'hostname',purpose:'System hostname',example:'hostname'},
+  {cat:'System Info',cmd:'hostnamectl',purpose:'Hostname + OS/system details',example:'hostnamectl'},
+  {cat:'System Info',cmd:'uptime',purpose:'System running time/load',example:'uptime'},
+  {cat:'System Info',cmd:'whoami',purpose:'Current logged-in user',example:'whoami'},
+  {cat:'System Info',cmd:'id',purpose:'User ID and group information',example:'id'},
+  {cat:'System Info',cmd:'who',purpose:'Currently logged-in users',example:'who'},
+  // 2. CPU & Memory
+  {cat:'CPU/Memory',cmd:'top',purpose:'Live CPU/process monitoring',example:'top'},
+  {cat:'CPU/Memory',cmd:'htop',purpose:'Easy process/CPU monitoring',example:'htop'},
+  {cat:'CPU/Memory',cmd:'free -h',purpose:'RAM usage in readable format',example:'free -h'},
+  {cat:'CPU/Memory',cmd:'free -m',purpose:'RAM usage in MB',example:'free -m'},
+  {cat:'CPU/Memory',cmd:'vmstat',purpose:'CPU, memory and system performance',example:'vmstat'},
+  // 3. File & Directory Management
+  {cat:'File Mgmt',cmd:'pwd',purpose:'Current directory',example:'pwd'},
+  {cat:'File Mgmt',cmd:'ls',purpose:'Files/directories list',example:'ls'},
+  {cat:'File Mgmt',cmd:'ls -l',purpose:'Detailed file list',example:'ls -l'},
+  {cat:'File Mgmt',cmd:'ls -la',purpose:'Detailed + hidden files',example:'ls -la'},
+  {cat:'File Mgmt',cmd:'cd',purpose:'Change directory',example:'cd /etc'},
+  {cat:'File Mgmt',cmd:'cd ..',purpose:'One directory back',example:'cd ..'},
+  {cat:'File Mgmt',cmd:'mkdir',purpose:'Create directory',example:'mkdir test'},
+  {cat:'File Mgmt',cmd:'mkdir -p',purpose:'Create nested directories',example:'mkdir -p /data/backup'},
+  {cat:'File Mgmt',cmd:'touch',purpose:'Create empty file',example:'touch test.txt'},
+  {cat:'File Mgmt',cmd:'cp',purpose:'Copy file',example:'cp test.txt /tmp/'},
+  {cat:'File Mgmt',cmd:'cp -r',purpose:'Copy directory',example:'cp -r folder /tmp/'},
+  {cat:'File Mgmt',cmd:'mv',purpose:'Move/rename file',example:'mv old.txt new.txt'},
+  {cat:'File Mgmt',cmd:'rm',purpose:'Delete file',example:'rm test.txt'},
+  {cat:'File Mgmt',cmd:'rm -r',purpose:'Delete directory',example:'rm -r folder'},
+  {cat:'File Mgmt',cmd:'rm -rf',purpose:'Force delete directory',example:'rm -rf folder'},
+  // 4. File Reading & Searching
+  {cat:'File Reading',cmd:'cat',purpose:'Display file content',example:'cat /etc/hosts'},
+  {cat:'File Reading',cmd:'less',purpose:'Read large file',example:'less /var/log/messages'},
+  {cat:'File Reading',cmd:'head',purpose:'First lines of file',example:'head file.txt'},
+  {cat:'File Reading',cmd:'tail',purpose:'Last lines of file',example:'tail file.txt'},
+  {cat:'File Reading',cmd:'tail -f',purpose:'Live log monitoring',example:'tail -f /var/log/messages'},
+  {cat:'File Reading',cmd:'grep',purpose:'Search text',example:'grep "error" /var/log/messages'},
+  {cat:'File Reading',cmd:'grep -i',purpose:'Case-insensitive search',example:'grep -i "error" file.txt'},
+  {cat:'File Reading',cmd:'find',purpose:'Find files/directories',example:'find /var -name "*.log"'},
+  {cat:'File Reading',cmd:'locate',purpose:'Quickly find files',example:'locate httpd.conf'},
+  // 5. Process Management
+  {cat:'Process',cmd:'ps aux',purpose:'Show running processes',example:'ps aux'},
+  {cat:'Process',cmd:'ps aux | grep',purpose:'Find specific process',example:'ps aux | grep sshd'},
+  {cat:'Process',cmd:'pgrep',purpose:'Find process PID',example:'pgrep sshd'},
+  {cat:'Process',cmd:'kill PID',purpose:'Stop process normally',example:'kill 1234'},
+  {cat:'Process',cmd:'kill -9 PID',purpose:'Force stop process',example:'kill -9 1234'},
+  {cat:'Process',cmd:'pkill',purpose:'Kill process by name',example:'pkill processname'},
+  // 6. Network Commands
+  {cat:'Network',cmd:'ip a',purpose:'Check IP address',example:'ip a'},
+  {cat:'Network',cmd:'ip link',purpose:'Check network interfaces',example:'ip link'},
+  {cat:'Network',cmd:'ip route',purpose:'Check routing table',example:'ip route'},
+  {cat:'Network',cmd:'ping',purpose:'Test network connectivity',example:'ping 8.8.8.8'},
+  {cat:'Network',cmd:'ping -c 4',purpose:'Send 4 ping packets',example:'ping -c 4 8.8.8.8'},
+  {cat:'Network',cmd:'ss -tuln',purpose:'Check listening TCP/UDP ports',example:'ss -tuln'},
+  {cat:'Network',cmd:'ss -tulpn',purpose:'Ports + process information',example:'ss -tulpn'},
+  {cat:'Network',cmd:'hostname -I',purpose:'Show system IP',example:'hostname -I'},
+  {cat:'Network',cmd:'nslookup',purpose:'DNS resolution test',example:'nslookup google.com'},
+  {cat:'Network',cmd:'dig',purpose:'Detailed DNS query',example:'dig google.com'},
+  {cat:'Network',cmd:'traceroute',purpose:'Trace network path',example:'traceroute 8.8.8.8'},
+  // 7. SSH
+  {cat:'SSH',cmd:'ssh user@IP',purpose:'Remote Linux login',example:'ssh root@192.168.1.10'},
+  {cat:'SSH',cmd:'ssh -p PORT user@IP',purpose:'SSH using custom port',example:'ssh -p 2222 user@192.168.1.10'},
+  {cat:'SSH',cmd:'exit',purpose:'Close SSH session',example:'exit'},
+  {cat:'SSH',cmd:'systemctl status sshd',purpose:'Check SSH service',example:'systemctl status sshd'},
+  {cat:'SSH',cmd:'systemctl restart sshd',purpose:'Restart SSH service',example:'systemctl restart sshd'},
+  // 8. SCP
+  {cat:'SCP',cmd:'scp file user@IP:/path',purpose:'Local → remote copy',example:'scp test.txt root@192.168.1.10:/tmp/'},
+  {cat:'SCP',cmd:'scp user@IP:/path file',purpose:'Remote → local copy',example:'scp root@192.168.1.10:/tmp/test.txt .'},
+  {cat:'SCP',cmd:'scp -r folder user@IP:/path',purpose:'Copy directory',example:'scp -r backup root@192.168.1.10:/tmp/'},
+  // 9. Users
+  {cat:'Users',cmd:'useradd',purpose:'Create user',example:'useradd john'},
+  {cat:'Users',cmd:'useradd -m',purpose:'Create user with home',example:'useradd -m john'},
+  {cat:'Users',cmd:'passwd',purpose:'Set/change password',example:'passwd john'},
+  {cat:'Users',cmd:'usermod',purpose:'Modify user',example:'usermod -aG wheel john'},
+  {cat:'Users',cmd:'userdel',purpose:'Delete user',example:'userdel john'},
+  {cat:'Users',cmd:'userdel -r',purpose:'Delete user + home',example:'userdel -r john'},
+  {cat:'Users',cmd:'su',purpose:'Switch user',example:'su - john'},
+  {cat:'Users',cmd:'sudo',purpose:'Run command as privileged',example:'sudo systemctl restart sshd'},
+  // 10. Groups
+  {cat:'Groups',cmd:'groupadd',purpose:'Create group',example:'groupadd admins'},
+  {cat:'Groups',cmd:'groupdel',purpose:'Delete group',example:'groupdel admins'},
+  {cat:'Groups',cmd:'usermod -aG',purpose:'Add user to group',example:'usermod -aG admins john'},
+  {cat:'Groups',cmd:'groups',purpose:'Show user groups',example:'groups john'},
+  {cat:'Groups',cmd:'id username',purpose:'Show UID/GID/groups',example:'id john'},
+  // 11. Permissions
+  {cat:'Permissions',cmd:'ls -l',purpose:'Check permissions',example:'ls -l file.txt'},
+  {cat:'Permissions',cmd:'chmod',purpose:'Change permissions',example:'chmod 755 script.sh'},
+  {cat:'Permissions',cmd:'chown',purpose:'Change owner',example:'chown john file.txt'},
+  {cat:'Permissions',cmd:'chgrp',purpose:'Change group',example:'chgrp admins file.txt'},
+  {cat:'Permissions',cmd:'chown user:group',purpose:'Change owner + group',example:'chown john:admins file.txt'},
+  // 12. DNF/YUM
+  {cat:'Package',cmd:'dnf install',purpose:'Install package',example:'dnf install httpd'},
+  {cat:'Package',cmd:'dnf remove',purpose:'Remove package',example:'dnf remove httpd'},
+  {cat:'Package',cmd:'dnf update',purpose:'Update packages',example:'dnf update'},
+  {cat:'Package',cmd:'dnf search',purpose:'Search package',example:'dnf search nginx'},
+  {cat:'Package',cmd:'dnf info',purpose:'Package information',example:'dnf info httpd'},
+  {cat:'Package',cmd:'rpm -qa',purpose:'List installed RPM packages',example:'rpm -qa'},
+  {cat:'Package',cmd:'rpm -qa | grep',purpose:'Search installed package',example:'rpm -qa | grep httpd'},
+  {cat:'Package',cmd:'yum install',purpose:'Install on older RHEL',example:'yum install httpd'},
+  {cat:'Package',cmd:'yum update',purpose:'Update on older RHEL',example:'yum update'},
+  // 13. systemctl
+  {cat:'systemctl',cmd:'systemctl status',purpose:'Check service',example:'systemctl status sshd'},
+  {cat:'systemctl',cmd:'systemctl start',purpose:'Start service',example:'systemctl start httpd'},
+  {cat:'systemctl',cmd:'systemctl stop',purpose:'Stop service',example:'systemctl stop httpd'},
+  {cat:'systemctl',cmd:'systemctl restart',purpose:'Restart service',example:'systemctl restart httpd'},
+  {cat:'systemctl',cmd:'systemctl reload',purpose:'Reload configuration',example:'systemctl reload httpd'},
+  {cat:'systemctl',cmd:'systemctl enable',purpose:'Start service at boot',example:'systemctl enable httpd'},
+  {cat:'systemctl',cmd:'systemctl disable',purpose:'Disable startup',example:'systemctl disable httpd'},
+  {cat:'systemctl',cmd:'systemctl is-active',purpose:'Check active status',example:'systemctl is-active httpd'},
+  {cat:'systemctl',cmd:'systemctl is-enabled',purpose:'Check boot status',example:'systemctl is-enabled httpd'},
+  // 14. journalctl
+  {cat:'journalctl',cmd:'journalctl',purpose:'View system logs',example:'journalctl'},
+  {cat:'journalctl',cmd:'journalctl -f',purpose:'Live logs',example:'journalctl -f'},
+  {cat:'journalctl',cmd:'journalctl -n 50',purpose:'Last 50 log entries',example:'journalctl -n 50'},
+  {cat:'journalctl',cmd:'journalctl -b',purpose:'Current boot logs',example:'journalctl -b'},
+  {cat:'journalctl',cmd:'journalctl -u',purpose:'Specific service logs',example:'journalctl -u sshd'},
+  {cat:'journalctl',cmd:'journalctl -p err',purpose:'Error-level logs',example:'journalctl -p err'},
+  {cat:'journalctl',cmd:'journalctl --since',purpose:'Logs from specific time',example:'journalctl --since "1 hour ago"'},
+  // 15. Disk
+  {cat:'Disk',cmd:'lsblk',purpose:'Show disks/partitions',example:'lsblk'},
+  {cat:'Disk',cmd:'lsblk -f',purpose:'Show filesystem information',example:'lsblk -f'},
+  {cat:'Disk',cmd:'df -h',purpose:'Disk space usage',example:'df -h'},
+  {cat:'Disk',cmd:'df -Th',purpose:'Disk + filesystem type',example:'df -Th'},
+  {cat:'Disk',cmd:'du -sh',purpose:'Directory size',example:'du -sh /var'},
+  {cat:'Disk',cmd:'du -sh *',purpose:'Size of items in current dir',example:'du -sh *'},
+  {cat:'Disk',cmd:'fdisk -l',purpose:'Show partition information',example:'fdisk -l'},
+  // 16. Mount
+  {cat:'Mount',cmd:'mount',purpose:'Show mounted filesystems',example:'mount'},
+  {cat:'Mount',cmd:'mount /dev/sdb1 /mnt',purpose:'Mount partition',example:'mount /dev/sdb1 /mnt'},
+  {cat:'Mount',cmd:'umount /mnt',purpose:'Unmount filesystem',example:'umount /mnt'},
+  {cat:'Mount',cmd:'findmnt',purpose:'Show mount information',example:'findmnt'},
+  // 17. Samba
+  {cat:'Samba',cmd:'dnf install samba',purpose:'Install Samba',example:'dnf install samba'},
+  {cat:'Samba',cmd:'systemctl status smb',purpose:'Check Samba',example:'systemctl status smb'},
+  {cat:'Samba',cmd:'systemctl start smb',purpose:'Start Samba',example:'systemctl start smb'},
+  {cat:'Samba',cmd:'systemctl enable smb',purpose:'Enable Samba at boot',example:'systemctl enable smb'},
+  {cat:'Samba',cmd:'systemctl restart smb',purpose:'Restart Samba',example:'systemctl restart smb'},
+  {cat:'Samba',cmd:'testparm',purpose:'Test Samba configuration',example:'testparm'},
+  {cat:'Samba',cmd:'smbclient -L localhost',purpose:'List Samba shares',example:'smbclient -L localhost'},
+  // 18. VI
+  {cat:'vi',cmd:'vi file.txt',purpose:'Open file',example:'vi file.txt'},
+  {cat:'vi',cmd:'i',purpose:'Insert/edit mode',example:'i'},
+  {cat:'vi',cmd:'Esc',purpose:'Exit editing mode',example:'Esc'},
+  {cat:'vi',cmd:':w',purpose:'Save',example:':w'},
+  {cat:'vi',cmd:':q',purpose:'Quit',example:':q'},
+  {cat:'vi',cmd:':wq',purpose:'Save + quit',example:':wq'},
+  {cat:'vi',cmd:':q!',purpose:'Quit without saving',example:':q!'},
+  {cat:'vi',cmd:'/text',purpose:'Search text',example:'/error'},
+  // 19. Firewall
+  {cat:'Firewall',cmd:'systemctl status firewalld',purpose:'Check firewall',example:'systemctl status firewalld'},
+  {cat:'Firewall',cmd:'systemctl start firewalld',purpose:'Start firewall',example:'systemctl start firewalld'},
+  {cat:'Firewall',cmd:'systemctl enable firewalld',purpose:'Enable at boot',example:'systemctl enable firewalld'},
+  {cat:'Firewall',cmd:'firewall-cmd --state',purpose:'Check firewall state',example:'firewall-cmd --state'},
+  {cat:'Firewall',cmd:'firewall-cmd --get-active-zones',purpose:'Show active zones',example:'firewall-cmd --get-active-zones'},
+  {cat:'Firewall',cmd:'firewall-cmd --list-all',purpose:'Show firewall rules',example:'firewall-cmd --list-all'},
+  {cat:'Firewall',cmd:'firewall-cmd --list-services',purpose:'Show allowed services',example:'firewall-cmd --list-services'},
+  {cat:'Firewall',cmd:'firewall-cmd --permanent --add-service=http',purpose:'Allow HTTP',example:'firewall-cmd --permanent --add-service=http'},
+  {cat:'Firewall',cmd:'firewall-cmd --reload',purpose:'Apply permanent changes',example:'firewall-cmd --reload'},
+  // 20. SELinux
+  {cat:'SELinux',cmd:'getenforce',purpose:'Check SELinux mode',example:'getenforce'},
+  {cat:'SELinux',cmd:'sestatus',purpose:'Detailed SELinux status',example:'sestatus'},
+  {cat:'SELinux',cmd:'setenforce 0',purpose:'Temporarily Permissive',example:'setenforce 0'},
+  {cat:'SELinux',cmd:'setenforce 1',purpose:'Temporarily Enforcing',example:'setenforce 1'},
+  {cat:'SELinux',cmd:'ls -Z',purpose:'Show SELinux context',example:'ls -Z'},
+  {cat:'SELinux',cmd:'restorecon',purpose:'Restore correct context',example:'restorecon -Rv /var/www/html'},
+  // 21. Cron
+  {cat:'Cron',cmd:'crontab -e',purpose:"Edit user's cron jobs",example:'crontab -e'},
+  {cat:'Cron',cmd:'crontab -l',purpose:'View cron jobs',example:'crontab -l'},
+  {cat:'Cron',cmd:'crontab -r',purpose:"Remove user's cron jobs",example:'crontab -r'},
+  {cat:'Cron',cmd:'systemctl status crond',purpose:'Cron service status',example:'systemctl status crond'},
+  {cat:'Cron',cmd:'systemctl enable --now crond',purpose:'Enable + start crond',example:'systemctl enable --now crond'},
+  // 22. Archive
+  {cat:'Archive',cmd:'tar -cvf',purpose:'Create tar archive',example:'tar -cvf backup.tar /data'},
+  {cat:'Archive',cmd:'tar -xvf',purpose:'Extract tar',example:'tar -xvf backup.tar'},
+  {cat:'Archive',cmd:'tar -czvf',purpose:'Create compressed archive',example:'tar -czvf backup.tar.gz /data'},
+  {cat:'Archive',cmd:'tar -xzvf',purpose:'Extract .tar.gz',example:'tar -xzvf backup.tar.gz'},
+  {cat:'Archive',cmd:'gzip',purpose:'Compress file',example:'gzip file.txt'},
+  {cat:'Archive',cmd:'gunzip',purpose:'Decompress gzip',example:'gunzip file.txt.gz'},
+  // 23. Important System Files
+  {cat:'System Files',cmd:'/etc/hosts',purpose:'Local hostname mapping',example:'cat /etc/hosts'},
+  {cat:'System Files',cmd:'/etc/resolv.conf',purpose:'DNS configuration',example:'cat /etc/resolv.conf'},
+  {cat:'System Files',cmd:'/etc/hostname',purpose:'Hostname',example:'cat /etc/hostname'},
+  {cat:'System Files',cmd:'/etc/passwd',purpose:'User account information',example:'cat /etc/passwd'},
+  {cat:'System Files',cmd:'/etc/group',purpose:'Group information',example:'cat /etc/group'},
+  {cat:'System Files',cmd:'/etc/shadow',purpose:'Password/security information',example:'sudo cat /etc/shadow'},
+  {cat:'System Files',cmd:'/etc/fstab',purpose:'Permanent mounts',example:'cat /etc/fstab'},
+  {cat:'System Files',cmd:'/etc/ssh/sshd_config',purpose:'SSH server configuration',example:'vi /etc/ssh/sshd_config'},
+  {cat:'System Files',cmd:'/etc/samba/smb.conf',purpose:'Samba configuration',example:'vi /etc/samba/smb.conf'},
+  {cat:'System Files',cmd:'/var/log/',purpose:'Log files directory',example:'ls /var/log/'},
+  {cat:'System Files',cmd:'/etc/cron*',purpose:'Cron configuration',example:'ls /etc/cron*'},
+];
+
+const ports = [
+  {service:'SSH',port:'22',proto:'TCP',desc:'Secure Shell'},
+  {service:'Telnet',port:'23',proto:'TCP',desc:'Telnet (insecure)'},
+  {service:'DNS',port:'53',proto:'UDP/TCP',desc:'Domain Name System'},
+  {service:'DHCP',port:'67/68',proto:'UDP',desc:'Dynamic Host Configuration'},
+  {service:'HTTP',port:'80',proto:'TCP',desc:'Web (unencrypted)'},
+  {service:'HTTPS',port:'443',proto:'TCP',desc:'Web (TLS)'},
+  {service:'FTP',port:'21',proto:'TCP',desc:'File Transfer'},
+  {service:'SMTP',port:'25',proto:'TCP',desc:'Mail transfer'},
+  {service:'RDP',port:'3389',proto:'TCP',desc:'Remote Desktop'},
+  {service:'SNMP',port:'161/162',proto:'UDP',desc:'Network management'},
+  {service:'NTP',port:'123',proto:'UDP',desc:'Time sync'},
+  {service:'LDAP',port:'389',proto:'TCP',desc:'Directory services'},
+  {service:'Syslog',port:'514',proto:'UDP',desc:'Logging'},
+  {service:'MySQL',port:'3306',proto:'TCP',desc:'Database'},
+  {service:'IMAP',port:'143',proto:'TCP',desc:'Mail access'},
+  {service:'POP3',port:'110',proto:'TCP',desc:'Mail access'},
+  {service:'SMB',port:'445',proto:'TCP',desc:'File sharing'},
+  {service:'Kerberos',port:'88',proto:'TCP/UDP',desc:'Authentication'},
+  {service:'BGP',port:'179',proto:'TCP',desc:'Border Gateway Protocol'},
+  {service:'OSPF',port:'89',proto:'IP',desc:'Open Shortest Path First'},
+  {service:'IPsec IKE',port:'500',proto:'UDP',desc:'VPN key exchange'},
+  {service:'IPsec NAT-T',port:'4500',proto:'UDP',desc:'VPN NAT traversal'},
+  {service:'VXLAN',port:'4789',proto:'UDP',desc:'Virtual Extensible LAN'},
+  {service:'RADIUS',port:'1812/1813',proto:'UDP',desc:'Authentication'},
+  {service:'TACACS+',port:'49',proto:'TCP',desc:'Cisco AAA'},
+  {service:'NETCONF',port:'830',proto:'TCP',desc:'Network configuration'},
+  {service:'RESTCONF',port:'443',proto:'TCP',desc:'HTTP-based config'},
+  {service:'gRPC',port:'50051',proto:'TCP',desc:'Telemetry'},
+];
+
+const troubleshootData = [
+  {issue:'No Internet', steps:['Check physical cable/Wi-Fi connection','Verify interface status: show ip interface brief / ip a','Check IP configuration: ipconfig / ip a','Verify default gateway is correct','Ping gateway: ping 192.168.1.1','Ping external IP: ping 8.8.8.8','Check DNS: nslookup google.com','Check routing table: show ip route / ip route','Check NAT/PAT configuration','Check firewall/ACL rules','Run traceroute to identify where packets stop','Solution: fix physical, correct IP/gateway, enable NAT, allow DNS']},
+  {issue:'PC cannot ping gateway', steps:['Check cable/link lights','Verify switch port is up: show interface status','Check PC IP/subnet mask match gateway subnet','Verify VLAN assignment on switch port','Ping gateway from switch: ping <gateway>','Check ARP table: arp -a / show arp','Check for ACL blocking ICMP','Verify SVI is up on switch','Solution: correct VLAN, enable port, fix IP/subnet, remove ACL block']},
+  {issue:'PC cannot ping another VLAN', steps:['Verify inter-VLAN routing is configured (router-on-a-stick or SVI)','Check trunk between switches: show interfaces trunk','Verify both VLANs exist on all switches','Check router sub-interface config: encapsulation dot1Q','Verify IP addressing on SVIs/sub-interfaces','Check ACLs between VLANs','Ping gateway then ping remote VLAN gateway','Solution: configure inter-VLAN routing, allow VLANs on trunk, correct SVI IPs']},
+  {issue:'DNS not working', steps:['Check DNS server IP configured on client: ipconfig /all','Ping DNS server','Test DNS resolution: nslookup google.com','Check DNS server service is running','Verify DNS zone/record exists','Check firewall allows port 53','Solution: correct DNS server, start DNS service, allow port 53']},
+  {issue:'DHCP not assigning IP', steps:['Check DHCP pool exists: show ip dhcp pool','Verify excluded addresses','Check interface has DHCP enabled','Verify DHCP relay (ip helper-address) if needed','Check DHCP bindings: show ip dhcp binding','Restart client DHCP: ipconfig /release /renew','Solution: create pool, set default-router, remove exclusions, enable relay']},
+  {issue:'VLAN communication problem', steps:['Verify VLAN exists: show vlan brief','Check port is in correct VLAN','Verify trunk carries the VLAN','Check native VLAN mismatch on trunk','Verify inter-VLAN routing','Check STP topology for blocked ports','Solution: create VLAN, assign port, allow on trunk, fix native VLAN']},
+  {issue:'Trunk problem', steps:['Check trunk status: show interfaces trunk','Verify encapsulation: switchport trunk encapsulation dot1q','Check allowed VLANs','Verify native VLAN matches both ends','Check DTP negotiation or nonegotiate','Solution: set trunk mode, match encapsulation, align native VLAN, allow VLANs']},
+  {issue:'OSPF neighbor problem', steps:['Check neighbor state: show ip ospf neighbor','Verify area IDs match','Check hello/dead timers match','Verify MTU matches','Check network type (broadcast/point-to-point)','Verify authentication matches','Check passive-interface not blocking','Solution: match area, timers, MTU, auth, remove passive-interface']},
+  {issue:'BGP neighbor problem', steps:['Check BGP summary: show ip bgp summary','Verify remote-as is correct','Check TCP port 179 connectivity','Verify update-source for loopback peering','Check authentication','Verify network advertisement','Solution: correct remote-as, open port 179, set update-source, fix auth']},
+  {issue:'NAT problem', steps:['Check inside/outside interfaces: show ip nat statistics','Verify ACL matches traffic','Check NAT translations: show ip nat translations','Verify pool/overload config','Check routing to outside','Solution: mark interfaces, fix ACL, enable overload, verify routes']},
+  {issue:'ACL blocking traffic', steps:['Check ACL: show access-lists','Verify ACL applied to correct interface/direction','Check implicit deny at end','Verify source/destination/port matches','Test with ping/telnet','Solution: add permit rule, correct direction, insert before deny']},
+  {issue:'SSH not working', steps:['Check SSH enabled: show ip ssh','Verify RSA keys generated: crypto key generate rsa','Check VTY lines: transport input ssh','Verify username/password or AAA','Check ACL allows port 22','Test: ssh -v user@ip','Solution: generate keys, enable SSH, set VTY transport, allow port 22']},
+  {issue:'Port down', steps:['Check cable and link lights','Verify no shutdown','Check speed/duplex mismatch','Check err-disabled: show interfaces status err-disabled','Check port security violation','Solution: no shutdown, fix cable, correct speed/duplex, clear err-disable']},
+  {issue:'Duplicate IP', steps:['Check ARP table for duplicate MACs: show arp','Use ipconfig /all to verify','Ping the IP and check MAC','Check DHCP for conflicting leases','Solution: find conflicting device, change IP, configure DHCP exclusion']},
+  {issue:'High latency', steps:['Ping gateway to check local latency','Traceroute to identify slow hop','Check interface utilization: show interfaces','Check CPU: show processes cpu','Check for loops or broadcast storms','Solution: identify bottleneck, upgrade link, fix loop, QoS']},
+  {issue:'Packet loss', steps:['Ping with extended options: ping -c 100','Check interface errors: show interfaces','Check duplex mismatch','Check cable quality','Check for congestion/QoS','Solution: fix duplex, replace cable, increase bandwidth, apply QoS']},
+  {issue:'STP loop', steps:['Check spanning-tree: show spanning-tree','Verify root bridge: show spanning-tree root','Check port roles and states','Check BPDU guard on access ports','Check for unidirectional links','Solution: fix root bridge, enable BPDU guard, check cabling']},
+  {issue:'EtherChannel issue', steps:['Check channel status: show etherchannel summary','Verify member ports are up','Check channel-group mode matches both sides','Check speed/duplex consistent','Check allowed VLANs on member ports','Solution: fix mode mismatch, ensure ports up, match configs']},
+  {issue:'HSRP/VRRP problem', steps:['Check HSRP/VRRP state: show standby brief / show vrrp brief','Verify virtual IP same on both routers','Check priority and preempt','Verify group number matches','Check interface is up','Solution: match virtual IP, group, priority, enable preempt']},
+  {issue:'Wireless client cannot connect', steps:['Check SSID broadcast','Verify WLC/AP is up','Check client authentication','Verify DHCP scope for wireless VLAN','Check RF interference','Solution: fix SSID, auth, DHCP, channel planning']},
+];
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+let ciscoCommands = JSON.parse(localStorage.getItem('ciscoCommands')) || [...defaultCiscoCmds];
+let linuxCommands = JSON.parse(localStorage.getItem('linuxCommands')) || [...defaultLinuxCmds];
+let vlans = JSON.parse(localStorage.getItem('vlans')) || [
+  {id:10,name:'Sales',net:'192.168.10.0/24'},
+  {id:20,name:'Engineering',net:'192.168.20.0/24'},
+  {id:30,name:'Management',net:'192.168.30.0/24'}
+];
+let knowledgeNotes = JSON.parse(localStorage.getItem('knowledgeNotes')) || [
+  {id:1,title:'OSPF Neighbor States',content:'Down → Init → 2-Way → ExStart → Exchange → Loading → Full.',tags:['CCNA','OSPF'],date:'2024-03-01'},
+  {id:2,title:'VLAN Trunk 802.1Q',content:'802.1Q encapsulation; native VLAN untagged. Allowed VLANs control traffic.',tags:['CCNA','VLAN'],date:'2024-03-05'},
+  {id:3,title:'Linux Firewall Commands',content:'firewall-cmd --list-all to view rules. --permanent then --reload to apply.',tags:['Linux','Firewall'],date:'2024-03-10'},
+  {id:4,title:'DHCP DORA Process',content:'Discover, Offer, Request, Acknowledge. UDP 67/68. Use ip helper-address for relay.',tags:['CCNA','DHCP'],date:'2024-03-12'},
+  {id:5,title:'BGP Path Selection',content:'Weight > Local Preference > AS-Path > Origin > MED. eBGP AD=20, iBGP AD=200.',tags:['CCNP','BGP'],date:'2024-03-14'},
+  {id:6,title:'STP Root Bridge',content:'Lowest Bridge ID (Priority + MAC). Default priority 32768. Set manually for control.',tags:['CCNA','STP'],date:'2024-03-15'},
+  {id:7,title:'IPsec VPN Phases',content:'Phase 1: IKE SA (ISAKMP) - authentication/key exchange. Phase 2: IPsec SA - data protection.',tags:['Security','VPN'],date:'2024-03-18'},
+  {id:8,title:'SDN Architecture',content:'Control plane separated from data plane. Northbound APIs (REST), Southbound APIs (NETCONF/RESTCONF).',tags:['CCNP','SDN'],date:'2024-03-20'},
+];
+let projects = JSON.parse(localStorage.getItem('projects')) || [
+  {id:1,name:'Enterprise VLAN Design',desc:'Multi-switch VLAN, trunk, VTP, STP tuning.',tech:['Cisco','VLAN','STP'],github:'https://github.com/PraveenKumarmsk',demo:'',skills:['Network Design','Switching']},
+  {id:2,name:'OSPF Configuration Project',desc:'Multi-area OSPF with ABR and route summarization.',tech:['Cisco','OSPF','Routing'],github:'https://github.com/PraveenKumarmsk/OSPF-Configuration-Project',demo:'',skills:['Routing','OSPF']},
+  {id:3,name:'DHCP Configuration Project',desc:'DHCP server, relay, and IPv6 SLAAC configuration.',tech:['Cisco','DHCP','IPv6'],github:'https://github.com/PraveenKumarmsk/DHCP-Configuration-Project',demo:'',skills:['DHCP','IPv6']},
+  {id:4,name:'DNS Configuration Project',desc:'DNS server setup with forward and reverse lookup zones.',tech:['Linux','DNS','Networking'],github:'https://github.com/PraveenKumarmsk/DNS-Configuration-Project',demo:'',skills:['DNS','Linux']},
+  {id:5,name:'Network Planner Pro',desc:'Interactive network design and planning tool.',tech:['HTML','CSS','JavaScript'],github:'https://github.com/PraveenKumarmsk/network-planner-pro',demo:'',skills:['Web Development','Networking']},
+  {id:6,name:'Encryption Brute',desc:'Password encryption and brute force demonstration tool.',tech:['JavaScript','Security'],github:'https://github.com/PraveenKumarmsk/Encryption-Brute',demo:'',skills:['Security','JavaScript']},
+];
+let quizStats = JSON.parse(localStorage.getItem('quizStats')) || {total:0,correct:0};
+let subnetGameStats = JSON.parse(localStorage.getItem('subnetGameStats')) || {best:0,streak:0,lastPlayDate:''};
+
+/* ============================================================
+   UTILITY FUNCTIONS
+   ============================================================ */
+function save(key,data){localStorage.setItem(key,JSON.stringify(data));}
+function ipToInt(ip){return ip.split('.').reduce((a,o)=>(a<<8)+parseInt(o,10),0)>>>0;}
+function intToIp(i){return [(i>>>24)&255,(i>>>16)&255,(i>>>8)&255,i&255].join('.');}
+function prefixToMask(p){return p===0?0:(0xFFFFFFFF<<(32-p))>>>0;}
+function wildcardFromMask(m){return intToIp((~m)>>>0);}
+function calcIP(ip,cidr){
+  const mask=prefixToMask(cidr);
+  const ipInt=ipToInt(ip);
+  const network=(ipInt&mask)>>>0;
+  const broadcast=(network|(~mask>>>0))>>>0;
+  const first=(network+1)>>>0;
+  const last=(broadcast-1)>>>0;
+  const totalHosts=Math.pow(2,32-cidr);
+  const usableHosts=totalHosts>2?totalHosts-2:0;
+  const binary=ip.split('.').map(o=>parseInt(o).toString(2).padStart(8,'0')).join('.');
+  let ipClass='A';
+  const fo=parseInt(ip.split('.')[0]);
+  if(fo>=1&&fo<=126)ipClass='A';else if(fo>=128&&fo<=191)ipClass='B';else if(fo>=192&&fo<=223)ipClass='C';else if(fo>=224&&fo<=239)ipClass='D (Multicast)';else ipClass='E (Experimental)';
+  return{network:intToIp(network),broadcast:intToIp(broadcast),first:intToIp(first),last:intToIp(last),totalHosts,usableHosts,wildcard:wildcardFromMask(mask),ipClass,binary,mask:intToIp(mask)};
+}
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const toast=document.createElement('div');
+    toast.textContent='Copied!';
+    toast.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:8px 16px;border-radius:8px;font-size:.8rem;z-index:200;';
+    document.body.appendChild(toast);setTimeout(()=>toast.remove(),1500);
+  });
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('active');}
+function openModal(html){document.getElementById('modalBody').innerHTML=html;document.getElementById('modalOverlay').classList.add('active');}
+function showToast(msg,type='success'){
+  const t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText=`position:fixed;bottom:20px;right:20px;background:var(--${type});color:#fff;padding:10px 18px;border-radius:8px;font-size:.85rem;z-index:300;box-shadow:0 4px 12px rgba(0,0,0,.3);`;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2000);
+}
+function confirmDelete(name,cb){
+  if(confirm(`Are you sure you want to delete "${name}"?`)){cb();}
+}
+function escAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+
+/* ============================================================
+   PDF NOTES KNOWLEDGE BASE (for AI Assistant)
+   ============================================================ */
+const pdfKnowledge = {
+  dns: {
+    title: 'DNS - Domain Name System',
+    content: `Translates human-readable names to IP addresses. Port 53 (UDP query / TCP zone transfer).
+
+Key Concepts:
+• Hierarchical, distributed database of name-to-IP mappings
+• Root → TLD (.com, .net) → Authoritative domain servers
+• Record types: A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), PTR (reverse lookup), NS (name server), SOA (start of authority)
+• Recursive query: resolver does all the work for the client
+• Iterative query: server refers client to next server
+• Caching (TTL-based) reduces repeated lookups
+• DNS uses UDP/53 for standard queries, TCP/53 for zone transfers and responses >512 bytes
+
+Resolution Flow:
+Client → Resolver → Root → TLD → Authoritative`
+  },
+  udp: {
+    title: 'UDP - User Datagram Protocol',
+    content: `Connectionless, best-effort transport (RFC 768).
+
+Key Points:
+1. No Handshake - No SYN/SYN-ACK/ACK — data sent immediately, lower latency
+2. No Guaranteed Delivery - No acknowledgment, retransmission, or ordering
+3. 8-Byte Header - Src Port, Dst Port, Length, Checksum only
+4. Low Overhead - Ideal for speed-sensitive, loss-tolerant traffic
+
+UDP vs TCP:
+• Connection: Connectionless vs Connection-oriented
+• Reliability: Best-effort vs Reliable (ACK, retransmit)
+• Ordering: Not guaranteed vs Guaranteed sequencing
+• Speed: Faster, less overhead vs Slower, more overhead
+• Use Cases: DNS, DHCP, VoIP, streaming, SNMP vs HTTP(S), FTP, SSH, email`
+  },
+  vlan: {
+    title: 'VLAN - Virtual LAN',
+    content: `Logically segments a single physical switch into multiple broadcast domains.
+
+Key Concepts:
+• Each VLAN = separate broadcast domain (reduces broadcast traffic, improves security)
+• Devices in different VLANs cannot communicate without a Layer-3 device (router or L3 switch)
+• VLAN range: 1-4094 (1-1005 normal, 1006-4094 extended)
+• VLAN 1 = default VLAN (all ports initially); VLAN 1002-1005 reserved (legacy)
+• Access port: carries traffic for ONE VLAN only, untagged to the end device
+• Static VLAN: manually assigned per port (most common)
+• Dynamic VLAN: assigned via VMPS/802.1X based on MAC or identity
+• VTP (VLAN Trunking Protocol) synchronizes VLAN DB across switches — modes: Server, Client, Transparent
+
+Config:
+switchport mode access
+switchport access vlan 10`
+  },
+  trunking: {
+    title: 'Trunking & Trunk Ports (802.1Q)',
+    content: `A single link that carries traffic for multiple VLANs between switches.
+
+Key Points:
+• 802.1Q inserts a 4-byte tag (12-bit VLAN ID) into the Ethernet frame
+• Native VLAN: traffic sent untagged over the trunk (default VLAN 1)
+• Trunk carries ALL VLANs by default; can be pruned with allowed-vlan list
+• DTP (Dynamic Trunking Protocol) can auto-negotiate trunk/access — best practice: disable & hardcode
+
+Sample Configuration:
+interface GigabitEthernet0/1
+ switchport mode trunk
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,30
+ switchport trunk native vlan 99`
+  },
+  interVlan: {
+    title: 'Inter-VLAN Routing & MLS',
+    content: `How devices in different VLANs communicate.
+
+Methods:
+1. Router-on-a-Stick
+Single router interface, subdivided into sub-interfaces (one per VLAN), trunked to switch.
+Cost-effective but router becomes a bottleneck.
+encapsulation dot1q 10
+
+2. Multilayer Switch (MLS/SVI)
+Switch Virtual Interfaces (SVI) — one logical L3 interface per VLAN on an L3 switch.
+Uses ASIC-based hardware switching = wire-speed routing.
+interface vlan 10
+
+3. Router with Multiple NICs
+One physical router interface per VLAN — simple but not scalable (rarely used today).
+
+MLS Key Points:
+• "ip routing" must be enabled globally on the multilayer switch for SVIs to route between VLANs
+• CEF (Cisco Express Forwarding) hardware-accelerates routing decisions on MLS
+• Trunk ports still required between L2-only access switches and the MLS distribution switch`
+  },
+  stp: {
+    title: 'STP & RSTP',
+    content: `Prevents Layer-2 loops in redundant switched topologies.
+
+Key Concepts:
+• Port roles: Root, Designated, Blocking (STP) / Alternate, Backup (RSTP)
+• Elected Root Bridge = lowest Bridge ID (Priority + MAC)
+• BPDUs (Bridge Protocol Data Units) exchanged every 2 sec to build the tree
+
+STP (802.1D) vs RSTP (802.1w):
+• Convergence: 30–50 sec (slow) vs 1–2 sec (fast)
+• Port States: 5 (Block/Listen/Learn/Fwd/Disabled) vs 3 (Discarding/Learning/Forwarding)
+• Port Roles: Root, Designated, Blocking vs + Alternate, Backup
+• BPDU Handling: Passive; waits for timers vs Active handshake (proposal/agreement)
+• Standard: IEEE 802.1D vs IEEE 802.1w
+
+Timers: Hello 2s - Forward Delay 15s - Max Age 20s (STP defaults)
+
+PortFast + BPDU Guard: recommended on access ports to skip STP states and protect against rogue switches.`
+  },
+  ipAddressing: {
+    title: 'IP Addressing & Subnetting',
+    content: `32-bit (IPv4) logical address identifying a host on a network.
+
+Classful Address Ranges:
+• Class A: 1.0.0.0 – 126.255.255.255, /8 (255.0.0.0) - Very large networks
+• Class B: 128.0.0.0 – 191.255.255.255, /16 (255.255.0.0) - Medium networks
+• Class C: 192.0.0.0 – 223.255.255.255, /24 (255.255.255.0) - Small networks
+• Class D: 224.0.0.0 – 239.255.255.255 - Multicast
+• Class E: 240.0.0.0 – 255.255.255.255 - Experimental/reserved
+
+Subnetting Essentials:
+• Borrowing bits from the host portion creates subnets
+• # Subnets = 2^n (n = borrowed bits)
+• # Hosts = 2^h - 2 (h = remaining host bits)
+• Subtract network & broadcast address from usable host count
+• Example: /27 = 255.255.255.224 → 8 subnets, 30 usable hosts each
+
+Quick CIDR Cheat Sheet:
+/24 = 255.255.255.0 - 254 hosts
+/25 = 255.255.255.128 - 126 hosts
+/26 = 255.255.255.192 - 62 hosts
+/27 = 255.255.255.224 - 30 hosts
+/28 = 255.255.255.240 - 14 hosts
+/30 = 255.255.255.252 - 2 hosts (point-to-point)`
+  },
+  classlessRouting: {
+    title: 'Classless Routing (CIDR & VLSM)',
+    content: `CIDR & VLSM replace rigid classful boundaries with flexible, efficient addressing.
+
+CIDR (Classless Inter-Domain Routing):
+• Uses prefix notation (/24) instead of class-based masks
+• Allows route summarization (supernetting) — multiple networks advertised as one route
+• Drastically slowed IPv4 address-space exhaustion
+• Introduced in 1993 (RFC 1519)
+
+VLSM (Variable-Length Subnet Masking):
+• Subnets a network into unequal-sized pieces to match actual host needs
+• Prevents wasting addresses (e.g., using a /30 for a WAN link instead of a /24)
+• Requires a classless routing protocol (OSPF, EIGRP, RIPv2, BGP) — these carry the mask in updates
+• Classful protocols like RIPv1 do NOT support VLSM
+
+Example: Summarizing 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24 → advertised as 192.168.0.0/22
+
+Route summarization reduces routing table size and speeds convergence.`
+  },
+  acl: {
+    title: 'Access Control Lists (ACLs)',
+    content: `Filter traffic using standard or extended ACLs.
+
+Standard ACL:
+• Numbers: 1-99, 1300-1999
+• Filters based on SOURCE IP address only
+• Place as close to the DESTINATION as possible
+• Less granular - coarse filtering
+
+Extended ACL:
+• Numbers: 100-199, 2000-2699
+• Filters on source & destination IP, protocol, port number
+• Place as close to the SOURCE as possible
+• More flexible & precise
+
+Named ACL:
+• IP-based, text name
+• Either standard or extended, identified by name not number
+• Easier to manage/edit individual lines
+
+Core Rules:
+• Processed top-down, first match wins - order matters
+• Implicit "deny all" at the end of every ACL
+• Wildcard mask = inverse of subnet mask (0 = match, 1 = ignore)
+
+Sample Extended ACL:
+access-list 101 permit tcp 10.0.1.0 0.0.0.255 any eq 443
+access-list 101 deny ip any any
+interface G10/0
+ ip access-group 101 in`
+  },
+  firewalls: {
+    title: 'Firewalls',
+    content: `Enforces security policy at the perimeter between trust zones.
+
+Types:
+1. Packet-Filtering - Inspects headers (IP/port) per packet, stateless; fast but limited context
+2. Stateful - Tracks connection state in a session table; only allows return traffic for established sessions
+3. Proxy / Application - Terminates & inspects traffic at Layer 7 (app-aware); highest security, more overhead
+4. Next-Gen (NGFW) - Stateful + IPS, App visibility, URL filtering, identity awareness in one platform
+
+Traffic Flow:
+Traffic from Inside → Outside typically permitted by default; Outside → Inside is denied unless explicitly allowed or part of an established session (stateful).`
+  },
+  vpn: {
+    title: 'VPN - Virtual Private Network',
+    content: `Encrypted tunnel providing confidentiality, integrity & authentication over untrusted networks.
+
+Types:
+• Site-to-Site: connects two networks (e.g., branch ↔ HQ) permanently via router/firewall gateways
+• Remote Access: individual client connects to a corporate network (SSL VPN / AnyConnect)
+• MPLS VPN: provider-based L3 VPN using labels for traffic separation
+• Clientless SSL VPN: browser-based access to internal web apps
+
+IPsec Components:
+• IKE Phase 1: builds a secure ISAKMP tunnel (authentication + key exchange)
+• IKE Phase 2: negotiates IPsec SAs to protect actual data
+• AH (Authentication Header): integrity & authentication, NO encryption
+• ESP (Encapsulating Security Payload): encryption + optional integrity — most common
+• Modes: Transport (host-to-host) vs Tunnel (network-to-network, full packet encrypted)`
+  },
+  hsrp: {
+    title: 'HSRP - Hot Standby Router Protocol',
+    content: `Cisco-proprietary FHRP providing default-gateway redundancy (RFC 2281).
+
+Key Facts:
+• Router states: Active, Standby, Listen, Speak, Initial, Learn
+• Election based on HIGHEST priority (default 100); tie broken by highest IP
+• Hello timer 3s / Hold timer 10s (defaults)
+• Preempt: allows a higher-priority router to reclaim Active role once it comes back online (off by default)
+• Multiple HSRP groups allow load-balancing across VLANs (different Active router per group)
+• Alternatives: VRRP (open standard), GLBP (Cisco, true load balancing across all routers)
+
+Topology:
+PC's default gateway = Virtual IP. R1 (Active) forwards traffic; R2 (Standby) takes over instantly if R1 fails.`
+  },
+  ospf: {
+    title: 'OSPF - Open Shortest Path First',
+    content: `Link-state IGP using Dijkstra's SPF algorithm - Classless - Open standard (RFC 2328).
+
+Key Facts:
+• Metric = Cost (based on interface bandwidth: 100,000,000 / BW in bps)
+• Administrative Distance: 110
+• Uses Areas to control LSA flooding & scale — Area 0 (Backbone) is mandatory, all other areas must connect to it
+• Router forms neighbor adjacency after Hello packets match: Area ID, Hello/Dead timers, Subnet, Authentication
+• DR/BDR election on multi-access networks (Ethernet) to reduce LSA flooding — highest priority wins (default 1), tie-break by highest Router ID
+• LSA types include: Router (Type 1), Network (Type 2), Summary (Type 3), ASBR-Summary (4), External (5)
+• Runs directly over IP (protocol 89), not TCP/UDP
+
+Area Design: All non-backbone areas connect through Area 0 — never directly to each other (without a virtual link)
+
+Basic Config:
+router ospf 1
+ router-id 1.1.1.1
+ network 10.0.0.0 0.0.0.255 area 0`
+  },
+  bgp: {
+    title: 'BGP - Border Gateway Protocol',
+    content: `Path-vector protocol that routes between Autonomous Systems (AS) - The protocol of the Internet.
+
+Key Facts:
+• Runs over TCP port 179 - reliable, connection-oriented
+• Administrative Distance: 20 (eBGP) / 200 (iBGP)
+• Path-vector: makes decisions based on AS-Path and policy, not just shortest metric
+• Each Autonomous System (AS) has a unique AS number (16-bit or 32-bit)
+• Best path selection uses a long attribute list (in order): Weight → Local Preference → Locally originated → AS-Path length → Origin → MED → eBGP over iBGP → lowest IGP metric → oldest route → lowest Router ID
+• Peers are configured manually (neighbor statements) - no automatic discovery
+
+Key Attributes:
+• Weight - Cisco-proprietary, local to router only (higher wins)
+• Local Preference - Sent within AS, prefers exit point (higher wins)
+• AS-Path - List of ASes traversed (shorter wins)
+• MED - Supports preferred entry point to neighbor AS (lower wins)
+• Next-Hop - IP of next router toward destination
+• Origin - How the route was introduced (IGP/EGP/Incomplete)
+
+iBGP vs eBGP:
+• Peers: Same AS number vs Different AS numbers
+• AD: 200 vs 20
+• AS-Path: Not incremented on advertisement vs AS number prepended each hop
+• TTL: Typically 255 vs 1 by default
+• Topology Rule: Requires full mesh or Route Reflectors/Confederations vs Peers are usually directly connected
+• Next-Hop: Unchanged by default (may need next-hop-self) vs Changed to eBGP router's own address`
+  },
+  dhcp: {
+    title: 'DHCP - Dynamic Host Configuration Protocol',
+    content: `Automates IP assignment (UDP 67/68) using Scopes and Exclusions.
+
+D.O.R.A. Process:
+1. DISCOVER - Client broadcast: "Who is out there?" (FF:FF:FF:FF:FF:FF)
+2. OFFER - Server unicast: "Here is an available IP address."
+3. REQUEST - Client broadcast: "I officially accept this IP."
+4. ACKNOWLEDGE - Server unicast: "Confirmed. Configuration locked."
+
+Key Elements:
+• Scope: The total pool of IP addresses configured for distribution on the server.
+• Exclusion Range: Addresses manually removed from the pool (reserved for routers, servers, printers).
+• IP Reservation: A specific IP permanently bound to a specific device's MAC Address.
+• Lease Duration: The ticking clock on an assigned IP before renewal is required (e.g., 8 Days).
+
+DHCP Relay:
+Routers block Layer 2 broadcasts natively. A Relay Agent converts the broadcast into a targeted unicast packet using the command:
+ip helper-address [Server-IP]
+
+Config:
+ip dhcp excluded-address 192.168.1.1 192.168.1.20
+ip dhcp pool OFFICE
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1
+ dns-server 8.8.8.8
+ lease 8`
+  },
+  slaac: {
+    title: 'IPv6 SLAAC (Stateless Address Autoconfiguration)',
+    content: `IPv6 shifts the paradigm from Stateful Server Tracking (DHCPv6) to Stateless Client Autonomy (SLAAC).
+
+How SLAAC Works:
+1. Router Advertisement - Network Prefix (e.g., /64) provided by the Router
+2. Interface ID - Client autonomously generates this using EUI-64 (MAC Address) or a randomized value
+3. Complete IPv6 Address - Fully routable, globally unique device address
+
+Stateful vs Stateless:
+• Stateful (DHCPv6): Centralized server assigns IPs and maintains a complete database ('state') of all active leases. Total administrative control, precise device tracking, native DNS assignment.
+• Stateless (SLAAC): Router provides a network prefix; the client device independently generates its own complete IP address. Zero-touch automation, highly resilient, no dedicated DHCP server.
+
+The DNS Gap: SLAAC doesn't provide DNS natively. Use Stateless DHCPv6 to fill the gap via the command:
+ipv6 nd other-config-flag`
+  },
+  dhcpSnooping: {
+    title: 'DHCP Snooping - Layer 2 Security',
+    content: `Defending Layer 2 with DHCP Snooping.
+
+The Threat: Rogue DHCP Servers
+An attacker introduces a fake server to hand out malicious Gateways or DNS settings to endpoints.
+
+The Defense: DHCP Snooping
+Categorizes switch ports as Trusted (connected to the real server) or Untrusted (connected to endpoints).
+Untrusted ports are instantly blocked if they attempt to send DHCP Offers.
+
+Configuration:
+ip dhcp snooping vlan 10
+interface GigabitEthernet0/1
+ ip dhcp snooping trust
+
+Verification:
+show ip dhcp snooping
+show ip dhcp snooping binding`
+  },
+  networkModels: {
+    title: 'Network Models - OSI & TCP/IP',
+    content: `The Rules of Communication: Network Models
+
+OSI Model (7 layers):
+1. Physical - Bits, cables, connectors
+2. Data Link - Frames, MAC addresses, switches
+3. Network - Packets, IP addresses, routers
+4. Transport - Segments, TCP/UDP, ports
+5. Session - Session management
+6. Presentation - Encryption, compression
+7. Application - User services
+
+TCP/IP Model (4 layers):
+1. Network Access - Physical + Data Link
+2. Internet - Network layer
+3. Transport - Transport layer
+4. Application - Session + Presentation + Application
+
+The OSI Model is for learning and troubleshooting; TCP/IP is the practical model running the modern internet.`
+  },
+  arp: {
+    title: 'ARP - Address Resolution Protocol',
+    content: `ARP resolves an IP Address to a MAC Address. (RARP does the reverse).
+
+Step 1: ARP Request (Broadcast)
+Destination MAC: FF:FF:FF:FF:FF:FF
+Message: Who has 192.168.1.20?
+
+Step 2: ARP Reply (Unicast)
+Message: 192.168.1.20 is at 00:11:22:33:44:55.
+
+Verification Commands:
+show mac address-table
+show arp
+arp -a`
+  },
+  etherchannel: {
+    title: 'EtherChannel - Link Aggregation',
+    content: `Combines multiple physical links into one logical link for load balancing and fault tolerance.
+
+Negotiation Protocols:
+• Static (On) - Any vendor, no negotiation
+• LACP (802.3ad) - Multi-vendor standard, modes: active, passive
+• PAgP - Cisco proprietary, modes: desirable, auto
+
+Configuration:
+interface range g0/1-4
+ channel-group 1 mode active
+
+Verification:
+show etherchannel summary`
+  },
+  dhcpv6: {
+    title: 'DHCPv6 - Stateful vs Stateless',
+    content: `IPv6 Evolution: Stateful vs Stateless Configuration
+
+Stateful (DHCPv6):
+• Centralized server assigns IPs and maintains a complete database ('state') of all active leases.
+• Pros: Total administrative control, precise device tracking, native DNS assignment.
+• Cons: Requires dedicated server infrastructure; server failure halts new assignments.
+
+Stateless (SLAAC):
+• Router provides a network prefix; the client device independently generates its own complete IP address.
+• Pros: Zero-touch automation, highly resilient, no dedicated DHCP server.
+• Cons: No centralized database of connected devices; limited administrative oversight.
+
+SLAAC Mechanics:
+1. Router Advertisement - Network Prefix (e.g., /64) provided by the Router
+2. Interface ID - Client autonomously generates this using EUI-64 (MAC Address) or a randomized value
+3. Complete IPv6 Address - Fully routable, globally unique device address
+
+The DNS Gap: SLAAC doesn't provide DNS natively. Use Stateless DHCPv6 to fill the gap via:
+ipv6 nd other-config-flag`
+  },
+  sdn: {
+    title: 'SDN - Software-Defined Networking',
+    content: `Modern Enterprise (SD-WAN & Automation)
+
+Traditional Networking:
+• Distributed Control Planes - Every device makes its own routing decisions.
+• Managed box-by-box via CLI.
+
+SDN Architecture:
+• Control Plane separated from Data Plane
+• Centralized Control Plane (SDN Controller - Cisco DNA Center)
+• Northbound APIs (REST, Python) - Applications to Controller
+• Southbound APIs (NETCONF, RESTCONF) - Controller to Devices
+
+Benefits:
+• Centralized management
+• Automation and orchestration
+• Policy-based routing
+• Application-Aware Routing (AAR)
+
+Infrastructure as Code:
+• Data formats: JSON, YAML
+• Tools: Ansible, Terraform
+• Version Control: Git
+• API Payload: RESTCONF / YANG Models`
+  }
+};
+
+/* ============================================================
+   GLOSSARY (searchable acronyms)
+   ============================================================ */
+const glossaryTerms = [
+  {term:'OSPF',full:'Open Shortest Path First',def:'Link-state IGP using Dijkstra SPF, AD 110.'},
+  {term:'BGP',full:'Border Gateway Protocol',def:'Path-vector EGP for inter-AS routing, TCP/179.'},
+  {term:'EIGRP',full:'Enhanced Interior Gateway Routing Protocol',def:'Cisco advanced distance-vector, AD 90.'},
+  {term:'VTP',full:'VLAN Trunking Protocol',def:'Synchronizes VLAN database across switches.'},
+  {term:'DTP',full:'Dynamic Trunking Protocol',def:'Auto-negotiates trunk/access mode on a link.'},
+  {term:'STP',full:'Spanning Tree Protocol',def:'Prevents Layer-2 loops, 802.1D.'},
+  {term:'RSTP',full:'Rapid Spanning Tree Protocol',def:'Faster-converging STP, 802.1w.'},
+  {term:'HSRP',full:'Hot Standby Router Protocol',def:'Cisco FHRP for gateway redundancy.'},
+  {term:'VRRP',full:'Virtual Router Redundancy Protocol',def:'Open-standard FHRP, alternative to HSRP.'},
+  {term:'GLBP',full:'Gateway Load Balancing Protocol',def:'Cisco FHRP with active load balancing.'},
+  {term:'NAT',full:'Network Address Translation',def:'Translates private to public IP addresses.'},
+  {term:'PAT',full:'Port Address Translation',def:'NAT overload — many-to-one via port mapping.'},
+  {term:'ACL',full:'Access Control List',def:'Ordered rules that permit/deny traffic.'},
+  {term:'VLSM',full:'Variable Length Subnet Masking',def:'Subnetting into unequal-sized blocks.'},
+  {term:'CIDR',full:'Classless Inter-Domain Routing',def:'Prefix-based addressing, enables summarization.'},
+  {term:'SLAAC',full:'Stateless Address Autoconfiguration',def:'IPv6 clients self-generate addresses from RA prefix.'},
+  {term:'DHCP',full:'Dynamic Host Configuration Protocol',def:'Automatic IP assignment via DORA, UDP 67/68.'},
+  {term:'ARP',full:'Address Resolution Protocol',def:'Resolves IP address to MAC address.'},
+  {term:'LACP',full:'Link Aggregation Control Protocol',def:'IEEE 802.3ad EtherChannel negotiation.'},
+  {term:'PAgP',full:'Port Aggregation Protocol',def:'Cisco-proprietary EtherChannel negotiation.'},
+  {term:'IPsec',full:'Internet Protocol Security',def:'Encrypted tunnel framework; IKE Phase 1/2, ESP/AH.'},
+  {term:'SVI',full:'Switch Virtual Interface',def:'Layer-3 gateway interface for a VLAN on an L3 switch.'},
+  {term:'SDN',full:'Software-Defined Networking',def:'Separates control plane from data plane, centralized controller.'},
+  {term:'MED',full:'Multi-Exit Discriminator',def:'BGP attribute suggesting preferred entry point (lower wins).'},
+  {term:'AD',full:'Administrative Distance',def:'Trustworthiness rating of a routing source (lower = preferred).'},
+];
+
+/* ============================================================
+   CABLE TYPE REFERENCE
+   ============================================================ */
+const cableTypes = [
+  {name:'Straight-through',use:'PC ↔ Switch, Switch ↔ Router',wiring:'Both ends T568B (or both T568A) — pin order identical on both ends.'},
+  {name:'Crossover',use:'Switch ↔ Switch, PC ↔ PC, Router ↔ Router (older gear)',wiring:'One end T568A, other end T568B — swaps TX/RX pairs. Modern NICs auto-MDIX makes this mostly unnecessary.'},
+  {name:'Rollover (Console)',use:'PC ↔ Router/Switch console port',wiring:'Pin 1 on one end maps to pin 8 on the other — used only for out-of-band CLI management, not data.'},
+  {name:'Fiber (SM/MM)',use:'Long-haul / high-bandwidth switch-to-switch, datacenter uplinks',wiring:'Single-mode = long distance, laser; Multi-mode = shorter distance, LED. Never mix SM and MM optics.'},
+];
+
+
+/* ============================================================
+   RENDER ROUTER
+   ============================================================ */
+const contentDiv=document.getElementById('content');
+let dashboardHTML='';
+
+function navigateTo(page){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const nav=document.querySelector(`.nav-item[data-page="${page}"]`);
+  if(nav)nav.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(page==='dashboard')renderDashboard();
+  else if(page==='networking')renderNetworking();
+  else if(page==='tools')renderTools();
+  else if(page==='cisco')renderCisco();
+  else if(page==='troubleshoot')renderTroubleshoot();
+  else if(page==='linux')renderLinux();
+  else if(page==='interview')renderInterview();
+  else if(page==='knowledge')renderKnowledge();
+  else if(page==='projects')renderProjects();
+  else if(page==='assistant')renderAssistant();
+}
+
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',()=>navigateTo(item.dataset.page));
+});
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-goto]');
+  if(el){e.stopPropagation();navigateTo(el.dataset.goto);}
+});
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const totalCmds=ciscoCommands.length+linuxCommands.length;
+  contentDiv.innerHTML=`
+    <div class="page-title">IT Engineer Command Center <small><i class="fas fa-circle" style="color:var(--success);font-size:.5rem;"></i> Online</small></div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Commands</div><div class="stat-value">${totalCmds}</div><div class="stat-sub">Cisco + Linux</div></div>
+      <div class="stat-card"><div class="stat-label">Notes</div><div class="stat-value">${knowledgeNotes.length}</div><div class="stat-sub">Knowledge base</div></div>
+      <div class="stat-card"><div class="stat-label">Projects</div><div class="stat-value">${projects.length}</div><div class="stat-sub">Portfolio items</div></div>
+      <div class="stat-card"><div class="stat-label">Learning Progress</div><div class="stat-value">68%</div><div class="stat-sub">CCNA 200-301</div></div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card" data-goto="tools"><div class="dash-icon"><i class="fas fa-calculator"></i></div><div class="dash-title">Network Tools</div><div class="dash-desc">IP/Subnet calculators, VLAN planner, port reference</div></div>
+      <div class="dash-card" data-goto="cisco"><div class="dash-icon"><i class="fas fa-terminal"></i></div><div class="dash-title">Cisco Commands</div><div class="dash-desc">${ciscoCommands.length} CLI commands with copy & examples</div></div>
+      <div class="dash-card" data-goto="linux"><div class="dash-icon"><i class="fab fa-linux"></i></div><div class="dash-title">Linux Commands</div><div class="dash-desc">${linuxCommands.length} commands for sysadmin</div></div>
+      <div class="dash-card" data-goto="troubleshoot"><div class="dash-icon"><i class="fas fa-search"></i></div><div class="dash-title">Troubleshooting</div><div class="dash-desc">${troubleshootData.length} network problem workflows</div></div>
+      <div class="dash-card" data-goto="knowledge"><div class="dash-icon"><i class="fas fa-book"></i></div><div class="dash-title">Knowledge Base</div><div class="dash-desc">${knowledgeNotes.length} notes · searchable · glossary</div></div>
+      <div class="dash-card" data-goto="interview"><div class="dash-icon"><i class="fas fa-question-circle"></i></div><div class="dash-title">Interview Prep &amp; Subnet Game</div><div class="dash-desc">MCQ, port quiz, 60-second subnetting game</div></div>
+      <div class="dash-card" data-goto="projects"><div class="dash-icon"><i class="fas fa-briefcase"></i></div><div class="dash-title">Projects</div><div class="dash-desc">${projects.length} portfolio items</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-bolt"></i> Quick Tools</h2><span class="badge">Live</span></div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3><i class="fas fa-network-wired"></i> IP Calculator</h3>
+          <div class="form-group"><label>IP Address</label><input id="quickIp" value="192.168.1.10"></div>
+          <div class="form-group"><label>CIDR</label><input id="quickCidr" value="24"></div>
+          <button class="btn btn-primary" onclick="quickCalc()">Calculate</button>
+          <div class="result-box" id="quickResult">—</div>
+        </div>
+        <div class="tool-card">
+          <h3><i class="fas fa-search"></i> Port Lookup</h3>
+          <div class="form-group"><label>Search port / service</label><input id="quickPortSearch" placeholder="e.g. SSH, 443" oninput="quickPortSearch()"></div>
+          <div id="quickPortResult" style="font-size:.8rem;color:var(--text-secondary);">Type to search...</div>
+        </div>
+        <div class="tool-card">
+          <h3><i class="fas fa-terminal"></i> Command Search</h3>
+          <div class="form-group"><label>Search Cisco/Linux command</label><input id="quickCmdSearch" placeholder="e.g. vlan, systemctl" oninput="quickCmdSearch()"></div>
+          <div id="quickCmdResult" style="font-size:.8rem;color:var(--text-secondary);">Type to search...</div>
+        </div>
+      </div>
+    </div>
+  `;
+  quickCalc();quickPortSearch();quickCmdSearch();
+}
+
+/* ============================================================
+   NETWORKING PAGE - MORE EXPLANATION
+   ============================================================ */
+function renderNetworking(){
+  const topics=[
+    {name:'OSI Model',icon:'fa-layer-group',desc:'7-layer reference model for network communication'},
+    {name:'TCP/IP Model',icon:'fa-network-wired',desc:'4-layer practical model for the Internet'},
+    {name:'IPv4',icon:'fa-ip',desc:'32-bit logical addressing with classes A-E'},
+    {name:'IPv6',icon:'fa-ip',desc:'128-bit addressing with SLAAC and no broadcasts'},
+    {name:'Subnetting',icon:'fa-calculator',desc:'Dividing networks into smaller subnets'},
+    {name:'VLSM',icon:'fa-chart-pie',desc:'Variable Length Subnet Masking for efficient addressing'},
+    {name:'FLSM',icon:'fa-equals',desc:'Fixed Length Subnet Masking - all subnets same size'},
+    {name:'Supernetting',icon:'fa-object-group',desc:'Combining networks into a single route'},
+    {name:'VLAN',icon:'fa-layer-group',desc:'Logical segmentation of a switch into broadcast domains'},
+    {name:'Trunking',icon:'fa-exchange-alt',desc:'802.1Q tagging for multiple VLANs over one link'},
+    {name:'Inter-VLAN Routing',icon:'fa-route',desc:'Routing between VLANs using ROAS or SVI'},
+    {name:'Router-on-a-Stick',icon:'fa-usb',desc:'Single router interface with sub-interfaces per VLAN'},
+    {name:'SVI',icon:'fa-microchip',desc:'Switch Virtual Interface - L3 gateway for a VLAN'},
+    {name:'STP',icon:'fa-sitemap',desc:'Spanning Tree Protocol - prevents Layer 2 loops'},
+    {name:'RSTP',icon:'fa-bolt',desc:'Rapid STP - fast convergence (1-2 sec)'},
+    {name:'EtherChannel',icon:'fa-link',desc:'Bundling physical links into one logical link'},
+    {name:'LACP',icon:'fa-handshake',desc:'Link Aggregation Control Protocol - IEEE standard'},
+    {name:'PAgP',icon:'fa-cisco',desc:'Port Aggregation Protocol - Cisco proprietary'},
+    {name:'Port Security',icon:'fa-lock',desc:'Restrict MAC addresses on switch ports'},
+    {name:'DHCP',icon:'fa-server',desc:'Dynamic Host Configuration Protocol - auto IP assignment'},
+    {name:'DNS',icon:'fa-globe',desc:'Domain Name System - name to IP resolution'},
+    {name:'NAT',icon:'fa-random',desc:'Network Address Translation - private to public'},
+    {name:'ACL',icon:'fa-filter',desc:'Access Control Lists - traffic filtering'},
+    {name:'RIP',icon:'fa-route',desc:'Distance-vector routing protocol - hop count metric'},
+    {name:'OSPF',icon:'fa-diagram-project',desc:'Link-state IGP using Dijkstra SPF algorithm'},
+    {name:'EIGRP',icon:'fa-cisco',desc:'Advanced distance-vector - Cisco proprietary'},
+    {name:'BGP',icon:'fa-globe-americas',desc:'Path-vector EGP for Internet routing'},
+    {name:'HSRP',icon:'fa-shield-alt',desc:'Hot Standby Router Protocol - Cisco FHRP'},
+    {name:'VRRP',icon:'fa-shield',desc:'Virtual Router Redundancy Protocol - open standard'},
+    {name:'GLBP',icon:'fa-balance-scale',desc:'Gateway Load Balancing Protocol - Cisco'},
+    {name:'FHRP',icon:'fa-arrows-alt',desc:'First Hop Redundancy Protocol umbrella'},
+    {name:'ARP',icon:'fa-map-marker-alt',desc:'Address Resolution Protocol - IP to MAC'},
+    {name:'ICMP',icon:'fa-heartbeat',desc:'Internet Control Message Protocol - ping/traceroute'},
+    {name:'TCP / UDP',icon:'fa-exchange-alt',desc:'Transport layer protocols - reliable vs fast'},
+    {name:'SSH / Telnet',icon:'fa-terminal',desc:'Secure vs insecure remote access'},
+    {name:'VPN',icon:'fa-lock',desc:'Virtual Private Network - encrypted tunnel'},
+    {name:'IPsec',icon:'fa-shield-alt',desc:'IP Security - IKE Phase 1/2, ESP/AH'},
+    {name:'SDN',icon:'fa-cloud',desc:'Software-Defined Networking - control/data plane separation'},
+    {name:'SLAAC',icon:'fa-magic',desc:'Stateless Address Autoconfiguration for IPv6'},
+    {name:'VXLAN',icon:'fa-layer-group',desc:'Virtual Extensible LAN - overlay for scale'},
+    {name:'Cable Types',icon:'fa-ethernet',desc:'Straight-through vs crossover vs rollover vs fiber'},
+  ];
+  contentDiv.innerHTML=`
+    <div class="page-title">CCNA / Networking <small>${topics.length} topics</small></div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-sitemap"></i> Topics</h2></div>
+      <div class="troubleshoot-grid">
+        ${topics.map(t=>`<div class="troubleshoot-item" onclick="showTopic('${t.name}')"><i class="fas ${t.icon}"></i> ${t.name}</div>`).join('')}
+      </div>
+      <div id="topicDetail"></div>
+    </div>
+  `;
+}
+function showTopic(topic){
+  const details={
+    'OSI Model':'7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application. Mnemonic: Please Do Not Throw Sausage Pizza Away. The OSI model is a conceptual framework for understanding network communication.',
+    'TCP/IP Model':'4 layers: Network Access, Internet, Transport, Application. Maps to OSI. This is the practical model running the modern internet.',
+    'IPv4':'32-bit address, dotted decimal. Classes A/B/C/D/E. Private ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Classful addressing with default masks /8, /16, /24.',
+    'IPv6':'128-bit hex address. No NAT, built-in IPsec, SLAAC. Example: 2001:db8::1/64. No broadcasts - uses multicast and anycast. Stateless autoconfiguration (SLAAC) allows devices to generate their own addresses.',
+    'Subnetting':'Divide network into smaller subnets. Formula: 2^n subnets, 2^h-2 hosts. Borrowing bits from host portion creates subnets. Quick reference: /24=254 hosts, /25=126, /26=62, /27=30, /28=14, /30=2.',
+    'VLSM':'Variable Length Subnet Mask — different subnet sizes in same network. Prevents wasting addresses. Requires classless routing protocol (OSPF, EIGRP, RIPv2, BGP).',
+    'FLSM':'Fixed Length Subnet Mask — all subnets same size. Simpler but can waste addresses.',
+    'Supernetting':'Combine multiple networks into one (route summarization). Example: 192.168.0.0/24 through 192.168.3.0/24 = 192.168.0.0/22. Reduces routing table size.',
+    'VLAN':'Virtual LAN — logical segmentation. Access ports carry one VLAN, trunk carries many. Each VLAN = separate broadcast domain. VLAN range 1-4094. VTP synchronizes VLAN databases.',
+    'Trunking':'802.1Q tagging. Native VLAN untagged. Allowed VLANs restrict traffic. 4-byte tag with 12-bit VLAN ID. DTP can auto-negotiate — best practice: disable and hardcode.',
+    'Inter-VLAN Routing':'Route between VLANs using router-on-a-stick (sub-interfaces) or SVI on L3 switch. Router-on-a-stick: single interface with sub-interfaces. SVI: Switch Virtual Interface on MLS — wire-speed routing with CEF.',
+    'Router-on-a-Stick':'Single router interface with sub-interfaces, each tagged for a VLAN. Cost-effective but router becomes bottleneck. Requires trunk link on switch side.',
+    'SVI':'Switch Virtual Interface — L3 interface for a VLAN on multilayer switch. Requires ip routing enabled globally. Uses ASIC-based hardware switching for wire-speed routing.',
+    'STP':'Spanning Tree Protocol — prevents loops. 802.1D. Root bridge election by priority/MAC. Port roles: Root, Designated, Blocking. Hello 2s, Forward Delay 15s, Max Age 20s.',
+    'RSTP':'Rapid STP — 802.1w. Faster convergence (1-2s). Port states: Discarding, Learning, Forwarding. Port roles: Root, Designated, Alternate, Backup. Active handshake with proposal/agreement.',
+    'EtherChannel':'Bundle multiple links into one logical link. LACP (802.3ad) or PAgP (Cisco). Modes: active/passive (LACP), desirable/auto (PAgP). Provides load balancing and fault tolerance.',
+    'LACP':'Link Aggregation Control Protocol — IEEE standard, mode active/passive. Multi-vendor support. Uses channel-group command.',
+    'PAgP':'Port Aggregation Protocol — Cisco proprietary, mode desirable/auto. Only works between Cisco devices.',
+    'Port Security':'Restrict MAC addresses on switch port. Violation: protect, restrict, shutdown. Sticky learning saves MACs to config. Maximum MACs limits allowed devices.',
+    'DHCP':'Dynamic Host Configuration Protocol — assigns IP, gateway, DNS automatically. DORA process: Discover, Offer, Request, Acknowledge. UDP 67/68. Use ip helper-address for relay across subnets.',
+    'DNS':'Domain Name System — resolves names to IPs. Port 53. Hierarchical: Root → TLD → Authoritative. Record types: A, AAAA, CNAME, MX, PTR, NS, SOA. UDP for queries, TCP for zone transfers.',
+    'NAT':'Network Address Translation — translates private to public. PAT = overload (many-to-one). Static NAT (one-to-one), Dynamic NAT (pool). Conserves IPv4 addresses.',
+    'ACL':'Access Control List — filter traffic. Standard (source only, 1-99), Extended (src/dst/port, 100-199). Named ACLs easier to manage. Implicit deny at end. Wildcard mask = inverse of subnet mask.',
+    'RIP':'Distance-vector, hop count max 15. RIPv2 supports VLSM. AD 120. Simple but limited scalability.',
+    'OSPF':'Link-state IGP. Areas, LSAs, DR/BDR. AD 110. Metric = cost (bandwidth). Area 0 mandatory. Runs over IP protocol 89. Dijkstra SPF algorithm.',
+    'EIGRP':'Advanced distance-vector, Cisco. AD 90. Uses DUAL, feasible successor. Metric = bandwidth + delay. No auto-summary in modern IOS.',
+    'BGP':'Path-vector EGP. AS numbers. Used on internet. Port 179. AD 20 (eBGP) / 200 (iBGP). Best path: Weight > Local Pref > AS-Path > Origin > MED.',
+    'HSRP':'Hot Standby Router Protocol — Cisco FHRP. Virtual IP, active/standby. Priority default 100, higher wins. Preempt allows reclaiming active role. Hello 3s, Hold 10s.',
+    'VRRP':'Virtual Router Redundancy Protocol — open standard FHRP. Master/Backup model. Similar to HSRP but multi-vendor.',
+    'GLBP':'Gateway Load Balancing Protocol — Cisco, load balances across gateways. Active/Active model with AVG and AVFs.',
+    'FHRP':'First Hop Redundancy Protocol — umbrella for HSRP/VRRP/GLBP. Provides default gateway redundancy.',
+    'ARP':'Address Resolution Protocol — maps IP to MAC. Broadcast request, unicast reply. arp -a to view cache. show arp on Cisco.',
+    'ICMP':'Internet Control Message Protocol — ping, traceroute. Used for error reporting and diagnostics.',
+    'TCP / UDP':'TCP: connection-oriented, reliable, 3-way handshake, sequencing. UDP: connectionless, best-effort, 8-byte header, low overhead. TCP for HTTP(S), FTP, SSH. UDP for DNS, DHCP, VoIP, streaming.',
+    'SSH / Telnet':'SSH: encrypted, port 22, secure. Telnet: plaintext, port 23, insecure. Always use SSH in production.',
+    'VPN':'Virtual Private Network — encrypted tunnel over public network. Site-to-site, remote access, SSL VPN. IPsec with IKE Phase 1/2. ESP for encryption, AH for integrity.',
+    'IPsec':'IP Security — IKE Phase 1 (ISAKMP tunnel), Phase 2 (IPsec SAs). ESP (encryption) vs AH (integrity). Transport mode (host-to-host) vs Tunnel mode (network-to-network).',
+    'SDN':'Software-Defined Networking — separates control plane from data plane. Centralized controller (Cisco DNA Center). Northbound APIs (REST), Southbound APIs (NETCONF/RESTCONF). Infrastructure as Code with Ansible, Terraform.',
+    'SLAAC':'Stateless Address Autoconfiguration — IPv6 clients generate their own addresses from router prefix + interface ID. No DHCP server needed. DNS gap filled by Stateless DHCPv6.',
+    'VXLAN':'Virtual Extensible LAN — overlay for data center. Encapsulates L2 frames in L3 UDP (port 4789). 16 million VNIs vs 4094 VLANs. Used in spine-leaf architectures.',
+    'Cable Types':'Straight-through: PC↔Switch, Switch↔Router (dissimilar devices). Crossover: Switch↔Switch, PC↔PC (similar devices) — auto-MDIX makes this mostly automatic today. Rollover/Console: initial CLI setup only, not for data. Fiber: SM (long-haul, laser) vs MM (shorter, LED).',
+  };
+  document.getElementById('topicDetail').innerHTML=`
+    <div style="margin-top:20px;padding:18px;background:var(--bg);border-radius:10px;border:1px solid var(--border);">
+      <h3 style="color:var(--accent);margin-bottom:12px;">${topic}</h3>
+      <p style="font-size:.9rem;line-height:1.7;">${details[topic]||'Details coming soon.'}</p>
+      <div class="note-highlight">
+        <strong>📝 Key Note:</strong> Practice this topic in Packet Tracer, GNS3, EVE-NG, or CML.
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   NETWORK TOOLS
+   ============================================================ */
+function renderTools(){
+  contentDiv.innerHTML=`
+    <div class="page-title">Network Tools <small>IP · Subnet · VLAN · Ports</small></div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <h3><i class="fas fa-network-wired"></i> IP Calculator</h3>
+        <div class="form-group"><label>IP Address</label><input id="toolIp" value="192.168.1.10"></div>
+        <div class="form-group"><label>CIDR</label><input id="toolCidr" value="24"></div>
+        <button class="btn btn-primary" onclick="toolCalc()">Calculate</button>
+        <div class="result-box" id="toolResult">—</div>
+      </div>
+      <div class="tool-card">
+        <h3><i class="fas fa-sitemap"></i> VLSM Calculator</h3>
+        <div class="form-group"><label>Base Network</label><input id="vlsmBase" value="192.168.1.0/24"></div>
+        <div class="form-group"><label>Required Hosts (comma separated)</label><input id="vlsmHosts" value="50,20,10"></div>
+        <button class="btn btn-primary" onclick="vlsmCalc()">Calculate VLSM</button>
+        <div id="vlsmResult" class="result-box vlsm-result">—</div>
+        <div class="hint-line">Need routing config, topology diagram and supernetting too? Use <a href="#" onclick="event.preventDefault();window.hubOpen&&hubOpen('planner','plan')">Network Planner Pro</a> (open it from the sidebar).</div>
+      </div>
+      <div class="tool-card">
+        <h3><i class="fas fa-layer-group"></i> VLAN Planner</h3>
+        <div class="form-group"><label>VLAN ID</label><input id="vlanId" value="40"></div>
+        <div class="form-group"><label>Name</label><input id="vlanName" value="HR"></div>
+        <div class="form-group"><label>IP Network</label><input id="vlanNet" value="192.168.40.0/24"></div>
+        <button class="btn btn-primary" onclick="addVlan()">Add VLAN</button>
+        <div id="vlanList" style="margin-top:12px;font-size:.8rem;"></div>
+      </div>
+      <div class="tool-card">
+        <h3><i class="fas fa-plug"></i> Port Reference</h3>
+        <div class="form-group"><label>Search</label><input id="portSearch" placeholder="SSH, 443, DNS..." oninput="portSearch()"></div>
+        <div id="portResults" style="max-height:200px;overflow-y:auto;font-size:.8rem;"></div>
+      </div>
+      <div class="tool-card">
+        <h3><i class="fas fa-ethernet"></i> Cable Type Reference</h3>
+        <div id="cableRefList"></div>
+      </div>
+    </div>
+  `;
+  portSearch();renderVlanList();toolCalc();renderCableRef();
+}
+function renderCableRef(){
+  const el=document.getElementById('cableRefList');if(!el)return;
+  el.innerHTML=cableTypes.map(c=>`<div class="cable-row"><strong>${c.name}</strong><div class="cable-use">${c.use}</div><div class="cable-wiring">${c.wiring}</div></div>`).join('');
+}
+window.toolCalc=function(){
+  const ip=document.getElementById('toolIp').value.trim();
+  const cidr=parseInt(document.getElementById('toolCidr').value.trim());
+  if(!ip||isNaN(cidr)||cidr<0||cidr>32){document.getElementById('toolResult').innerHTML='Invalid input';return;}
+  const r=calcIP(ip,cidr);
+  document.getElementById('toolResult').innerHTML=`
+    <strong>Network:</strong> ${r.network}/${cidr}<br>
+    <strong>Broadcast:</strong> ${r.broadcast}<br>
+    <strong>First usable:</strong> ${r.first}<br>
+    <strong>Last usable:</strong> ${r.last}<br>
+    <strong>Total hosts:</strong> ${r.totalHosts}<br>
+    <strong>Usable hosts:</strong> ${r.usableHosts}<br>
+    <strong>Wildcard:</strong> ${r.wildcard}<br>
+    <strong>Class:</strong> ${r.ipClass}<br>
+    <strong>Binary:</strong> ${r.binary}
+  `;
+};
+/* Fixed VLSM Calculator — correctly aligns each block to its own boundary
+   (rounds pointer UP to the next multiple of the block size) instead of
+   just masking the raw pointer, which used to produce overlapping /
+   incorrect subnets. */
+window.vlsmCalc=function(){
+  const resultEl=document.getElementById('vlsmResult');
+  const base=document.getElementById('vlsmBase').value.trim();
+  const hostsStr=document.getElementById('vlsmHosts').value.trim();
+  if(!base.includes('/')){resultEl.innerHTML='<span style="color:var(--danger);">Base must include /CIDR, e.g. 192.168.1.0/24</span>';return;}
+  const[baseIp,baseCidrStr]=base.split('/');
+  const baseCidr=parseInt(baseCidrStr);
+  const baseLong=ipToInt(baseIp);
+  if(isNaN(baseCidr)||baseCidr<1||baseCidr>30||isNaN(baseLong)){resultEl.innerHTML='<span style="color:var(--danger);">Invalid base network</span>';return;}
+  const hosts=hostsStr.split(',').map(h=>parseInt(h.trim())).filter(h=>!isNaN(h)&&h>0);
+  if(hosts.length===0){resultEl.innerHTML='<span style="color:var(--danger);">Enter at least one host count</span>';return;}
+
+  const baseSize=Math.pow(2,32-baseCidr);
+  const baseNet=baseLong-(baseLong%baseSize);
+  const baseEnd=baseNet+baseSize-1;
+
+  // Largest requirement first — standard VLSM allocation order
+  const ordered=hosts.map((h,i)=>({h,origIdx:i})).sort((a,b)=>b.h-a.h);
+  let pointer=baseNet;
+  const rowsOut=[];
+  let overflow=null;
+  ordered.forEach(item=>{
+    if(overflow)return;
+    const neededBits=Math.max(2,Math.ceil(Math.log2(item.h+2)));
+    const blockSize=Math.pow(2,neededBits);
+    const aligned=Math.ceil(pointer/blockSize)*blockSize;   // <-- the actual fix
+    const network=aligned;
+    const broadcast=network+blockSize-1;
+    if(broadcast>baseEnd){overflow={h:item.h,blockSize};return;}
+    const newCidr=32-neededBits;
+    rowsOut.push({
+      origIdx:item.origIdx,hosts:item.h,network,broadcast,cidr:newCidr,
+      first:network+1,last:broadcast-1
+    });
+    pointer=broadcast+1;
+  });
+
+  if(overflow){
+    resultEl.innerHTML=`<span style="color:var(--danger);">Base ${intToIp(baseNet)}/${baseCidr} (${baseSize} addresses) is too small — "${overflow.h} hosts" needs ${overflow.blockSize} addresses but there's no room left. Use a bigger base network (smaller CIDR) or fewer/smaller host groups.</span>`;
+    return;
+  }
+  rowsOut.sort((a,b)=>a.origIdx-b.origIdx);
+  resultEl.innerHTML=`<table class="mini-table"><tr><th>Req. Hosts</th><th>Subnet</th><th>Usable Range</th><th>Broadcast</th></tr>${
+    rowsOut.map(r=>`<tr><td>${r.hosts}</td><td>${intToIp(r.network)}/${r.cidr}</td><td>${intToIp(r.first)} – ${intToIp(r.last)}</td><td>${intToIp(r.broadcast)}</td></tr>`).join('')
+  }</table>`;
+};
+window.addVlan=function(){
+  const id=parseInt(document.getElementById('vlanId').value);
+  const name=document.getElementById('vlanName').value;
+  const net=document.getElementById('vlanNet').value;
+  if(!id||!name)return;
+  vlans.push({id,name,net});
+  save('vlans',vlans);renderVlanList();
+  showToast(`VLAN ${id} added`);
+};
+window.deleteVlan=function(idx){
+  confirmDelete(vlans[idx].name,()=>{vlans.splice(idx,1);save('vlans',vlans);renderVlanList();showToast('VLAN deleted','danger');});
+};
+window.editVlan=function(idx){
+  const v=vlans[idx];
+  openModal(`
+    <h3 style="margin-bottom:16px;">Edit VLAN</h3>
+    <div class="form-group"><label>VLAN ID</label><input id="editVlanId" type="number" value="${v.id}"></div>
+    <div class="form-group"><label>Name</label><input id="editVlanName" value="${escAttr(v.name)}"></div>
+    <div class="form-group"><label>IP Network</label><input id="editVlanNet" value="${escAttr(v.net)}"></div>
+    <button class="btn btn-primary" onclick="updateVlan(${idx})">Save Changes</button>
+  `);
+};
+window.updateVlan=function(idx){
+  vlans[idx]={
+    id:parseInt(document.getElementById('editVlanId').value)||vlans[idx].id,
+    name:document.getElementById('editVlanName').value,
+    net:document.getElementById('editVlanNet').value
+  };
+  save('vlans',vlans);closeModal();renderVlanList();showToast('VLAN updated');
+};
+function renderVlanList(){
+  const div=document.getElementById('vlanList');if(!div)return;
+  div.innerHTML=vlans.map((v,i)=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);align-items:center;gap:6px;"><span>VLAN ${v.id} · ${v.name}</span><span style="color:var(--text-secondary);">${v.net}</span><span style="display:flex;gap:2px;"><button class="copy-btn" onclick="copyText('VLAN ${v.id} - ${v.name.replace(/'/g,"\\'")} - ${v.net}')"><i class="fas fa-copy"></i></button><button class="copy-btn" onclick="editVlan(${i})"><i class="fas fa-edit"></i></button><button class="copy-btn" style="color:var(--danger);" onclick="deleteVlan(${i})"><i class="fas fa-trash"></i></button></span></div>`).join('')||'<div style="color:var(--text-secondary);">No VLANs</div>';
+}
+window.portSearch=function(){
+  const q=document.getElementById('portSearch')?.value.toLowerCase()||'';
+  const results=ports.filter(p=>p.service.toLowerCase().includes(q)||p.port.includes(q));
+  const div=document.getElementById('portResults');if(!div)return;
+  div.innerHTML=results.map(p=>`<div style="padding:4px 0;border-bottom:1px solid var(--border);"><strong>${p.service}</strong> — ${p.port}/${p.proto} <span style="color:var(--text-secondary);">${p.desc}</span></div>`).join('');
+};
+window.quickCalc=function(){
+  const ip=document.getElementById('quickIp')?.value.trim();
+  const cidr=parseInt(document.getElementById('quickCidr')?.value.trim());
+  if(!ip||isNaN(cidr))return;
+  const r=calcIP(ip,cidr);
+  const el=document.getElementById('quickResult');
+  if(el)el.innerHTML=`<strong>Network:</strong> ${r.network}/${cidr}<br><strong>Broadcast:</strong> ${r.broadcast}<br><strong>Hosts:</strong> ${r.usableHosts}`;
+};
+window.quickPortSearch=function(){
+  const q=document.getElementById('quickPortSearch')?.value.toLowerCase()||'';
+  const results=ports.filter(p=>p.service.toLowerCase().includes(q)||p.port.includes(q));
+  const div=document.getElementById('quickPortResult');if(!div)return;
+  div.innerHTML=results.slice(0,5).map(p=>`<div style="padding:3px 0;"><strong>${p.service}</strong> — ${p.port}/${p.proto}</div>`).join('')||'No results';
+};
+window.quickCmdSearch=function(){
+  const q=document.getElementById('quickCmdSearch')?.value.toLowerCase()||'';
+  const all=[...ciscoCommands,...linuxCommands];
+  const results=all.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q));
+  const div=document.getElementById('quickCmdResult');if(!div)return;
+  div.innerHTML=results.slice(0,5).map(c=>`<div style="padding:3px 0;"><code style="color:var(--accent);">${c.cmd}</code> — ${c.purpose}</div>`).join('')||'No results';
+};
+
+/* ============================================================
+   CISCO COMMAND CENTER
+   ============================================================ */
+function renderCisco(){
+  contentDiv.innerHTML=`
+    <div class="page-title">Cisco Command Center <small>${ciscoCommands.length} commands</small></div>
+    <div class="section">
+      <div class="section-header">
+        <h2><i class="fas fa-terminal"></i> Command Library</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="text" id="ciscoSearch" placeholder="Search commands..." style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);" oninput="filterCisco()">
+          <button class="btn btn-primary" onclick="showAddCiscoModal()"><i class="fas fa-plus"></i> Add Command</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Command</th><th>Category</th><th>Purpose</th><th>Example</th><th>Use</th><th></th></tr></thead>
+          <tbody id="ciscoTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  renderCiscoTable(ciscoCommands);
+}
+function renderCiscoTable(cmds){
+  const tbody=document.getElementById('ciscoTableBody');if(!tbody)return;
+  tbody.innerHTML=cmds.map((c)=>{
+    const i=ciscoCommands.indexOf(c);
+    return `
+    <tr>
+      <td><code style="color:var(--accent);">${c.cmd}</code></td>
+      <td><span class="badge">${c.cat}</span></td>
+      <td>${c.purpose}</td>
+      <td><code style="font-size:.75rem;">${c.example}</code></td>
+      <td>${c.use}</td>
+      <td style="display:flex;gap:4px;">
+        <button class="copy-btn" onclick="copyText('${c.example.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
+        <button class="copy-btn" onclick="editCisco(${i})"><i class="fas fa-edit"></i></button>
+        <button class="copy-btn" style="color:var(--danger);" onclick="deleteCisco(${i})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `;}).join('');
+}
+window.filterCisco=function(){
+  const q=document.getElementById('ciscoSearch').value.toLowerCase();
+  const filtered=ciscoCommands.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q)||c.cat.toLowerCase().includes(q));
+  renderCiscoTable(filtered);
+};
+window.deleteCisco=function(idx){
+  confirmDelete(ciscoCommands[idx].cmd,()=>{ciscoCommands.splice(idx,1);save('ciscoCommands',ciscoCommands);renderCisco();showToast('Command deleted','danger');});
+};
+window.showAddCiscoModal=function(){
+  openModal(`
+    <h3 style="margin-bottom:16px;">Add Cisco Command</h3>
+    <div class="form-group"><label>Category</label><input id="newCiscoCat" value="Basic"></div>
+    <div class="form-group"><label>Command</label><input id="newCiscoCmd" placeholder="e.g. show ip route"></div>
+    <div class="form-group"><label>Purpose</label><input id="newCiscoPurpose" placeholder="What it does"></div>
+    <div class="form-group"><label>Example</label><input id="newCiscoExample" placeholder="R1# show ip route"></div>
+    <div class="form-group"><label>Use</label><input id="newCiscoUse" placeholder="When to use"></div>
+    <button class="btn btn-primary" onclick="addCiscoCmd()">Add Command</button>
+  `);
+};
+window.addCiscoCmd=function(){
+  const cat=document.getElementById('newCiscoCat').value;
+  const cmd=document.getElementById('newCiscoCmd').value;
+  const purpose=document.getElementById('newCiscoPurpose').value;
+  const example=document.getElementById('newCiscoExample').value;
+  const use=document.getElementById('newCiscoUse').value;
+  if(!cmd||!purpose)return showToast('Fill required fields','danger');
+  ciscoCommands.push({cat,cmd,purpose,example,use});
+  save('ciscoCommands',ciscoCommands);closeModal();renderCisco();showToast('Command added');
+};
+window.editCisco=function(idx){
+  const c=ciscoCommands[idx];
+  openModal(`
+    <h3 style="margin-bottom:16px;">Edit Cisco Command</h3>
+    <div class="form-group"><label>Category</label><input id="editCiscoCat" value="${escAttr(c.cat)}"></div>
+    <div class="form-group"><label>Command</label><input id="editCiscoCmd" value="${escAttr(c.cmd)}"></div>
+    <div class="form-group"><label>Purpose</label><input id="editCiscoPurpose" value="${escAttr(c.purpose)}"></div>
+    <div class="form-group"><label>Example</label><input id="editCiscoExample" value="${escAttr(c.example)}"></div>
+    <div class="form-group"><label>Use</label><input id="editCiscoUse" value="${escAttr(c.use)}"></div>
+    <button class="btn btn-primary" onclick="updateCiscoCmd(${idx})">Save Changes</button>
+  `);
+};
+window.updateCiscoCmd=function(idx){
+  ciscoCommands[idx]={
+    cat:document.getElementById('editCiscoCat').value,
+    cmd:document.getElementById('editCiscoCmd').value,
+    purpose:document.getElementById('editCiscoPurpose').value,
+    example:document.getElementById('editCiscoExample').value,
+    use:document.getElementById('editCiscoUse').value
+  };
+  save('ciscoCommands',ciscoCommands);closeModal();renderCisco();showToast('Command updated');
+};
+
+/* ============================================================
+   LINUX COMMAND CENTER
+   ============================================================ */
+function renderLinux(){
+  contentDiv.innerHTML=`
+    <div class="page-title">Linux Command Center <small>${linuxCommands.length} commands</small></div>
+    <div class="section">
+      <div class="section-header">
+        <h2><i class="fab fa-linux"></i> Command Library</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="text" id="linuxSearch" placeholder="Search commands..." style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);" oninput="filterLinux()">
+          <button class="btn btn-primary" onclick="showAddLinuxModal()"><i class="fas fa-plus"></i> Add Command</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Command</th><th>Category</th><th>Purpose</th><th>Example</th><th></th></tr></thead>
+          <tbody id="linuxTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  renderLinuxTable(linuxCommands);
+}
+function renderLinuxTable(cmds){
+  const tbody=document.getElementById('linuxTableBody');if(!tbody)return;
+  tbody.innerHTML=cmds.map((c)=>{
+    const i=linuxCommands.indexOf(c);
+    return `
+    <tr>
+      <td><code style="color:var(--accent);">${c.cmd}</code></td>
+      <td><span class="badge">${c.cat}</span></td>
+      <td>${c.purpose}</td>
+      <td><code style="font-size:.75rem;">${c.example}</code></td>
+      <td style="display:flex;gap:4px;">
+        <button class="copy-btn" onclick="copyText('${c.example.replace(/'/g,"\\'")}')"><i class="fas fa-copy"></i></button>
+        <button class="copy-btn" onclick="editLinux(${i})"><i class="fas fa-edit"></i></button>
+        <button class="copy-btn" style="color:var(--danger);" onclick="deleteLinux(${i})"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>
+  `;}).join('');
+}
+window.filterLinux=function(){
+  const q=document.getElementById('linuxSearch').value.toLowerCase();
+  const filtered=linuxCommands.filter(c=>c.cmd.toLowerCase().includes(q)||c.purpose.toLowerCase().includes(q)||c.cat.toLowerCase().includes(q));
+  renderLinuxTable(filtered);
+};
+window.deleteLinux=function(idx){
+  confirmDelete(linuxCommands[idx].cmd,()=>{linuxCommands.splice(idx,1);save('linuxCommands',linuxCommands);renderLinux();showToast('Command deleted','danger');});
+};
+window.showAddLinuxModal=function(){
+  openModal(`
+    <h3 style="margin-bottom:16px;">Add Linux Command</h3>
+    <div class="form-group"><label>Category</label><input id="newLinuxCat" value="File Mgmt"></div>
+    <div class="form-group"><label>Command</label><input id="newLinuxCmd" placeholder="e.g. ls -la"></div>
+    <div class="form-group"><label>Purpose</label><input id="newLinuxPurpose" placeholder="What it does"></div>
+    <div class="form-group"><label>Example</label><input id="newLinuxExample" placeholder="ls -la /var/log"></div>
+    <button class="btn btn-primary" onclick="addLinuxCmd()">Add Command</button>
+  `);
+};
+window.addLinuxCmd=function(){
+  const cat=document.getElementById('newLinuxCat').value;
+  const cmd=document.getElementById('newLinuxCmd').value;
+  const purpose=document.getElementById('newLinuxPurpose').value;
+  const example=document.getElementById('newLinuxExample').value;
+  if(!cmd||!purpose)return showToast('Fill required fields','danger');
+  linuxCommands.push({cat,cmd,purpose,example});
+  save('linuxCommands',linuxCommands);closeModal();renderLinux();showToast('Command added');
+};
+window.editLinux=function(idx){
+  const c=linuxCommands[idx];
+  openModal(`
+    <h3 style="margin-bottom:16px;">Edit Linux Command</h3>
+    <div class="form-group"><label>Category</label><input id="editLinuxCat" value="${escAttr(c.cat)}"></div>
+    <div class="form-group"><label>Command</label><input id="editLinuxCmd" value="${escAttr(c.cmd)}"></div>
+    <div class="form-group"><label>Purpose</label><input id="editLinuxPurpose" value="${escAttr(c.purpose)}"></div>
+    <div class="form-group"><label>Example</label><input id="editLinuxExample" value="${escAttr(c.example)}"></div>
+    <button class="btn btn-primary" onclick="updateLinuxCmd(${idx})">Save Changes</button>
+  `);
+};
+window.updateLinuxCmd=function(idx){
+  linuxCommands[idx]={
+    cat:document.getElementById('editLinuxCat').value,
+    cmd:document.getElementById('editLinuxCmd').value,
+    purpose:document.getElementById('editLinuxPurpose').value,
+    example:document.getElementById('editLinuxExample').value
+  };
+  save('linuxCommands',linuxCommands);closeModal();renderLinux();showToast('Command updated');
+};
+
+/* ============================================================
+   TROUBLESHOOTING CENTER
+   ============================================================ */
+function renderTroubleshoot(){
+  contentDiv.innerHTML=`
+    <div class="page-title">Troubleshooting Center <small>${troubleshootData.length} issues · Step-by-step</small></div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-search"></i> Select a problem</h2></div>
+      <div class="troubleshoot-grid">
+        ${troubleshootData.map((t,i)=>`<div class="troubleshoot-item" onclick="showTroubleshoot(${i})"><i class="fas fa-exclamation-triangle"></i> ${t.issue}</div>`).join('')}
+      </div>
+      <div id="troubleshootDetail"></div>
+    </div>
+  `;
+}
+window.showTroubleshoot=function(idx){
+  const t=troubleshootData[idx];
+  document.getElementById('troubleshootDetail').innerHTML=`
+    <div style="margin-top:20px;padding:18px;background:var(--bg);border-radius:10px;border:1px solid var(--border);">
+      <h3 style="color:var(--accent);margin-bottom:12px;">${t.issue}</h3>
+      <ol style="padding-left:20px;line-height:2;font-size:.85rem;">
+        ${t.steps.map(s=>`<li>${s}</li>`).join('')}
+      </ol>
+    </div>
+  `;
+};
+
+/* ============================================================
+   INTERVIEW PREP (+ Port Quiz)
+   ============================================================ */
+const quizBank=[
+  {q:'What is the default administrative distance of OSPF?',a:['90','110','120','100'],correct:1,topic:'OSPF'},
+  {q:'Which protocol uses TCP port 22?',a:['Telnet','SSH','FTP','RDP'],correct:1,topic:'Ports'},
+  {q:'What does VLSM stand for?',a:['Variable Length Subnet Mask','Virtual LAN Subnet Mask','Verified Link State Mask','None'],correct:0,topic:'Subnetting'},
+  {q:'Which command saves the running config to NVRAM?',a:['copy run start','save config','write memory','backup config'],correct:0,topic:'Cisco'},
+  {q:'What is the wildcard mask for /24?',a:['0.0.0.255','255.255.255.0','0.0.255.255','255.255.0.0'],correct:0,topic:'Subnetting'},
+  {q:'Which STP mode is fastest?',a:['STP','RSTP','PVST','MSTP'],correct:1,topic:'STP'},
+  {q:'What port does BGP use?',a:['179','89','520','443'],correct:0,topic:'Ports'},
+  {q:'Which command shows OSPF neighbors?',a:['show ospf','show ip ospf neighbor','show neighbors','show ip route'],correct:1,topic:'OSPF'},
+  {q:'What does NAT overload do?',a:['One-to-one mapping','Many-to-one PAT','Static NAT','None'],correct:1,topic:'NAT'},
+  {q:'Which Linux command shows listening ports?',a:['netstat','ss -tuln','ip a','ifconfig'],correct:1,topic:'Linux'},
+  {q:'What is the DHCP DORA process?',a:['Discover, Offer, Request, Acknowledge','Data, Open, Route, Access','Dynamic, Optional, Reserved, Assigned','None'],correct:0,topic:'DHCP'},
+  {q:'Which protocol is connectionless?',a:['TCP','UDP','SSH','FTP'],correct:1,topic:'Transport'},
+  {q:'What is the default HSRP priority?',a:['100','110','120','1'],correct:0,topic:'FHRP'},
+  {q:'Which BGP attribute is Cisco-proprietary?',a:['Weight','Local Preference','AS-Path','MED'],correct:0,topic:'BGP'},
+  {q:'What does SLAAC stand for?',a:['Stateless Address Autoconfiguration','Stateful Link Address Assignment','Secure LAN Address Configuration','None'],correct:0,topic:'IPv6'},
+  {q:'Which command enables IPv6 routing?',a:['ipv6 routing','ipv6 unicast-routing','ip routing v6','enable ipv6'],correct:1,topic:'IPv6'},
+  {q:'What is the native VLAN default?',a:['VLAN 1','VLAN 100','VLAN 0','VLAN 99'],correct:0,topic:'VLAN'},
+  {q:'Which OSPF area is mandatory?',a:['Area 1','Area 0','Area 10','Area 100'],correct:1,topic:'OSPF'},
+  {q:'What is the AD of eBGP?',a:['20','200','110','90'],correct:0,topic:'BGP'},
+  {q:'Which cable is used for switch-to-switch?',a:['Crossover','Straight-through','Rollover','Console'],correct:0,topic:'Cabling'},
+];
+function renderInterview(){
+  const stats=quizStats.total?`Score: ${quizStats.correct}/${quizStats.total} (${Math.round(quizStats.correct/quizStats.total*100)}%)`:'No attempts yet';
+  contentDiv.innerHTML=`
+    <div class="page-title">Interview Preparation &amp; Subnetting Game <small>MCQ · Port Quiz · 60s Subnet Game</small></div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-gamepad"></i> Subnetting Practice Game</h2><span class="badge">Best: ${subnetGameStats.best} · Streak: ${subnetGameStats.streak}</span></div>
+      <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:14px;">Rapid-fire subnetting — answer as many as you can in 60 seconds.</p>
+      <div id="gameArea">
+        <button class="btn btn-primary" onclick="startSubnetGame()"><i class="fas fa-play"></i> Start 60-Second Round</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-question-circle"></i> Quick Quiz</h2><span class="badge">${stats}</span></div>
+      <div id="quizContainer"></div>
+      <button class="btn btn-primary" onclick="loadQuiz()" style="margin-top:12px;">Load Random Question</button>
+    </div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-plug"></i> Port Number Quiz</h2></div>
+      <div id="portQuizArea"></div>
+      <button class="btn btn-primary" onclick="loadPortQuiz()" style="margin-top:12px;">New Question</button>
+    </div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-lightbulb"></i> Common Interview Topics</h2></div>
+      <div class="note-highlight"><strong>OSPF:</strong> Explain neighbor states, LSA types, area types, DR/BDR election.</div>
+      <div class="note-highlight"><strong>VLAN:</strong> Access vs trunk ports, native VLAN, 802.1Q tagging, VTP modes.</div>
+      <div class="note-highlight"><strong>STP:</strong> Root bridge election, port roles, RSTP vs STP, PortFast/BPDU Guard.</div>
+      <div class="note-highlight"><strong>BGP:</strong> Path selection, iBGP vs eBGP, route reflectors, attributes.</div>
+      <div class="note-highlight"><strong>DHCP:</strong> DORA process, relay agent, snooping, options.</div>
+      <div class="note-highlight"><strong>Security:</strong> ACL types, firewall zones, IPsec phases, port security.</div>
+    </div>
+  `;
+  loadQuiz();loadPortQuiz();
+}
+window.loadQuiz=function(){
+  const q=quizBank[Math.floor(Math.random()*quizBank.length)];
+  const container=document.getElementById('quizContainer');if(!container)return;
+  container.innerHTML=`
+    <div style="padding:16px;background:var(--bg);border-radius:10px;">
+      <p style="font-weight:600;margin-bottom:12px;">${q.q}</p>
+      ${q.a.map((opt,i)=>`<button class="btn" style="display:block;margin-bottom:6px;width:100%;text-align:left;" onclick="checkQuiz(${i},${q.correct})">${opt}</button>`).join('')}
+      <div id="quizFeedback" style="margin-top:8px;font-size:.85rem;"></div>
+    </div>
+  `;
+};
+window.checkQuiz=function(sel,correct){
+  quizStats.total++;
+  if(sel===correct){quizStats.correct++;document.getElementById('quizFeedback').innerHTML='<span style="color:var(--success);"><i class="fas fa-check"></i> Correct!</span>';}
+  else{document.getElementById('quizFeedback').innerHTML='<span style="color:var(--danger);"><i class="fas fa-times"></i> Incorrect. Try again.</span>';}
+  save('quizStats',quizStats);
+};
+window.loadPortQuiz=function(){
+  const p=ports[Math.floor(Math.random()*ports.length)];
+  const askPort=Math.random()<0.5;
+  const container=document.getElementById('portQuizArea');if(!container)return;
+  const question=askPort?`Which service uses port <strong>${p.port}</strong>?`:`What port does <strong>${p.service}</strong> use?`;
+  const correctAns=askPort?p.service:p.port;
+  const wrongPool=ports.filter(x=>x!==p).sort(()=>Math.random()-0.5).slice(0,3);
+  const options=[correctAns,...wrongPool.map(x=>askPort?x.service:x.port)].sort(()=>Math.random()-0.5);
+  container.innerHTML=`<div style="padding:16px;background:var(--bg);border-radius:10px;">
+    <p style="font-weight:600;margin-bottom:12px;">${question}</p>
+    ${options.map(o=>`<button class="btn" style="display:block;margin-bottom:6px;width:100%;text-align:left;" onclick="checkPortQuiz(this,'${String(o).replace(/'/g,"\\'")}','${String(correctAns).replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+    <div id="portQuizFeedback" style="margin-top:8px;font-size:.85rem;"></div>
+  </div>`;
+};
+window.checkPortQuiz=function(btn,chosen,correct){
+  const fb=document.getElementById('portQuizFeedback');
+  if(chosen===correct){fb.innerHTML='<span style="color:var(--success);"><i class="fas fa-check"></i> Correct!</span>';}
+  else{fb.innerHTML=`<span style="color:var(--danger);"><i class="fas fa-times"></i> Incorrect — correct answer: ${correct}</span>`;}
+};
+
+/* ============================================================
+   SUBNETTING PRACTICE GAME
+   ============================================================ */
+let gameState=null;
+function randomSubnetQuestion(){
+  const cidr=Math.floor(Math.random()*13)+19; // /19 - /31 range mostly useful ones
+  const clampedCidr=Math.min(30,Math.max(20,cidr));
+  const oct1=[10,172,192][Math.floor(Math.random()*3)];
+  const ip=`${oct1}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.0`;
+  const types=['usable','network','broadcast','mask'];
+  const type=types[Math.floor(Math.random()*types.length)];
+  const hostIp=ip.split('.').slice(0,3).join('.')+'.77';
+  const r=calcIP(ip,clampedCidr);
+  let question,answer;
+  if(type==='usable'){question=`${ip}/${clampedCidr} — how many usable hosts?`;answer=String(r.usableHosts);}
+  else if(type==='network'){question=`What's the Network ID for a host at ${hostIp}/${clampedCidr}?`;answer=calcIP(hostIp,clampedCidr).network;}
+  else if(type==='broadcast'){question=`What's the Broadcast address for ${ip}/${clampedCidr}?`;answer=r.broadcast;}
+  else{question=`What's the subnet mask for /${clampedCidr}?`;answer=r.mask;}
+  return {question,answer};
+}
+window.startSubnetGame=function(){
+  gameState={score:0,timeLeft:60,current:randomSubnetQuestion(),timer:null};
+  renderGameRound();
+  gameState.timer=setInterval(()=>{
+    gameState.timeLeft--;
+    const t=document.getElementById('gameTimer');
+    if(t)t.textContent=gameState.timeLeft+'s';
+    if(gameState.timeLeft<=0){endSubnetGame();}
+  },1000);
+}
+function renderGameRound(){
+  const area=document.getElementById('gameArea');
+  if(!area||!gameState)return;
+  area.innerHTML=`
+    <div style="padding:18px;background:var(--bg);border-radius:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+        <span class="badge">Score: <strong id="gameScore">${gameState.score}</strong></span>
+        <span class="badge" id="gameTimer">${gameState.timeLeft}s</span>
+      </div>
+      <p style="font-weight:600;margin-bottom:12px;font-size:1.05rem;">${gameState.current.question}</p>
+      <div style="display:flex;gap:10px;">
+        <input type="text" id="gameAnswerInput" placeholder="Type your answer..." style="flex:1;" onkeydown="if(event.key==='Enter')submitGameAnswer()">
+        <button class="btn btn-primary" onclick="submitGameAnswer()">Submit</button>
+      </div>
+      <div id="gameFeedback" style="margin-top:8px;font-size:.85rem;"></div>
+    </div>
+  `;
+  document.getElementById('gameAnswerInput')?.focus();
+}
+window.submitGameAnswer=function(){
+  if(!gameState)return;
+  const val=(document.getElementById('gameAnswerInput').value||'').trim();
+  const correct=val===gameState.current.answer;
+  if(correct){
+    gameState.score++;
+    document.getElementById('gameFeedback').innerHTML='<span style="color:var(--success);">Correct!</span>';
+  }else{
+    document.getElementById('gameFeedback').innerHTML=`<span style="color:var(--danger);">Answer: ${gameState.current.answer}</span>`;
+  }
+  gameState.current=randomSubnetQuestion();
+  setTimeout(renderGameRound,correct?150:600);
+}
+function endSubnetGame(){
+  clearInterval(gameState.timer);
+  const score=gameState.score;
+  const today=new Date().toISOString().split('T')[0];
+  if(score>subnetGameStats.best)subnetGameStats.best=score;
+  if(subnetGameStats.lastPlayDate!==today){
+    const yesterday=new Date(Date.now()-86400000).toISOString().split('T')[0];
+    subnetGameStats.streak=(subnetGameStats.lastPlayDate===yesterday)?subnetGameStats.streak+1:1;
+    subnetGameStats.lastPlayDate=today;
+  }
+  save('subnetGameStats',subnetGameStats);
+  const area=document.getElementById('gameArea');
+  if(!area){gameState=null;return;}
+  area.innerHTML=`
+    <div style="padding:24px;background:var(--bg);border-radius:10px;text-align:center;">
+      <h3 style="color:var(--accent);font-size:1.6rem;">Time's up!</h3>
+      <p style="font-size:1.2rem;margin:10px 0;">Score: <strong>${score}</strong> ${score>=subnetGameStats.best&&score>0?'🏆 New Best!':''}</p>
+      <p style="color:var(--text-secondary);font-size:.85rem;">Streak: ${subnetGameStats.streak} day(s)</p>
+      <button class="btn btn-primary" onclick="startSubnetGame()" style="margin-top:14px;">Play Again</button>
+    </div>
+  `;
+  gameState=null;
+}
+
+/* ============================================================
+   KNOWLEDGE BASE (search + tag filter + glossary)
+   ============================================================ */
+let kbSearchTerm='';
+let kbActiveTag=null;
+function renderKnowledge(){
+  const allTags=[...new Set(knowledgeNotes.flatMap(n=>n.tags))];
+  contentDiv.innerHTML=`
+    <div class="page-title">Knowledge Base <small>${knowledgeNotes.length} notes</small></div>
+    <div class="section">
+      <div class="section-header">
+        <h2><i class="fas fa-book"></i> Notes & Commands</h2>
+        <button class="btn btn-primary" onclick="showAddNoteModal()"><i class="fas fa-plus"></i> Add Note</button>
+      </div>
+      <div class="form-group" style="max-width:400px;">
+        <input type="text" id="kbSearchInput" placeholder="🔍 Search notes..." oninput="kbSearchTerm=this.value;renderNotes();">
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <span class="badge kb-tag ${!kbActiveTag?'active':''}" onclick="kbActiveTag=null;renderKnowledge();">All</span>
+        ${allTags.map(t=>`<span class="badge kb-tag ${kbActiveTag===t?'active':''}" onclick="kbActiveTag='${t}';renderKnowledge();">${t}</span>`).join('')}
+      </div>
+      <div id="notesList"></div>
+    </div>
+    <div class="section">
+      <div class="section-header"><h2><i class="fas fa-spell-check"></i> Glossary / Acronyms</h2></div>
+      <div class="form-group" style="max-width:400px;">
+        <input type="text" id="glossarySearch" placeholder="🔍 Search acronyms..." oninput="renderGlossary()">
+      </div>
+      <div id="glossaryList"></div>
+    </div>
+  `;
+  renderNotes();
+  renderGlossary();
+}
+function renderNotes(){
+  const div=document.getElementById('notesList');if(!div)return;
+  const q=kbSearchTerm.toLowerCase();
+  const filtered=knowledgeNotes.filter(n=>{
+    const matchesTag=!kbActiveTag||n.tags.includes(kbActiveTag);
+    const matchesSearch=!q||n.title.toLowerCase().includes(q)||n.content.toLowerCase().includes(q)||n.tags.some(t=>t.toLowerCase().includes(q));
+    return matchesTag&&matchesSearch;
+  });
+  if(!filtered.length){div.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-secondary);">No notes match.</div>';return;}
+  div.innerHTML=filtered.map((n)=>{
+    const i=knowledgeNotes.indexOf(n);
+    return `
+    <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <strong style="font-size:.95rem;">${n.title}</strong>
+          <div style="font-size:.75rem;color:var(--text-secondary);margin:4px 0;">${n.date} · ${n.tags.map(t=>`<span class="badge" style="font-size:.65rem;">${t}</span>`).join(' ')}</div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <button class="copy-btn" onclick="copyNoteContent(${i})"><i class="fas fa-copy"></i></button>
+          <button class="copy-btn" onclick="editNote(${i})"><i class="fas fa-edit"></i></button>
+          <button class="copy-btn" style="color:var(--danger);" onclick="deleteNote(${i})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div style="font-size:.85rem;line-height:1.6;margin-top:6px;">${n.content}</div>
+    </div>
+  `;}).join('');
+}
+function renderGlossary(){
+  const el=document.getElementById('glossaryList');if(!el)return;
+  const q=(document.getElementById('glossarySearch')?.value||'').toLowerCase();
+  const filtered=glossaryTerms.filter(g=>!q||g.term.toLowerCase().includes(q)||g.full.toLowerCase().includes(q)||g.def.toLowerCase().includes(q));
+  el.innerHTML=filtered.map(g=>`<div class="glossary-row"><strong>${g.term}</strong> — ${g.full}<div class="glossary-def">${g.def}</div></div>`).join('')||'<div style="padding:20px;text-align:center;color:var(--text-secondary);">No matches.</div>';
+}
+window.copyNoteContent=function(i){
+  const n=knowledgeNotes[i];if(!n)return;
+  copyText(`${n.title}\n${n.content}`);
+};
+window.deleteNote=function(i){
+  confirmDelete(knowledgeNotes[i].title,()=>{knowledgeNotes.splice(i,1);save('knowledgeNotes',knowledgeNotes);renderKnowledge();showToast('Note deleted','danger');});
+};
+window.editNote=function(i){
+  const n=knowledgeNotes[i];
+  openModal(`
+    <h3 style="margin-bottom:16px;">Edit Note</h3>
+    <div class="form-group"><label>Title</label><input id="editNoteTitle" value="${n.title}"></div>
+    <div class="form-group"><label>Content</label><textarea id="editNoteContent" rows="4">${n.content}</textarea></div>
+    <div class="form-group"><label>Tags (comma separated)</label><input id="editNoteTags" value="${n.tags.join(', ')}"></div>
+    <button class="btn btn-primary" onclick="updateNote(${i})">Update Note</button>
+  `);
+};
+window.updateNote=function(i){
+  knowledgeNotes[i].title=document.getElementById('editNoteTitle').value;
+  knowledgeNotes[i].content=document.getElementById('editNoteContent').value;
+  knowledgeNotes[i].tags=document.getElementById('editNoteTags').value.split(',').map(t=>t.trim()).filter(t=>t);
+  save('knowledgeNotes',knowledgeNotes);closeModal();renderKnowledge();showToast('Note updated');
+};
+window.showAddNoteModal=function(){
+  openModal(`
+    <h3 style="margin-bottom:16px;">Add Note</h3>
+    <div class="form-group"><label>Title</label><input id="newNoteTitle" placeholder="e.g. OSPF Neighbor States"></div>
+    <div class="form-group"><label>Content</label><textarea id="newNoteContent" rows="4" placeholder="Write your note..."></textarea></div>
+    <div class="form-group"><label>Tags (comma separated)</label><input id="newNoteTags" placeholder="CCNA, OSPF, Networking"></div>
+    <button class="btn btn-primary" onclick="addNote()">Add Note</button>
+  `);
+};
+window.addNote=function(){
+  const title=document.getElementById('newNoteTitle').value;
+  const content=document.getElementById('newNoteContent').value;
+  const tags=document.getElementById('newNoteTags').value.split(',').map(t=>t.trim()).filter(t=>t);
+  if(!title||!content)return showToast('Title and content required','danger');
+  knowledgeNotes.push({id:Date.now(),title,content,tags,date:new Date().toISOString().split('T')[0]});
+  save('knowledgeNotes',knowledgeNotes);closeModal();renderKnowledge();showToast('Note added');
+};
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+function renderProjects(){
+  contentDiv.innerHTML=`
+    <div class="page-title">Portfolio & Projects <small>${projects.length} projects</small></div>
+    <div class="tools-grid">
+      ${projects.map((p,i)=>`
+        <div class="tool-card">
+          <h3><i class="fas fa-briefcase"></i> ${p.name}</h3>
+          <p style="font-size:.85rem;color:var(--text-secondary);line-height:1.5;">${p.desc}</p>
+          <div style="margin-top:10px;">${p.tech.map(t=>`<span class="badge">${t}</span>`).join(' ')}</div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            ${p.github?`<a href="${p.github}" target="_blank" class="btn btn-sm"><i class="fab fa-github"></i> GitHub</a>`:''}
+            ${p.demo?`<a href="${p.demo}" target="_blank" class="btn btn-sm"><i class="fas fa-external-link-alt"></i> Demo</a>`:''}
+            <button class="btn btn-sm" onclick="editProject(${i})"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm" onclick="copyProject(${i})"><i class="fas fa-copy"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProject(${i})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-primary" onclick="showAddProjectModal()" style="margin-top:16px;"><i class="fas fa-plus"></i> Add Project</button>
+    <div style="margin-top:20px;">
+      <a href="https://github.com/PraveenKumarmsk" target="_blank" class="btn btn-primary"><i class="fab fa-github"></i> View My GitHub Profile</a>
+    </div>
+  `;
+}
+window.deleteProject=function(i){
+  confirmDelete(projects[i].name,()=>{projects.splice(i,1);save('projects',projects);renderProjects();showToast('Project deleted','danger');});
+};
+window.copyProject=function(i){
+  const p=projects[i];
+  copyText(`${p.name}\n${p.desc}\nTech: ${p.tech.join(', ')}${p.github?`\n${p.github}`:''}`);
+};
+window.showAddProjectModal=function(){
+  openModal(`
+    <h3 style="margin-bottom:16px;">Add Project</h3>
+    <div class="form-group"><label>Project Name</label><input id="newProjName"></div>
+    <div class="form-group"><label>Description</label><textarea id="newProjDesc" rows="2"></textarea></div>
+    <div class="form-group"><label>Technologies (comma separated)</label><input id="newProjTech" placeholder="Cisco, VLAN, OSPF"></div>
+    <div class="form-group"><label>GitHub Link</label><input id="newProjGithub" placeholder="https://github.com/..."></div>
+    <div class="form-group"><label>Live Demo</label><input id="newProjDemo" placeholder="https://..."></div>
+    <div class="form-group"><label>Skills (comma separated)</label><input id="newProjSkills" placeholder="Network Design, Security"></div>
+    <button class="btn btn-primary" onclick="addProject()">Add Project</button>
+  `);
+};
+window.addProject=function(){
+  const name=document.getElementById('newProjName').value;
+  if(!name)return showToast('Project name required','danger');
+  projects.push({
+    id:Date.now(),name,
+    desc:document.getElementById('newProjDesc').value,
+    tech:document.getElementById('newProjTech').value.split(',').map(t=>t.trim()).filter(t=>t),
+    github:document.getElementById('newProjGithub').value,
+    demo:document.getElementById('newProjDemo').value,
+    skills:document.getElementById('newProjSkills').value.split(',').map(s=>s.trim()).filter(s=>s)
+  });
+  save('projects',projects);closeModal();renderProjects();showToast('Project added');
+};
+window.editProject=function(i){
+  const p=projects[i];
+  openModal(`
+    <h3 style="margin-bottom:16px;">Edit Project</h3>
+    <div class="form-group"><label>Project Name</label><input id="editProjName" value="${escAttr(p.name)}"></div>
+    <div class="form-group"><label>Description</label><textarea id="editProjDesc" rows="2">${p.desc||''}</textarea></div>
+    <div class="form-group"><label>Technologies (comma separated)</label><input id="editProjTech" value="${escAttr(p.tech.join(', '))}"></div>
+    <div class="form-group"><label>GitHub Link</label><input id="editProjGithub" value="${escAttr(p.github)}"></div>
+    <div class="form-group"><label>Live Demo</label><input id="editProjDemo" value="${escAttr(p.demo)}"></div>
+    <div class="form-group"><label>Skills (comma separated)</label><input id="editProjSkills" value="${escAttr((p.skills||[]).join(', '))}"></div>
+    <button class="btn btn-primary" onclick="updateProject(${i})">Save Changes</button>
+  `);
+};
+window.updateProject=function(i){
+  const p=projects[i];
+  p.name=document.getElementById('editProjName').value;
+  p.desc=document.getElementById('editProjDesc').value;
+  p.tech=document.getElementById('editProjTech').value.split(',').map(t=>t.trim()).filter(t=>t);
+  p.github=document.getElementById('editProjGithub').value;
+  p.demo=document.getElementById('editProjDemo').value;
+  p.skills=document.getElementById('editProjSkills').value.split(',').map(s=>s.trim()).filter(s=>s);
+  save('projects',projects);closeModal();renderProjects();showToast('Project updated');
+};
+
+/* ============================================================
+   AI ASSISTANT (with PDF knowledge base)
+   ============================================================ */
+function renderAssistant(){
+  contentDiv.innerHTML=`
+    <div class="page-title">IT Assistant <small>AI-powered · PDF Notes Included</small></div>
+    <div class="ai-panel" style="max-width:800px;margin:0 auto;">
+      <div class="ai-header"><i class="fas fa-robot"></i><div><div style="font-weight:700;">AI IT Assistant</div><div style="font-size:.8rem;color:var(--text-secondary);">Ask about Cisco, Linux, firewall, cloud, subnetting — answers from CCNA/CCNP notes</div></div></div>
+      <div class="ai-input-wrapper">
+        <input type="text" id="aiInputFull" placeholder="e.g., Explain OSPF, VLAN trunk, DHCP DORA, BGP path selection...">
+        <button class="btn btn-primary" onclick="askAssistantFull()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      <div class="ai-response" id="aiResponseFull"></div>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-sm" onclick="quickAsk('OSPF')">OSPF</button>
+        <button class="btn btn-sm" onclick="quickAsk('VLAN')">VLAN</button>
+        <button class="btn btn-sm" onclick="quickAsk('DHCP')">DHCP</button>
+        <button class="btn btn-sm" onclick="quickAsk('BGP')">BGP</button>
+        <button class="btn btn-sm" onclick="quickAsk('Subnetting')">Subnetting</button>
+        <button class="btn btn-sm" onclick="quickAsk('STP')">STP</button>
+        <button class="btn btn-sm" onclick="quickAsk('Firewall')">Firewall</button>
+        <button class="btn btn-sm" onclick="quickAsk('VPN')">VPN</button>
+        <button class="btn btn-sm" onclick="quickAsk('DNS')">DNS</button>
+        <button class="btn btn-sm" onclick="quickAsk('UDP')">UDP</button>
+        <button class="btn btn-sm" onclick="quickAsk('SDN')">SDN</button>
+        <button class="btn btn-sm" onclick="quickAsk('SLAAC')">SLAAC</button>
+      </div>
+    </div>
+  `;
+}
+window.quickAsk=function(q){document.getElementById('aiInputFull').value=q;askAssistantFull();};
+window.askAssistantFull=function(){
+  const input=document.getElementById('aiInputFull').value.trim();
+  if(!input)return;
+  const resp=document.getElementById('aiResponseFull');
+  resp.style.display='block';
+  const lower=input.toLowerCase();
+  let answer='';
+
+  // Search PDF knowledge base
+  let found=null;
+  for(const[key,val]of Object.entries(pdfKnowledge)){
+    if(lower.includes(key.toLowerCase())||val.title.toLowerCase().includes(lower)){
+      found=val;break;
+    }
+  }
+  // Also check for specific keywords
+  if(!found){
+    if(lower.includes('ospf'))found=pdfKnowledge.ospf;
+    else if(lower.includes('vlan'))found=pdfKnowledge.vlan;
+    else if(lower.includes('trunk'))found=pdfKnowledge.trunking;
+    else if(lower.includes('dhcp'))found=pdfKnowledge.dhcp;
+    else if(lower.includes('bgp'))found=pdfKnowledge.bgp;
+    else if(lower.includes('dns'))found=pdfKnowledge.dns;
+    else if(lower.includes('udp'))found=pdfKnowledge.udp;
+    else if(lower.includes('stp')||lower.includes('spanning'))found=pdfKnowledge.stp;
+    else if(lower.includes('acl')||lower.includes('access'))found=pdfKnowledge.acl;
+    else if(lower.includes('firewall'))found=pdfKnowledge.firewalls;
+    else if(lower.includes('vpn')||lower.includes('ipsec'))found=pdfKnowledge.vpn;
+    else if(lower.includes('hsrp'))found=pdfKnowledge.hsrp;
+    else if(lower.includes('subnet')||lower.includes('cidr')||lower.includes('vlsm'))found=pdfKnowledge.ipAddressing;
+    else if(lower.includes('slaac')||lower.includes('ipv6'))found=pdfKnowledge.slaac;
+    else if(lower.includes('sd-wan')||lower.includes('sdn')||lower.includes('automation'))found=pdfKnowledge.sdn;
+    else if(lower.includes('etherchannel')||lower.includes('lacp')||lower.includes('pagp'))found=pdfKnowledge.etherchannel;
+    else if(lower.includes('arp'))found=pdfKnowledge.arp;
+    else if(lower.includes('osi')||lower.includes('tcp/ip')||lower.includes('model'))found=pdfKnowledge.networkModels;
+    else if(lower.includes('snooping'))found=pdfKnowledge.dhcpSnooping;
+    else if(lower.includes('inter-vlan')||lower.includes('roas')||lower.includes('svi'))found=pdfKnowledge.interVlan;
+  }
+
+  if(found){
+    answer=`<strong>${found.title}</strong><br><br>${found.content}`;
+  } else {
+    answer=`<strong>Explanation:</strong> I can help with Cisco commands, network troubleshooting, subnetting, Linux, firewall, and cloud networking.<br><br>
+    <strong>Try asking about:</strong><br>
+    • OSPF, VLAN, Trunk, DHCP, BGP, STP, ACL, NAT<br>
+    • DNS, UDP, IPsec, VPN, HSRP, VRRP, GLBP<br>
+    • Subnetting, VLSM, CIDR, IPv6, SLAAC<br>
+    • Firewall, SDN, Automation, EtherChannel<br><br>
+    <strong>Or ask a specific question like:</strong><br>
+    "How to configure OSPF?"<br>
+    "Explain DHCP DORA process"<br>
+    "What is BGP path selection?"`;
+  }
+  resp.innerHTML=answer;
+};
+
+/* ============================================================
+   GLOBAL SEARCH (was completely unwired — now live)
+   ============================================================ */
+function buildSearchIndex(){
+  const idx=[];
+  ciscoCommands.forEach(c=>idx.push({type:'Cisco cmd',label:c.cmd,sub:c.purpose,page:'cisco'}));
+  linuxCommands.forEach(c=>idx.push({type:'Linux cmd',label:c.cmd,sub:c.purpose,page:'linux'}));
+  knowledgeNotes.forEach(n=>idx.push({type:'Note',label:n.title,sub:n.content.slice(0,60),page:'knowledge'}));
+  ports.forEach(p=>idx.push({type:'Port',label:`${p.service} — ${p.port}/${p.proto}`,sub:p.desc,page:'tools'}));
+  projects.forEach(p=>idx.push({type:'Project',label:p.name,sub:p.desc,page:'projects'}));
+  glossaryTerms.forEach(g=>idx.push({type:'Glossary',label:`${g.term} — ${g.full}`,sub:g.def,page:'knowledge'}));
+  return idx;
+}
+function runGlobalSearch(q){
+  const resEl=document.getElementById('globalSearchResults');
+  if(!q||q.trim().length<2){resEl.classList.remove('active');resEl.innerHTML='';return;}
+  const term=q.toLowerCase();
+  const idx=buildSearchIndex();
+  const matches=idx.filter(item=>item.label.toLowerCase().includes(term)||item.sub.toLowerCase().includes(term)).slice(0,12);
+  if(!matches.length){resEl.innerHTML='<div class="gsr-empty">No results</div>';resEl.classList.add('active');return;}
+  resEl.innerHTML=matches.map(m=>`<div class="gsr-item" data-page="${m.page}"><span class="gsr-type">${m.type}</span><span class="gsr-label">${m.label}</span><span class="gsr-sub">${m.sub}</span></div>`).join('');
+  resEl.classList.add('active');
+  resEl.querySelectorAll('.gsr-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      navigateTo(el.dataset.page);
+      resEl.classList.remove('active');
+      document.getElementById('globalSearch').value='';
+    });
+  });
+}
+document.getElementById('globalSearch').addEventListener('input',(e)=>runGlobalSearch(e.target.value));
+document.getElementById('globalSearch').addEventListener('focus',(e)=>{ if(e.target.value.trim().length>=2) runGlobalSearch(e.target.value); });
+document.addEventListener('click',(e)=>{
+  const wrap=document.querySelector('.search-wrapper');
+  if(wrap && !wrap.contains(e.target)){document.getElementById('globalSearchResults').classList.remove('active');}
+});
+
+/* ============================================================
+   EXPORT / IMPORT FULL BACKUP
+   ============================================================ */
+function exportBackup(){
+  const backup={
+    ciscoCommands,linuxCommands,vlans,knowledgeNotes,
+    projects,quizStats,subnetGameStats,
+    exportedAt:new Date().toISOString(),version:1
+  };
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`itops-backup-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  showToast('Backup exported');
+}
+function importBackup(file){
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.ciscoCommands){ciscoCommands=data.ciscoCommands;save('ciscoCommands',ciscoCommands);}
+      if(data.linuxCommands){linuxCommands=data.linuxCommands;save('linuxCommands',linuxCommands);}
+      if(data.vlans){vlans=data.vlans;save('vlans',vlans);}
+      if(data.knowledgeNotes){knowledgeNotes=data.knowledgeNotes;save('knowledgeNotes',knowledgeNotes);}
+      if(data.projects){projects=data.projects;save('projects',projects);}
+      if(data.quizStats){quizStats=data.quizStats;save('quizStats',quizStats);}
+      if(data.subnetGameStats){subnetGameStats=data.subnetGameStats;save('subnetGameStats',subnetGameStats);}
+      showToast('Backup imported — reloading...');
+      setTimeout(()=>navigateTo('dashboard'),800);
+    }catch(err){showToast('Invalid backup file','danger');}
+  };
+  reader.readAsText(file);
+}
+window.exportBackup=exportBackup;
+document.getElementById('backupBtn').addEventListener('click',()=>{
+  openModal(`
+    <h3 style="margin-bottom:16px;"><i class="fas fa-database"></i> Export / Import Backup</h3>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:16px;">All commands, notes, projects and quiz stats live in your browser's localStorage. Export a JSON snapshot to move to another browser, or import one to restore.</p>
+    <button class="btn btn-primary" onclick="exportBackup()" style="width:100%;margin-bottom:10px;"><i class="fas fa-download"></i> Export All Data (JSON)</button>
+    <label class="btn" style="width:100%;justify-content:center;cursor:pointer;">
+      <i class="fas fa-upload"></i> Import Backup File
+      <input type="file" accept="application/json" style="display:none;" onchange="if(this.files[0])importBackup(this.files[0])">
+    </label>
+  `);
+});
+
+/* ============================================================
+   KEYBOARD SHORTCUTS
+   ============================================================ */
+document.addEventListener('keydown',(e)=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
+    e.preventDefault();
+    document.getElementById('globalSearch').focus();
+  }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){
+    e.preventDefault();
+    navigateTo('dashboard');
+  }else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='n'){
+    e.preventDefault();
+    navigateTo('knowledge');
+    setTimeout(()=>window.showAddNoteModal&&window.showAddNoteModal(),150);
+  }else if(e.key==='Escape'){
+    closeModal();
+    document.getElementById('globalSearchResults')?.classList.remove('active');
+  }
+});
+
+/* ============================================================
+   THEME & MOBILE
+   ============================================================ */
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  document.body.classList.toggle('light-mode');
+  const icon=document.querySelector('#themeToggle i');
+  icon.className=document.body.classList.contains('light-mode')?'fas fa-sun':'fas fa-moon';
+});
+document.getElementById('mobileMenuBtn')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+});
+document.getElementById('modalOverlay')?.addEventListener('click',e=>{
+  if(e.target===document.getElementById('modalOverlay'))closeModal();
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+/* ============================================================
+   PHONE-APP LAYER: bottom nav, More sheet, back button, install
+   banner, offline toasts
+   ============================================================ */
+(function(){
+  const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  const isMobile=()=>window.matchMedia('(max-width:900px)').matches;
+  const mainPages=['dashboard','tools','interview','cisco'];
+  const labels={};
+  document.querySelectorAll('.sidebar .nav-item').forEach(n=>{labels[n.dataset.page]=n.textContent.trim();});
+  const sheet=document.getElementById('moreSheet');
+  const backdrop=document.getElementById('sheetBackdrop');
+
+  function buildSheet(){
+    let html='<div class="sheet-handle"></div>',open=false;
+    document.querySelectorAll('.sidebar > *').forEach(el=>{
+      if(el.classList.contains('nav-section')){
+        if(open)html+='</div>';
+        html+='<div class="sheet-heading">'+el.textContent+'</div><div class="sheet-grid">';open=true;
+      }else if(el.classList.contains('nav-item')){
+        const ic=el.querySelector('i');
+        html+='<button class="sheet-tile" data-page="'+el.dataset.page+'"><i class="'+(ic?ic.className:'')+'"></i><span>'+el.textContent.trim()+'</span></button>';
+      }
+    });
+    if(open)html+='</div>';
+    html+='<div id="sheetInstall"></div>';
+    sheet.innerHTML=html;
+  }
+  function openSheet(){sheet.classList.add('open');backdrop.classList.add('open');}
+  function closeSheet(){sheet.classList.remove('open');backdrop.classList.remove('open');}
+  buildSheet();
+  if(isMobile()){const gs=document.getElementById('globalSearch');if(gs)gs.placeholder='Search commands, tools, notes...';}
+
+  function syncChrome(page){
+    document.querySelectorAll('.bn-item[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+    const more=document.getElementById('bnMore');
+    if(more)more.classList.toggle('active',!mainPages.includes(page));
+    sheet.querySelectorAll('.sheet-tile').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
+    const t=document.getElementById('appTitleText');
+    if(t)t.textContent=(page==='dashboard'||!labels[page])?'IT Ops Center':labels[page];
+  }
+
+  /* wrap navigateTo: sync chrome + Android back-button history */
+  const _nav=navigateTo;
+  navigateTo=function(page,fromPop){
+    _nav(page);
+    syncChrome(page);
+    closeSheet();
+    if(fromPop!==true){
+      try{if(!window.__HUB&&!(history.state&&history.state.page===page))history.pushState({page:page},'');}catch(e){}
+    }
+  };
+  try{history.replaceState({page:'dashboard'},'');}catch(e){}
+  window.addEventListener('popstate',e=>{
+    navigateTo((e.state&&e.state.page)||'dashboard',true);
+  });
+
+  document.getElementById('bottomNav').addEventListener('click',e=>{
+    const b=e.target.closest('.bn-item');if(!b)return;
+    if(navigator.vibrate)try{navigator.vibrate(10);}catch(err){}
+    if(b.id==='bnMore'){sheet.classList.contains('open')?closeSheet():openSheet();return;}
+    navigateTo(b.dataset.page);
+  });
+  sheet.addEventListener('click',e=>{
+    const t=e.target.closest('.sheet-tile');
+    if(t)navigateTo(t.dataset.page);
+  });
+  backdrop.addEventListener('click',closeSheet);
+  syncChrome('dashboard');
+
+  /* ---- install banner ---- */
+  let deferred=null;
+  const banner=document.getElementById('installBanner');
+  const dismissed=()=>{try{return localStorage.getItem('installDismissed')==='1';}catch(e){return false;}};
+  const hideBanner=()=>banner.classList.remove('show');
+  function addSheetInstall(){
+    const box=document.getElementById('sheetInstall');
+    if(!box||!deferred||standalone)return;
+    box.innerHTML='<button class="btn btn-primary sheet-install" id="sheetInstallBtn"><i class="fas fa-download"></i> Install App</button>';
+    document.getElementById('sheetInstallBtn').addEventListener('click',doInstall);
+  }
+  function doInstall(){
+    if(!deferred)return;
+    deferred.prompt();
+    deferred.userChoice.then(()=>{deferred=null;hideBanner();closeSheet();const b=document.getElementById('sheetInstall');if(b)b.innerHTML='';});
+  }
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();deferred=e;
+    if(!standalone&&!dismissed()&&isMobile())banner.classList.add('show');
+    addSheetInstall();
+  });
+  window.addEventListener('appinstalled',()=>{deferred=null;hideBanner();showToast('App installed');});
+  document.getElementById('ibInstall').addEventListener('click',doInstall);
+  document.getElementById('ibClose').addEventListener('click',()=>{hideBanner();try{localStorage.setItem('installDismissed','1');}catch(e){}});
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!standalone&&!dismissed()&&isMobile()){
+    document.getElementById('ibSub').textContent='Tap the Share button, then "Add to Home Screen"';
+    document.getElementById('ibInstall').style.display='none';
+    setTimeout(()=>banner.classList.add('show'),2500);
+  }
+
+  /* ---- online / offline ---- */
+  window.addEventListener('offline',()=>showToast('You are offline — app keeps working','warning'));
+  window.addEventListener('online',()=>showToast('Back online'));
+
+  /* ---- splash (only visible when installed) ---- */
+  window.addEventListener('load',()=>{
+    const sp=document.getElementById('splash');
+    if(!sp)return;
+    setTimeout(()=>{sp.classList.add('hide');setTimeout(()=>sp.remove(),500);},standalone?700:0);
+  });
+})();
+
+/* ============================================================
+   PWA: shortcut deep-links (?page=...&section=...) + Service Worker
+   ============================================================ */
+(function initFromUrl(){
+  const params=new URLSearchParams(location.search);
+  const page=params.get('page');
+  const section=params.get('section');
+  const valid=['dashboard','networking','tools','cisco','troubleshoot','linux','interview','knowledge','projects','assistant'];
+  if(page&&valid.includes(page)){
+    navigateTo(page);
+    if(page==='interview'){
+      setTimeout(()=>{
+        const target=document.getElementById(section==='daily'?'gameArea':'quizContainer');
+        if(target)target.scrollIntoView({behavior:'smooth',block:'center'});
+      },200);
+    }
+  }else{
+    renderDashboard();
+  }
+})();
+
+</script>
+
+<script id="hub-bridge">
+/* Hub bridge: lets the IT Ops Hub drive this module (page navigation, theme, search). */
+(function(){
+  if(!window.__HUB) return;
+  function post(m){ try{ parent.postMessage(Object.assign({hub:true,module:'ops'},m),location.origin); }catch(e){} }
+  window.hubOpen=function(mod,item){ post({type:'open',target:mod,item:item}); };
+  function applyTheme(th){
+    if(!th) return;
+    document.body.classList.toggle('light-mode',th==='light');
+    var ic=document.querySelector('#themeToggle i'); if(ic) ic.className=th==='light'?'fas fa-sun':'fas fa-moon';
+  }
+  var _nav=navigateTo;
+  navigateTo=function(page,fromPop){ _nav(page,fromPop); post({type:'state',item:page}); };
+  window.addEventListener('message',function(e){
+    if(e.origin!==location.origin) return;
+    var m=e.data; if(!m||!m.hub) return;
+    if(m.type==='init'){ applyTheme(m.theme); navigateTo(m.item||'dashboard'); }
+    else if(m.type==='goto'){ navigateTo(m.item); }
+    else if(m.type==='theme'){ applyTheme(m.theme); }
+    else if(m.type==='search'){
+      var gs=document.getElementById('globalSearch');
+      if(gs){ gs.value=m.q||''; gs.focus(); if(typeof runGlobalSearch==='function') runGlobalSearch(m.q||''); }
+    }
+  });
+  post({type:'ready'});
+})();
+</script>
+</body>
+</html>

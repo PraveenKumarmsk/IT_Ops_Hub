@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CMD Notes · Command Reference</title>
+<meta name="description" content="Your command notes, live from Google Sheets — add, edit, search and copy.">
+
+<!-- PWA -->
+<meta name="theme-color" content="#0b1114">
+<script>(function(){try{if(window.self!==window.top){window.__HUB=true;document.documentElement.classList.add("hub-embed");}}catch(e){window.__HUB=true;document.documentElement.classList.add("hub-embed");}})();</script>
+<meta name="application-name" content="CMD Notes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CMD Notes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<style>
+:root{
+  --bg:#0b1114;--bg2:#0f171b;--panel:#121b20;--panel2:#17232a;--line:#223139;--line2:#2c3f49;
+  --text:#e6eef1;--mute:#8da2ab;--faint:#5f737c;--accent:#5fd9aa;--accent-ink:#06241b;--accent-soft:rgba(95,217,170,.12);
+  --danger:#ff6b6b;--warn:#f5b84b;--blue:#6cb6ff;--code:#0a1013;--shadow:0 10px 30px rgba(0,0,0,.35);
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);--sal:env(safe-area-inset-left);--sar:env(safe-area-inset-right);
+  --mono:ui-monospace,"JetBrains Mono","Cascadia Code","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+:root[data-theme="light"]{
+  --bg:#f2f5f6;--bg2:#e9eef0;--panel:#ffffff;--panel2:#f6f9fa;--line:#dbe3e6;--line2:#c6d2d7;
+  --text:#14232a;--mute:#566d77;--faint:#8499a3;--accent:#0d9a6e;--accent-ink:#ffffff;--accent-soft:rgba(13,154,110,.1);
+  --danger:#d93f3f;--warn:#b7791f;--blue:#2563eb;--code:#eef3f5;--shadow:0 8px 24px rgba(20,35,42,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--ui);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;
+  background-image:radial-gradient(900px 500px at 8% -10%,var(--accent-soft),transparent 60%)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--text)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ── Shell — poora layout ─────────────────────────────────────────────── */
+#app{display:grid;grid-template-columns:260px 1fr;grid-template-rows:auto 1fr;height:100%;
+  padding-left:var(--sal);padding-right:var(--sar)}
+header.top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:calc(10px + var(--sat)) 18px 10px;
+  border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:30}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:34px;height:34px;border-radius:9px}
+.brand b{font-family:var(--mono);font-size:1.02rem;letter-spacing:.2px;white-space:nowrap}
+.brand b i{color:var(--accent);font-style:normal}
+.search{flex:1;max-width:620px;margin:0 auto;position:relative}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--faint);pointer-events:none}
+.search input{width:100%;padding:11px 44px 11px 40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);outline:none;font-size:.95rem;transition:.15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search kbd{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.7rem;color:var(--faint);border:1px solid var(--line2);border-radius:6px;padding:1px 7px}
+.search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:8px;color:var(--mute);display:none}
+.search.has .clr{display:block}.search.has kbd{display:none}
+.tools{display:flex;align-items:center;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:30px;padding:6px 12px;background:var(--panel);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2.4s infinite}
+.pill.sync .dot{background:var(--warn);animation:spin 1s linear infinite;border-radius:2px}
+.pill.off .dot,.pill.err .dot{background:var(--danger);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}70%,100%{box-shadow:0 0 0 8px transparent}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ibtn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;color:var(--mute);transition:.15s}
+.ibtn:hover{color:var(--text);border-color:var(--line2)}
+.ibtn svg{width:18px;height:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:11px;font-weight:700;font-size:.88rem;transition:.15s;white-space:nowrap}
+.btn svg{width:17px;height:17px}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border:1px solid var(--line2);color:var(--text)}.btn.ghost:hover{background:var(--panel2)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+#installBtn{display:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;padding:9px 16px;border-radius:30px;box-shadow:0 4px 14px rgba(34,197,94,.35)}
+#installBtn.show{display:inline-flex}
+
+/* ── Sidebar ───────────────────────────────────────────── */
+aside{border-right:1px solid var(--line);overflow-y:auto;padding:16px 12px calc(16px + var(--sab));display:flex;flex-direction:column;gap:4px;background:color-mix(in srgb,var(--bg2) 60%,transparent)}
+aside h6{font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);padding:6px 10px}
+.tabbtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:10px 12px;border-radius:11px;color:var(--mute);font-weight:600;font-size:.92rem;transition:.12s;border:1px solid transparent}
+.tabbtn:hover{background:var(--panel);color:var(--text)}
+.tabbtn.on{background:var(--panel);color:var(--text);border-color:var(--line2);box-shadow:inset 3px 0 0 var(--accent)}
+.tabbtn .ic{font-size:1.1rem;width:24px;text-align:center}
+.tabbtn .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tabbtn .ct{font-family:var(--mono);font-size:.72rem;color:var(--faint);background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+.tabbtn.on .ct{color:var(--accent);border-color:var(--accent-soft)}
+.side-foot{margin-top:auto;padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.side-foot a,.side-foot button{font-size:.82rem;color:var(--mute);text-decoration:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;text-align:left}
+.side-foot a:hover,.side-foot button:hover{background:var(--panel);color:var(--text)}
+
+/* ── Main area ──────────────────────────────────────────────── */
+main{overflow-y:auto;padding:18px 22px calc(110px + var(--sab));scroll-behavior:smooth}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.chips::-webkit-scrollbar{display:none}
+.mobtabs{display:none}
+.chip{flex:0 0 auto;padding:7px 14px;border-radius:30px;border:1px solid var(--line);background:var(--panel);color:var(--mute);font-size:.8rem;font-weight:600;transition:.12s}
+.chip:hover{color:var(--text)}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.bar{display:flex;align-items:center;gap:12px;margin:14px 0 16px;flex-wrap:wrap}
+.bar h2{font-size:1.25rem;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
+.bar h2 small{font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--faint)}
+.bar .sp{flex:1}
+select.sel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--mute);outline:none}
+.vbylbl{font-size:.74rem;color:var(--faint);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+select.vby{border-color:var(--accent);color:var(--text);font-weight:600;max-width:210px}
+.grid.f-cmd .purpose,.grid.f-cmd .ex,.grid.f-cmd .cardfoot{display:none}
+.grid.f-pu .ex{display:none}
+.grid.f-ex .purpose{display:none}
+@media(max-width:700px){.vbylbl{display:none}select.vby{max-width:150px}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{padding:7px 11px;color:var(--faint)}.seg button.on{background:var(--accent-soft);color:var(--accent)}
+.seg svg{width:16px;height:16px;display:block}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}
+.grid.list{grid-template-columns:1fr}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .15s,box-shadow .15s;position:relative;animation:in .25s ease both}
+.card:hover{border-color:var(--line2);box-shadow:var(--shadow)}
+.card.pending{opacity:.6}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card header{display:flex;align-items:center;gap:8px}
+.badge{font-size:.68rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 10px;border-radius:20px;color:hsl(var(--h) 80% 72%);background:hsl(var(--h) 60% 50% / .14);border:1px solid hsl(var(--h) 60% 55% / .25);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:root[data-theme="light"] .badge{color:hsl(var(--h) 65% 30%);background:hsl(var(--h) 70% 50% / .12)}
+.tagtab{font-size:.68rem;color:var(--faint);font-family:var(--mono)}
+.acts{margin-left:auto;display:flex;gap:2px;opacity:.55;transition:.15s}
+.card:hover .acts,.card:focus-within .acts{opacity:1}
+.acts button{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--mute)}
+.acts button:hover{background:var(--panel2);color:var(--text)}
+.acts button.del:hover{color:var(--danger)}
+.acts svg{width:16px;height:16px}
+.cmd{display:flex;align-items:flex-start;gap:10px;background:var(--code);border:1px solid var(--line);border-radius:11px;padding:10px 10px 10px 12px;cursor:pointer;transition:.12s}
+.cmd:hover{border-color:var(--accent)}
+.cmd pre{flex:1;min-width:0;font-family:var(--mono);font-size:.88rem;line-height:1.5;white-space:pre-wrap;word-break:break-word;color:var(--text)}
+.cmd pre::before{content:"›  ";color:var(--accent);font-weight:800}
+.cp{flex:0 0 auto;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--faint);transition:.12s}
+.cmd:hover .cp,.ex:hover .cp{color:var(--accent);background:var(--accent-soft)}
+.cp svg{width:16px;height:16px}
+.cp.done{color:var(--accent-ink)!important;background:var(--accent)!important}
+.purpose{font-size:.9rem;line-height:1.55;color:var(--mute)}
+.ex{position:relative}
+.ex .lbl{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);margin-bottom:5px;display:block}
+.ex .body{display:flex;gap:8px;align-items:flex-start;border-left:2px solid var(--accent);background:var(--panel2);border-radius:0 10px 10px 0;padding:8px 8px 8px 12px;cursor:pointer}
+.ex pre{flex:1;min-width:0;font-family:var(--mono);font-size:.8rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:var(--text);opacity:.92}
+mark{background:color-mix(in srgb,var(--warn) 45%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.grid.list .card{flex-direction:row;flex-wrap:wrap;align-items:flex-start}
+.grid.list .card>header{flex:0 0 100%}
+.grid.list .cmd{flex:1 1 300px}.grid.list .purpose{flex:1 1 220px;align-self:center}.grid.list .ex{flex:1 1 260px}.grid.list .cardfoot{flex:0 0 100%}
+
+.empty{text-align:center;padding:70px 20px;color:var(--mute)}
+.empty .big{font-size:3rem;margin-bottom:10px}
+.empty h3{color:var(--text);margin-bottom:6px}
+.skel{height:190px;border-radius:16px;background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 50%,var(--panel) 75%);background-size:200% 100%;animation:sh 1.3s infinite;border:1px solid var(--line)}
+@keyframes sh{to{background-position:-200% 0}}
+.banner{display:none;align-items:center;gap:10px;margin:0 0 14px;padding:10px 14px;border-radius:12px;font-size:.84rem;border:1px solid var(--line);background:var(--panel)}
+.banner.show{display:flex}.banner.warn{border-color:color-mix(in srgb,var(--warn) 50%,transparent);color:var(--warn)}
+.banner.err{border-color:color-mix(in srgb,var(--danger) 50%,transparent);color:var(--danger)}
+.banner button{margin-left:auto;font-weight:700;color:var(--text);text-decoration:underline}
+
+.fab{display:none;position:fixed;right:calc(22px + var(--sar));bottom:calc(24px + var(--sab));z-index:40;display:flex;align-items:center;gap:8px;padding:15px 20px;border-radius:30px;
+  background:var(--accent);color:var(--accent-ink);font-weight:800;box-shadow:0 12px 28px rgba(0,0,0,.4);transition:.15s}
+.fab:hover{transform:translateY(-2px)}.fab svg{width:20px;height:20px}
+.fab:disabled{background:var(--panel2);color:var(--faint);box-shadow:none}
+
+/* ── Modal / bottom sheet ─────────────────────────────────────── */
+.ov{position:fixed;inset:0;background:rgba(2,6,8,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
+.ov.show{display:flex;animation:fade .15s}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:20px;width:100%;max-width:560px;max-height:calc(100dvh - 36px);overflow:auto;box-shadow:var(--shadow);animation:pop .2s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes pop{from{transform:translateY(14px) scale(.98);opacity:0}}
+.modal .mh{display:flex;align-items:center;gap:10px;padding:18px 20px 6px}
+.modal .mh h3{font-size:1.1rem;flex:1}
+.modal .mb{padding:10px 20px 6px;display:flex;flex-direction:column;gap:14px}
+.modal .mf{padding:14px 20px 18px;display:flex;gap:10px;align-items:center;position:sticky;bottom:0;background:var(--panel)}
+.fld label{display:block;font-size:.72rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.fld label em{color:var(--danger);font-style:normal}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:.95rem;outline:none;transition:.15s;resize:vertical}
+.fld textarea{font-family:var(--mono);font-size:.88rem;line-height:1.5;min-height:64px}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fld .hint{font-size:.72rem;color:var(--faint);margin-top:5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err-line{color:var(--danger);font-size:.82rem;font-weight:600;display:none}
+.mf .sp{flex:1}
+
+/* ── Toast messages ────────────────────────────────────────────── */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + var(--sab));z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:440px}
+.toast{background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:11px 18px;border-radius:30px;font-size:.86rem;font-weight:600;box-shadow:var(--shadow);animation:in .2s;max-width:100%;text-align:center}
+.toast.ok{border-color:var(--accent)}.toast.bad{border-color:var(--danger);color:var(--danger)}
+
+/* ── iOS install madad banner ────────────────────────────────── */
+#iosBanner{position:fixed;left:50%;bottom:calc(20px + var(--sab));transform:translate(-50%,160%);width:calc(100% - 32px);max-width:440px;z-index:300;background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.4,0,.2,1);display:none}
+#iosBanner.show{display:block;transform:translate(-50%,0)}
+#iosBanner b{display:block;margin-bottom:6px}#iosBanner p{font-size:.84rem;color:var(--mute);line-height:1.55;margin-bottom:12px}
+#iosBanner p strong{color:var(--accent)}#iosBanner .r{display:flex;justify-content:flex-end}
+
+/* ── Pehli baar ka setup screen ──────────────────────────────────────── */
+#setup{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+#setup .modal{max-width:480px}
+
+/* ── Organise: filters, tags, groups aur favourites ───── */
+.frow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.frow .fl{flex:0 0 66px;padding-top:8px;font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint)}
+.frow .chips{flex:1;flex-wrap:wrap;overflow:visible}
+.chip.tg::before{content:"#";opacity:.55;margin-right:2px}
+.chip.on.tg::before{opacity:.8}
+.chip.fav.on{background:var(--warn);border-color:var(--warn);color:#2a1d00}
+.cardfoot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
+.tgp{font-family:var(--mono);font-size:.7rem;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:1px 7px;cursor:pointer;transition:.12s}
+.tgp::before{content:"#";opacity:.55}
+.tgp:hover{color:var(--accent);border-color:var(--accent)}
+.when{font-size:.68rem;color:var(--faint);white-space:nowrap}
+.badge{cursor:pointer}
+.acts .star{font-size:1.05rem;line-height:1}
+.acts .star.on{color:var(--warn);opacity:1}
+.card.isfav{border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.grid.rows .grp{background:var(--bg);margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
+.grp{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 4px 8px;margin-top:6px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.grp:first-child{margin-top:0}
+.grp .chev{display:inline-block;transition:transform .15s;color:var(--faint);font-size:.8rem}
+.grp.shut .chev{transform:rotate(-90deg)}
+.grp h3{font-size:.95rem;font-weight:800}
+.grp h3.tg::before{content:"#";color:var(--accent);margin-right:2px}
+.grp .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);border:1px solid var(--line);border-radius:20px;padding:1px 9px}
+.fld .tagsug{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fld .tagsug button{font-family:var(--mono);font-size:.74rem;color:var(--mute);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.fld .tagsug button:hover{color:var(--accent);border-color:var(--accent)}
+.fld .tagsug button.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.favrow{display:flex;align-items:center;gap:10px;font-size:.92rem;cursor:pointer;user-select:none}
+.favrow input{width:18px;height:18px;accent-color:var(--warn)}
+
+/* ── Detail list view ───────────────────────────────────────── */
+.grid.rows{display:flex;flex-direction:column;align-items:stretch;align-content:flex-start;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.rhead,.rw .rsum{display:grid;grid-template-columns:30px minmax(160px,1.3fr) minmax(0,1.6fr) minmax(110px,.8fr) minmax(120px,.9fr) 22px;gap:12px;align-items:center;padding:10px 14px}
+.rhead{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--line);background:var(--bg2,transparent);position:sticky;top:0;z-index:2}
+.rw{border-bottom:1px solid var(--line);position:relative}
+.rw:last-child{border-bottom:0}
+.rw .rsum{cursor:pointer;transition:background .12s}
+.rw .rsum:hover{background:var(--accent-soft)}
+.rw.open .rsum{background:var(--accent-soft)}
+.rw .rc{font-family:var(--mono);font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rw .rc::before{content:"› ";color:var(--accent)}
+.rw .rp{font-size:.85rem;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rw .rt{display:flex;gap:5px;overflow:hidden;min-width:0}
+.rw .rg{min-width:0}
+.rw .rg .badge{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rw .chev{color:var(--faint);font-size:.7rem;transition:transform .15s;justify-self:end}
+.rw.open .chev{transform:rotate(180deg)}
+.rw .star{font-size:1rem;color:var(--faint);line-height:1}
+.rw .star.on{color:var(--warn)}
+.rdet{display:none;padding:4px 14px 16px 56px;gap:12px;flex-direction:column;background:var(--accent-soft)}
+.rw.open .rdet{display:flex}
+.rdet .kv{display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:start;font-size:.88rem}
+.rdet .kv>span{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);padding-top:6px}
+.rdet .box{position:relative;background:var(--code,var(--bg));border:1px solid var(--line);border-radius:10px;padding:8px 40px 8px 12px;cursor:pointer}
+.rdet .box pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:.84rem}
+.rdet .box .cp{position:absolute;right:8px;top:8px}
+.rdet .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rdet .ra{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.rdet .ra button{font-size:.8rem;font-weight:600;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 12px;display:inline-flex;gap:6px;align-items:center}
+.rdet .ra button:hover{border-color:var(--accent);color:var(--accent)}
+.rdet .ra .del:hover{border-color:var(--danger);color:var(--danger)}
+.rdet .ra svg{width:14px;height:14px}
+.fsel{display:flex;align-items:center;gap:8px;flex:1 1 200px;min-width:0}
+.fsel label{font-size:.64rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.fsel select{flex:1;min-width:0}
+.fbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.fbar .clr{font-size:.8rem;font-weight:700;color:var(--accent);padding:6px 4px}
+/* ── Combo dropdown (category / tags) ───────────────────────────────────── */
+.combo{position:relative}
+.combo input{width:100%;padding-right:38px}
+.combo .cbtn{position:absolute;right:4px;top:4px;bottom:4px;width:32px;border-radius:8px;color:var(--mute);font-size:.9rem}
+.combo .cbtn:hover{background:var(--accent-soft);color:var(--accent)}
+.cpanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:60;max-height:220px;overflow-y:auto;background:var(--panel2,var(--panel));border:1px solid var(--line2,var(--line));border-radius:10px;box-shadow:var(--shadow);padding:4px}
+.combo.open .cpanel{display:block}
+.cpanel .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;font-size:.9rem}
+.cpanel .opt:hover,.cpanel .opt.sel{background:var(--accent-soft)}
+.cpanel .opt .ck{width:16px;color:var(--accent);font-weight:800}
+.cpanel .opt .n{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
+.cpanel .none{padding:10px;color:var(--faint);font-size:.85rem}
+/* ── Lock screen aur Security ────────────────────────────── */
+#lock{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:20px;background:var(--bg);overflow-y:auto}
+#lock.show{display:flex}
+.lockbox{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:stretch;gap:12px;text-align:center}
+.lockbox .lk-logo{width:64px;height:64px;border-radius:18px;margin:0 auto;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:1.9rem}
+.lockbox h2{font-size:1.25rem;font-weight:800}
+.lockbox .sub{color:var(--mute);font-size:.88rem;min-height:1.2em}
+.lockbox input{width:100%;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:13px 14px;font-size:1rem;outline:none;text-align:center;color:var(--text)}
+.lockbox input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#lkPin{font-size:1.5rem;letter-spacing:.5em;font-family:var(--mono)}
+#lkPin::placeholder{letter-spacing:.1em;font-size:.95rem;font-family:var(--ui)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:2px 0}
+.pad button{height:56px;border-radius:14px;border:1px solid var(--line);background:var(--panel);font-size:1.3rem;font-weight:700;color:var(--text);transition:.1s}
+.pad button:active{background:var(--accent-soft);border-color:var(--accent);transform:scale(.97)}
+.pad button.fn{font-size:1.05rem;color:var(--mute)}
+.lockbox .linkbtn{color:var(--mute);font-size:.84rem;padding:6px;text-decoration:underline}
+.lockbox .err-line{display:block;min-height:1.2em;text-align:center}
+.lockbox .err-line:empty{display:block}
+body.ro .addtop,body.ro #fab,body.ro [data-act=edit],body.ro [data-act=del],body.ro [data-act=fav]{display:none!important}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.sec-row:last-child{border-bottom:0}
+.sec-row .sl{font-size:.9rem}.sec-row .sl small{display:block;color:var(--faint);font-size:.74rem;margin-top:2px}
+.sec-row select{width:auto;min-width:130px}
+/* ── Phone menu (chhupe sidebar footer ki jagah) ───────── */
+#moreBtn{display:none}
+#moreMenu{position:fixed;right:12px;top:calc(58px + var(--sat,0px));z-index:80;min-width:230px;background:var(--panel);border:1px solid var(--line2,var(--line));border-radius:14px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column}
+#moreMenu[hidden]{display:none}
+#moreMenu button,#moreMenu a{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 12px;border-radius:9px;font-size:.92rem;color:var(--text);text-decoration:none;min-height:44px}
+#moreMenu button[hidden]{display:none}
+#moreMenu button:hover,#moreMenu a:hover{background:var(--accent-soft)}
+/* ── Phone layout ─────────────────────────────────────────────── */
+@media(max-width:860px){
+  body{overflow:hidden}
+  #app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  aside{display:none}
+  #moreBtn{display:grid}
+  header.top{flex-wrap:wrap;gap:10px 10px;padding:calc(8px + var(--sat)) 12px 10px}
+  .brand img{width:30px;height:30px}
+  .search{order:3;flex:1 1 100%;max-width:none}
+  .search kbd{display:none}
+  .search input{font-size:16px;padding:12px 40px 12px 40px}
+  .tools{margin-left:auto}
+  .pill{padding:6px 9px}.pill span.t{display:none}
+  .btn.addtop{display:none}
+  main{padding:10px 12px calc(120px + var(--sab))}
+  .mobtabs{display:flex;position:sticky;top:-10px;z-index:20;margin:-10px -12px 0;padding:10px 12px 8px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .mobtabs .chip{display:flex;align-items:center;gap:6px;padding:8px 13px}
+  .mobtabs .chip b{font-family:var(--mono);font-size:.68rem;opacity:.7;font-weight:600}
+  .bar{margin:10px 0 12px}.bar h2{font-size:1.08rem}
+  .grid{grid-template-columns:1fr;gap:12px}
+  .fab{display:flex;right:16px;bottom:calc(18px + var(--sab));padding:16px 20px}
+  .cmd pre{font-size:.86rem}
+  .ov{align-items:flex-end;padding:0}
+  .modal{max-width:none;border-radius:22px 22px 0 0;max-height:92dvh;animation:sheet .25s cubic-bezier(.2,.9,.3,1)}
+  .modal .mf{padding-bottom:calc(16px + var(--sab))}
+  @keyframes sheet{from{transform:translateY(100%)}}
+  .two{grid-template-columns:1fr}
+  .fld input,.fld select,.fld textarea{font-size:16px}
+  .acts{opacity:1}
+  .frow{flex-direction:column;gap:4px}.frow .fl{flex:none;padding-top:0}
+  .frow .chips{flex-wrap:nowrap;overflow-x:auto}
+  .grid.list .card{flex-direction:column}
+  .rhead{display:none}
+  .rhead,.rw .rsum{grid-template-columns:26px 1fr 20px;gap:8px 10px}
+  .rw .rsum{grid-template-areas:"s c v" "s p v" "s t v"}
+  .rw .rs{grid-area:s;align-self:start;padding-top:2px}.rw .rc{grid-area:c}.rw .rp{grid-area:p;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .rw .rt{grid-area:t;flex-wrap:wrap}.rw .rg{display:none}.rw .chev{grid-area:v}
+  .rdet{padding:2px 14px 14px 14px}.rdet .kv{grid-template-columns:1fr;gap:4px}.rdet .kv>span{padding-top:0}
+  .fsel{flex:1 1 100%}
+  #toasts{bottom:calc(88px + var(--sab))}
+}
+@media(max-width:380px){.brand b{font-size:.92rem}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media print{aside,header.top,.fab,.acts,.mobtabs,.bar .seg{display:none!important}body{overflow:visible;background:#fff;color:#000}main{overflow:visible}}
+</style>
+<style id="hub-embed-css">
+html.hub-embed .brand,html.hub-embed #installBtn,html.hub-embed #moreInstall,html.hub-embed #iosBanner{display:none!important;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="top">
+    <div class="brand"><img src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%233DD6C6%27/%3E%3Cpath d=%27M8 11l6 5-6 5M17 22h8%27 stroke=%27%23062a26%27 stroke-width=%273%27 fill=%27none%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E" alt=""><b>cmd<i>_</i>notes</b></div>
+    <label class="search" id="searchBox">
+      <span class="sr">Search commands</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search command, category, purpose…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <kbd>/</kbd>
+      <button class="clr" id="qClr" type="button" aria-label="Clear search">✕</button>
+    </label>
+    <div class="tools">
+      <span class="pill" id="livePill" title="Live sync with Google Sheet"><i class="dot"></i><span class="t" id="liveTxt">Live</span></span>
+      <button id="installBtn" class="btn" type="button">⬇️ Install App</button>
+      <button class="ibtn" id="themeBtn" type="button" aria-label="Toggle theme" title="Theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn primary addtop" id="addTop" type="button">＋ Add command</button>
+      <button class="ibtn" id="moreBtn" type="button" aria-label="Menu" title="Menu" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button>
+    </div>
+    <div id="moreMenu" role="menu" hidden>
+      <button type="button" role="menuitem" data-go="newTabBtn">＋ New section (tab)</button>
+      <a id="moreSheet" role="menuitem" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
+      <button type="button" role="menuitem" data-go="lockBtn" id="moreLock" hidden>🔒 Unlock editing</button>
+      <button type="button" role="menuitem" data-go="secBtn" id="moreSec" hidden>🔐 Security</button>
+      <button type="button" role="menuitem" data-go="installBtn" id="moreInstall" hidden>⬇️ Install App</button>
+      <button type="button" role="menuitem" data-go="setupBtn">⚙️ Server settings</button>
+    </div>
+  </header>
+
+  <aside id="side" aria-label="Sections">
+    <h6>Sections</h6>
+    <div id="sideTabs"></div>
+    <div class="side-foot">
+      <button id="newTabBtn" type="button">＋ New section (tab)</button>
+      <a id="sheetLink" href="#" target="_blank" rel="noopener">📄 Open Google Sheet ↗</a>
+      <button id="lockBtn" type="button" style="display:none">🔒 Unlock editing</button>
+      <button id="secBtn" type="button" style="display:none">🔐 Security</button>
+      <button id="setupBtn" type="button">⚙️ Server settings</button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <nav class="chips mobtabs" id="mobTabs" aria-label="Sections"></nav>
+    <div class="banner" id="banner"><span id="bannerTxt"></span><button id="bannerBtn" type="button">Retry</button></div>
+    <div class="bar">
+      <h2 id="title">All commands <small id="count"></small></h2>
+      <span class="sp"></span>
+      <label class="vbylbl" for="vby">View by</label>
+      <select class="sel vby" id="vby" aria-label="View by">
+        <optgroup label="Layout">
+          <option value="list">Detail list (expandable)</option>
+          <option value="expanded">Detail list — all expanded</option>
+          <option value="cards">Cards (full details)</option>
+        </optgroup>
+        <optgroup label="Show only">
+          <option value="compact">Command only</option>
+          <option value="purpose">Command + Purpose</option>
+          <option value="example">Command + Example</option>
+        </optgroup>
+        <optgroup label="Grouped">
+          <option value="bycat">By Category</option>
+          <option value="bytag">By Tag</option>
+        </optgroup>
+      </select>
+      <select class="sel" id="sort" aria-label="Sort">
+        <option value="sheet">Sheet order</option>
+        <option value="az">A → Z</option>
+        <option value="cat">By category</option>
+        <option value="new">Newest first</option>
+        <option value="upd">Recently updated</option>
+        <option value="fav">Favourites first</option>
+      </select>
+      <select class="sel" id="group" aria-label="Group by">
+        <option value="none">No grouping</option>
+        <option value="tag">Group: Tag</option>
+        <option value="category">Group: Category</option>
+        <option value="section">Group: Section</option>
+      </select>
+      <span class="seg" role="group" aria-label="Layout">
+        <button id="vGrid" type="button" aria-label="Cards" title="Cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button id="vList" type="button" aria-label="Detail list" title="Detail list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </span>
+    </div>
+    <div class="fbar" id="filters">
+      <div class="fsel"><label for="cats">Category by</label><select class="sel" id="cats"></select></div>
+      <div class="fsel"><label for="tags">Tag by</label><select class="sel" id="tags"></select></div>
+      <button type="button" class="clr" id="clrF" style="display:none">✕ Clear</button>
+    </div>
+    
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<button class="fab" id="fab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button>
+
+<!-- Add / Edit form -->
+<div class="ov" id="editOv" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <form class="modal" id="editForm" autocomplete="off">
+    <div class="mh"><h3 id="editTitle">New command</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb">
+      <div class="two">
+        <div class="fld"><label for="fTab">Section</label><select id="fTab"></select></div>
+        <div class="fld"><label for="fCat">Category</label><div class="combo" data-for="fCat"><input id="fCat" autocomplete="off" placeholder="Windows, Linux, Cisco…"><button type="button" class="cbtn" tabindex="-1" aria-label="Category list">▾</button><div class="cpanel"></div></div></div>
+      </div>
+      <div class="fld"><label for="fTag">Tags</label><div class="combo" data-for="fTag" data-multi="1"><input id="fTag" autocomplete="off" placeholder="Files &amp; Folders, Network"><button type="button" class="cbtn" tabindex="-1" aria-label="Tag list">▾</button><div class="cpanel"></div></div><div class="tagsug" id="tagSug"></div></div>
+      <div class="fld"><label for="fCmd">Command <em>*</em></label><textarea id="fCmd" rows="2" placeholder="ipconfig /all" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea></div>
+      <div class="fld"><label for="fPurpose">Purpose</label><textarea id="fPurpose" rows="2" style="font-family:var(--ui);font-size:.95rem" placeholder="What does it do?"></textarea></div>
+      <div class="fld"><label for="fEx">Example</label><textarea id="fEx" rows="3" placeholder="ipconfig /all | findstr IPv4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea><div class="hint">Tip: Ctrl/⌘ + Enter to save</div></div>
+      <label class="favrow"><input type="checkbox" id="fFav"> ⭐ Mark as favourite</label>
+      <div class="err-line" id="editErr"></div>
+    </div>
+    <div class="mf">
+      <button type="button" class="btn ghost" id="delBtn" style="color:var(--danger);display:none">Delete</button>
+      <span class="sp"></span>
+      <button type="button" class="btn ghost" data-close>Cancel</button>
+      <button type="submit" class="btn primary" id="saveBtn">Save</button>
+    </div>
+  </form>
+</div>
+
+<!-- Delete confirm -->
+<div class="ov" id="confOv" role="alertdialog" aria-modal="true">
+  <div class="modal" style="max-width:420px">
+    <div class="mh"><h3>Delete this command?</h3></div>
+    <div class="mb"><div class="cmd" style="cursor:default"><pre id="confCmd"></pre></div><p class="purpose">This will also be removed from the Google Sheet.</p></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn danger" id="confYes" type="button">Delete</button></div>
+  </div>
+</div>
+
+<!-- Naya tab -->
+<div class="ov" id="tabOv" role="dialog" aria-modal="true">
+  <form class="modal" id="tabForm" style="max-width:420px" autocomplete="off">
+    <div class="mh"><h3>New section</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb"><div class="fld"><label for="tName">Tab name</label><input id="tName" maxlength="60" placeholder="e.g. Docker"><div class="hint">A new tab with all the standard columns will be created in the Google Sheet.</div></div><div class="err-line" id="tabErr"></div></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Create</button></div>
+  </form>
+</div>
+
+<!-- Unlock (edit password) -->
+<div class="ov" id="keyOv" role="dialog" aria-modal="true">
+  <form class="modal" id="keyForm" style="max-width:400px" autocomplete="off">
+    <div class="mh"><h3>🔒 Unlock editing</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb"><div class="fld"><label for="kIn">Edit password</label><input id="kIn" type="password" autocomplete="off"></div><div class="err-line" id="keyErr"></div></div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" data-close type="button">Cancel</button><button class="btn primary" type="submit">Unlock</button></div>
+  </form>
+</div>
+
+<!-- Login / lock screen -->
+<div id="lock" role="dialog" aria-modal="true" aria-label="Login">
+  <form class="lockbox" id="lockForm" autocomplete="off">
+    <div class="lk-logo" id="lkIcon">🔐</div>
+    <h2 id="lkTitle">cmd_notes</h2>
+    <p class="sub" id="lkSub"></p>
+    <div id="lkUserRow"><input id="lkUser" placeholder="User name" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="username"></div>
+    <div id="lkPinRow">
+      <input id="lkPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="PIN" autocomplete="off">
+      <div class="pad" id="lkPad">
+        <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+        <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+        <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+        <button type="button" class="fn" data-k="del" aria-label="Delete">⌫</button><button type="button" data-k="0">0</button><button type="button" class="fn" data-k="go" aria-label="OK">✓</button>
+      </div>
+    </div>
+    <div class="err-line" id="lkErr"></div>
+    <button class="btn primary" type="submit" id="lkGo">Unlock</button>
+    <button class="btn ghost" type="button" id="lkBio" style="display:none">👆 Unlock with fingerprint</button>
+    <button class="btn ghost" type="button" id="lkBioNo" style="display:none">Not now</button>
+    <button class="linkbtn" type="button" id="lkSwitch" style="display:none">Log in as a different user</button>
+  </form>
+</div>
+
+<!-- Security -->
+<div class="ov" id="secOv" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:440px">
+    <div class="mh"><h3>🔐 Security</h3><button type="button" class="ibtn" data-close aria-label="Close">✕</button></div>
+    <div class="mb">
+      <div class="sec-row"><div class="sl">Logged in as <b id="secUser"></b><small id="secRole"></small></div><button class="btn ghost" id="secLock" type="button">🔒 Lock now</button></div>
+      <div class="sec-row" id="secBioRow"><div class="sl">Fingerprint / face unlock<small id="secBioSt"></small></div><button class="btn ghost" id="secBio" type="button"></button></div>
+      <div class="sec-row"><div class="sl">Auto-lock<small>After the app goes to the background</small></div>
+        <select class="sel" id="secAuto"><option value="0">Immediately</option><option value="1">1 minute</option><option value="5">5 minutes</option><option value="15">15 minutes</option><option value="-1">Never</option></select></div>
+      <form id="pinForm" autocomplete="off" style="padding-top:12px">
+        <div class="fld"><label for="pOld">Change PIN</label><input id="pOld" type="password" inputmode="numeric" maxlength="12" placeholder="Current PIN"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew" type="password" inputmode="numeric" maxlength="8" placeholder="New PIN (4–8 digits)"></div>
+        <div class="fld" style="margin-top:8px"><input id="pNew2" type="password" inputmode="numeric" maxlength="8" placeholder="Repeat new PIN"></div>
+        <div class="err-line" id="pinErr" style="margin-top:8px"></div>
+        <button class="btn primary" type="submit" style="margin-top:10px">Save PIN</button>
+      </form>
+    </div>
+    <div class="mf"><button class="btn ghost" id="secOut" type="button">🚪 Logout</button><span class="sp"></span><button class="btn ghost" data-close type="button">Close</button></div>
+  </div>
+</div>
+
+<!-- Pehli baar server URL -->
+<div id="setup">
+  <form class="modal" id="setupForm" autocomplete="off">
+    <div class="mh"><h3>⚙️ Connect your Google Sheet</h3></div>
+    <div class="mb">
+      <p class="purpose">Paste your Apps Script <b>Web app URL</b> (Deploy → Manage deployments → URL; it ends with <b>/exec</b>). It is saved on this device only.</p>
+      <div class="fld"><label for="sUrl">Web app URL</label><input id="sUrl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/…/exec"></div>
+      <div class="err-line" id="sErr"></div>
+    </div>
+    <div class="mf"><span class="sp"></span><button class="btn ghost" type="button" id="sCancel" style="display:none">Cancel</button><button class="btn primary" type="submit">Save &amp; open</button></div>
+  </form>
+</div>
+
+<div id="iosBanner"><b>📲 Install CMD Notes</b><p>In Safari tap <strong>Share ⎋</strong> at the bottom, then choose <strong>Add to Home Screen ➕</strong>.</p><div class="r"><button class="btn primary" id="iosOk" type="button">Got it</button></div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+"use strict";
+(function () {
+
+// ══ CONFIG ══════════════════════════════════════════════════════════════════
+// Apps Script ka Web app URL (/exec par khatam) yahan paste karo, to pehli baar ka prompt skip ho jaayega.
+var GAS_URL = "";
+var POLL_MS = 15000;
+// ═════════════════════════════════════════════════════════════════════════════
+
+var LS = { tok: "cmdn_tok", auth: "cmdn_auth", ver: "cmdn_ver", bio: "cmdn_bio", bioNo: "cmdn_bio_no", lockmin: "cmdn_lockmin", lastUser: "cmdn_lastuser", url: "cmdn_url", cache: "cmdn_cache", tab: "cmdn_tab", theme: "cmdn_theme", key: "cmdn_key", view: "cmdn_view", sort: "cmdn_sort", group: "cmdn_group" };
+var $ = function (id) { return document.getElementById(id); };
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+var S = { openRows: {}, tabs: [], items: [], locked: false, sheetUrl: "", tab: "__all", cat: "", tag: "", group: "tag", shut: {}, warnings: [], q: "", sort: "sheet", view: "grid",
+          loaded: false, lastSync: 0, sig: "", key: lsGet(LS.key) || "", busy: 0, queue: [], editing: null, delItem: null, offline: false };
+
+/* ───────────── helper functions ───────────── */
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]; }); }
+function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function hl(text, q) {
+  text = String(text || "");
+  if (!q) return esc(text);
+  var terms = q.split(/\s+/).filter(Boolean).map(reEsc);
+  if (!terms.length) return esc(text);
+  var re = new RegExp("(" + terms.join("|") + ")", "ig"), out = "", last = 0, m;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index)) + "<mark>" + esc(m[0]) + "</mark>";
+    last = m.index + m[0].length;
+  }
+  return out + esc(text.slice(last));
+}
+function dv(v) { v = String(v == null ? "" : v).trim(); return v === "—" || v === "-" ? "" : v; }
+function tagsOf(it) {
+  var seen = {}, out = [];
+  dv(it.tag).split(/[,;|]/).forEach(function (x) { x = x.trim(); var k = x.toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } });
+  return out;
+}
+function hasTag(it, t) { t = t.toLowerCase(); return tagsOf(it).some(function (x) { return x.toLowerCase() === t; }); }
+function when(it) {
+  var iso = it.updated_at || it.created_at; if (!iso) return "";
+  var ms = Date.parse(iso); if (isNaN(ms)) return "";
+  var s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+  var txt = s < 60 ? "just now" : s < 3600 ? Math.round(s / 60) + "m ago" : s < 86400 ? Math.round(s / 3600) + "h ago" : s < 86400 * 30 ? Math.round(s / 86400) + "d ago" : new Date(ms).toLocaleDateString();
+  return (it.updated_at ? "updated " : "added ") + txt;
+}
+function hue(s) { var h = 0; s = String(s || "x").toLowerCase(); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
+function tabIcon(n) {
+  n = String(n).toLowerCase();
+  if (/win/.test(n)) return "🪟"; if (/lin|lun|ubuntu|unix|bash/.test(n)) return "🐧"; if (/ccn|cisco|net/.test(n)) return "🌐";
+  if (/trouble|fix|debug/.test(n)) return "🛠️"; if (/other|misc/.test(n)) return "📦"; if (/docker|kube|cloud/.test(n)) return "☁️"; return "📄";
+}
+function ago(ts) {
+  if (!ts) return "";
+  var s = Math.round((Date.now() - ts) / 1000);
+  return s < 8 ? "just now" : s < 60 ? s + "s ago" : s < 3600 ? Math.round(s / 60) + "m ago" : Math.round(s / 3600) + "h ago";
+}
+function toast(msg, kind, ms) {
+  var t = document.createElement("div"); t.className = "toast " + (kind || ""); t.textContent = msg;
+  $("toasts").appendChild(t); setTimeout(function () { t.remove(); }, ms || 2400);
+}
+var ICON = {
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>'
+};
+
+/* ───────────── server se baat ───────────── */
+function gasUrl() { return (GAS_URL || lsGet(LS.url) || "").trim(); }
+function validUrl(v) { try { var u = new URL(v); return u.protocol === "https:" && u.hostname === "script.google.com" && /\/exec$/.test(u.pathname); } catch (e) { return false; } }
+function api(action, data) {
+  var base = gasUrl();
+  if (!base) { showSetup(false); return Promise.reject(new Error("Server URL is not set.")); }
+  if (navigator.onLine === false) return Promise.reject(new Error("OFFLINE"));
+  var body = Object.assign({ action: action, key: S.key, token: AUTH.token }, data || {});
+  return fetch(base, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body), redirect: "follow" })
+    .then(function (r) { return r.text(); })
+    .then(function (t) {
+      var j; try { j = JSON.parse(t); } catch (e) { throw new Error("BADREPLY"); }
+      if (!j.ok && j.error) { if (j.error === "AUTH_REQUIRED" && action !== "login") authExpired(); throw new Error(j.error); }
+      return j;
+    });
+}
+function friendly(e) {
+  var m = (e && e.message) || String(e);
+  if (m === "OFFLINE") return "You are offline — try again when the connection is back.";
+  if (m === "EDIT_KEY_REQUIRED") return "Editing is locked — unlock it with the password first.";
+  if (m === "AUTH_REQUIRED") return "Your session has expired — log in again with your PIN.";
+  if (m === "READ_ONLY") return "You have read-only access (viewer).";
+  if (m === "ADMIN_ONLY") return "Only an admin can do this.";
+  if (m === "BADREPLY") return "The server reply is invalid. Did you deploy a 'New version' of the Apps Script? (Access: Anyone)";
+  if (/failed to fetch|networkerror|load failed/i.test(m)) return "Could not reach the server. Check: Apps Script deployed (New version), Access = Anyone, and the /exec URL is correct.";
+  return m;
+}
+
+/* ───────────── state aur storage ───────────── */
+function applyData(d, fromCache) {
+  var sig = JSON.stringify([d.tabs, d.items, d.warnings]);
+  S.locked = !!d.locked; S.sheetUrl = d.sheetUrl || S.sheetUrl; S.warnings = d.warnings || []; S.stale = !d.v; applyAuth(d);
+  var changed = sig !== S.sig;
+  S.sig = sig; S.tabs = d.tabs || []; S.items = d.items || []; S.loaded = true;
+  if (!fromCache) { S.lastSync = d.ts || Date.now(); }
+  if (S.tab !== "__all" && S.tab !== "__fav" && !S.tabs.some(function (t) { return t.name === S.tab; })) S.tab = "__all";
+  return changed;
+}
+function saveCache() { lsSet(LS.cache, JSON.stringify({ tabs: S.tabs, items: S.items, locked: S.locked, sheetUrl: S.sheetUrl, warnings: S.warnings, ts: S.lastSync })); }
+
+/* ───────────── login, lock aur fingerprint ───────────── */
+var AUTH = { on: lsGet(LS.auth) === "1", token: "", user: "", role: "", locked: false, mode: "login", fails: 0, until: 0, hiddenAt: 0 };
+(function () { try { var s = JSON.parse(lsGet(LS.tok) || "null"); if (s && s.t) { AUTH.token = s.t; AUTH.user = s.u || ""; AUTH.role = s.r || ""; } } catch (e) {} })();
+S.role = AUTH.role;
+function b64(buf) { var s = ""; new Uint8Array(buf).forEach(function (c) { s += String.fromCharCode(c); }); return btoa(s); }
+function unb64(s) { var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+function sha(str) {
+  if (!(window.crypto && crypto.subtle)) return Promise.resolve("");
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (h) { return b64(h); });
+}
+function saveSession(res, pin) {
+  AUTH.on = true; AUTH.token = res.token; AUTH.user = res.user; AUTH.role = res.role; S.role = res.role;
+  lsSet(LS.tok, JSON.stringify({ t: res.token, u: res.user, r: res.role })); lsSet(LS.auth, "1"); lsSet(LS.lastUser, res.user);
+  var salt = b64(crypto.getRandomValues ? crypto.getRandomValues(new Uint8Array(12)) : new Uint8Array(12));
+  return sha(salt + "|" + res.user.toLowerCase() + "|" + pin).then(function (h) { if (h) lsSet(LS.ver, JSON.stringify({ u: res.user, s: salt, h: h })); });
+}
+function applyAuth(d) {
+  if (d.auth) { AUTH.on = true; lsSet(LS.auth, "1"); if (d.user) { AUTH.user = d.user; AUTH.role = d.role; S.role = d.role; } }
+  else if (d.auth === false) { if (AUTH.on) { AUTH.on = false; AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); lsDel(LS.bio); } lsSet(LS.auth, "0"); S.role = ""; }
+  document.body.classList.toggle("ro", S.role === "viewer");
+  $("secBtn").style.display = AUTH.on ? "" : "none";
+}
+function bioSupported() { return !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext); }
+function bioInfo() { try { var b = JSON.parse(lsGet(LS.bio) || "null"); return b && b.u && AUTH.user && b.u.toLowerCase() === AUTH.user.toLowerCase() ? b : null; } catch (e) { return null; } }
+function rnd(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+function bioEnable() {
+  if (!bioSupported()) return Promise.reject(new Error("Fingerprint unlock is not available on this device or browser."));
+  return navigator.credentials.create({ publicKey: {
+    challenge: rnd(32), rp: { name: "CMD Notes", id: location.hostname },
+    user: { id: rnd(16), name: AUTH.user, displayName: AUTH.user },
+    pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+    authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required", residentKey: "discouraged" }, timeout: 60000
+  } }).then(function (c) { lsSet(LS.bio, JSON.stringify({ id: b64(c.rawId), u: AUTH.user })); });
+}
+function bioCheck() {
+  var b = bioInfo(); if (!b) return Promise.reject(new Error("no-bio"));
+  return navigator.credentials.get({ publicKey: { challenge: rnd(32), allowCredentials: [{ type: "public-key", id: unb64(b.id), transports: ["internal"] }], userVerification: "required", timeout: 60000 } });
+}
+var lkErr = $("lkErr");
+function lkMsg(m, bad) { lkErr.textContent = m || ""; lkErr.style.color = bad === false ? "var(--mute)" : ""; }
+function showLock(mode, msg) {
+  AUTH.locked = true; AUTH.mode = mode; closeAll(); $("lock").classList.add("show");
+  var unlock = mode === "unlock", offer = mode === "offer";
+  $("lkTitle").textContent = offer ? "Fingerprint unlock?" : unlock ? "Welcome, " + AUTH.user : "cmd_notes login";
+  $("lkIcon").textContent = offer ? "👆" : unlock ? "🔒" : "🔐";
+  $("lkSub").textContent = offer ? "Next time it opens with your fingerprint or face instead of the PIN." : (msg || (unlock ? "Enter your PIN" : "Enter your user name and PIN"));
+  $("lkUserRow").style.display = (unlock || offer) ? "none" : "";
+  $("lkPinRow").style.display = offer ? "none" : "";
+  $("lkGo").textContent = offer ? "👆 Enable" : unlock ? "Unlock" : "Login";
+  $("lkBioNo").style.display = offer ? "" : "none";
+  $("lkSwitch").style.display = unlock ? "" : "none";
+  var canBio = unlock && !!bioInfo() && bioSupported();
+  $("lkBio").style.display = canBio ? "" : "none";
+  $("lkPin").value = ""; lkMsg("");
+  if (!unlock && !offer && !$("lkUser").value) $("lkUser").value = lsGet(LS.lastUser) || "";
+  var coarse = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+  $("lkPin").setAttribute("inputmode", coarse ? "none" : "numeric");
+  $("lkPad").style.display = coarse && !offer ? "" : "none";
+  setTimeout(function () { if (offer) return; (mode === "login" && !$("lkUser").value ? $("lkUser") : $("lkPin")).focus({ preventScroll: true }); }, 80);
+  if (canBio && msg !== "nobio") setTimeout(function () { if (AUTH.locked && AUTH.mode === "unlock") bioUnlock(true); }, 350);
+}
+function hideLock() {
+  AUTH.locked = false; $("lock").classList.remove("show"); $("lkPin").value = "";
+  document.body.classList.toggle("ro", S.role === "viewer");
+  if (!S.loaded) { startApp(); } else { sync(true); }
+}
+function lockApp() { if (!AUTH.on || !AUTH.token) return; showLock("unlock"); }
+function authExpired() {
+  if (AUTH.locked && AUTH.mode === "login") return;
+  AUTH.token = ""; lsDel(LS.tok); lsDel(LS.ver); AUTH.on = true; lsSet(LS.auth, "1");
+  showLock("login", "Please log in (session ended or a new login is needed)");
+}
+function bioUnlock(auto) {
+  bioCheck().then(function () { hideLock(); }).catch(function (e) { if (!auto) lkMsg("Fingerprint did not match — enter your PIN."); });
+}
+function lkCooldown() {
+  if (Date.now() < AUTH.until) { lkMsg("Too many wrong attempts — wait " + Math.ceil((AUTH.until - Date.now()) / 1000) + " sec."); return true; }
+  return false;
+}
+function pinSubmit() {
+  var mode = AUTH.mode;
+  if (mode === "offer") { return bioEnable().then(function () { toast("Fingerprint unlock on ✓", "ok"); hideLock(); }).catch(function (e) { lkMsg((e && e.name === "NotAllowedError") ? "Cancelled." : (e.message || "Could not enable"), true); }); }
+  if (lkCooldown()) return;
+  var pin = $("lkPin").value.trim(), user = mode === "unlock" ? AUTH.user : $("lkUser").value.trim();
+  if (!user) return lkMsg("Enter your user name.");
+  if (!pin) return lkMsg("Enter your PIN.");
+  var go = $("lkGo"); go.disabled = true;
+  function fail(msg) { AUTH.fails++; if (AUTH.fails >= 5) { AUTH.until = Date.now() + 30000; AUTH.fails = 0; } $("lkPin").value = ""; lkMsg(msg); }
+  function viaServer() {
+    if (navigator.onLine === false) return fail("Offline — could not unlock with this PIN.");
+    return api("login", { user: user, pin: pin }).then(function (res) {
+      return saveSession(res, pin).then(function () {
+        AUTH.fails = 0;
+        var offer = bioSupported() && !bioInfo() && lsGet(LS.bioNo) !== "1";
+        if (offer) { return (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable ? PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() : Promise.resolve(false)).then(function (ok) { if (ok) showLock("offer"); else hideLock(); }); }
+        hideLock();
+      });
+    }).catch(function (e) { fail(friendly(e)); });
+  }
+  var p = Promise.resolve();
+  if (mode === "unlock") {
+    p = new Promise(function (res) { var v; try { v = JSON.parse(lsGet(LS.ver) || "null"); } catch (e) {} if (!v || v.u.toLowerCase() !== user.toLowerCase()) return res(false); sha(v.s + "|" + user.toLowerCase() + "|" + pin).then(function (h) { res(!!h && h === v.h); }); })
+      .then(function (okLocal) { if (okLocal) { AUTH.fails = 0; hideLock(); return "done"; } });
+  }
+  return p.then(function (done) { if (done !== "done") return viaServer(); }).then(function () { go.disabled = false; }, function () { go.disabled = false; });
+}
+$("lockForm").addEventListener("submit", function (e) { e.preventDefault(); pinSubmit(); });
+$("lkPad").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-k]"); if (!b) return; var k = b.getAttribute("data-k"), el = $("lkPin");
+  if (k === "del") el.value = el.value.slice(0, -1); else if (k === "go") pinSubmit(); else if (el.value.length < 12) el.value += k;
+});
+$("lkBio").onclick = function () { bioUnlock(false); };
+$("lkBioNo").onclick = function () { lsSet(LS.bioNo, "1"); hideLock(); };
+$("lkSwitch").onclick = function () { logout(); };
+function logout() {
+  AUTH.token = ""; AUTH.role = ""; S.role = ""; lsDel(LS.tok); lsDel(LS.ver); lsDel(LS.bio); lsDel(LS.cache);
+  S.items = []; S.tabs = []; S.sig = ""; S.loaded = false; S.failed = false; renderAll(); showLock("login");
+}
+/* security dialog (PIN badalna, logout) */
+function secOpen() {
+  $("secUser").textContent = AUTH.user; $("secRole").textContent = ({ admin: "Admin — full access", editor: "Editor — add / edit / delete", viewer: "Viewer — read only" })[AUTH.role] || "";
+  var sup = bioSupported(), on = !!bioInfo();
+  $("secBioRow").style.display = sup ? "" : "none";
+  $("secBio").textContent = on ? "Turn off" : "Turn on"; $("secBioSt").textContent = on ? "Currently ON" : "Currently OFF";
+  $("secAuto").value = lsGet(LS.lockmin) == null ? "1" : lsGet(LS.lockmin);
+  ["pOld", "pNew", "pNew2"].forEach(function (i) { $(i).value = ""; }); $("pinErr").style.display = "none";
+  openOv("secOv");
+}
+$("secBtn").onclick = secOpen;
+$("secLock").onclick = function () { closeAll(); lockApp(); };
+$("secOut").onclick = function () { closeAll(); logout(); };
+$("secAuto").onchange = function () { lsSet(LS.lockmin, this.value); toast("Auto-lock set ✓", "ok", 1200); };
+$("secBio").onclick = function () {
+  if (bioInfo()) { lsDel(LS.bio); lsSet(LS.bioNo, "1"); secOpen(); toast("Fingerprint unlock turned off"); return; }
+  bioEnable().then(function () { lsDel(LS.bioNo); secOpen(); toast("Fingerprint unlock on ✓", "ok"); }).catch(function (e) { toast((e && e.name === "NotAllowedError") ? "Cancelled" : (e.message || "Could not enable"), "bad"); });
+};
+$("pinForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var er = $("pinErr"), o = $("pOld").value, n = $("pNew").value, n2 = $("pNew2").value;
+  function bad(m) { er.textContent = m; er.style.display = "block"; }
+  if (!/^[0-9]{4,8}$/.test(n)) return bad("The new PIN must be 4 to 8 digits.");
+  if (n !== n2) return bad("The two new PINs do not match.");
+  api("changePin", { oldPin: o, newPin: n }).then(function () {
+    return saveSession({ token: AUTH.token, user: AUTH.user, role: AUTH.role }, n).then(function () { closeAll(); toast("PIN changed ✓", "ok"); });
+  }).catch(function (e2) { bad(friendly(e2)); });
+});
+
+/* ───────────── sync (sheet se data lena) ───────────── */
+var syncing = false, syncAgain = false;
+function setLive(kind, txt) { var p = $("livePill"); p.className = "pill " + (kind || ""); $("liveTxt").textContent = txt; }
+function refreshLive() {
+  if (S.offline) return setLive("off", "Offline" + (S.lastSync ? " · " + ago(S.lastSync) : ""));
+  if (syncing || S.busy) return setLive("sync", "Syncing…");
+  if (S.lastSync) setLive("", "Live · " + ago(S.lastSync));
+}
+function sync(silent) {
+  if (AUTH.locked) return Promise.resolve();
+  if (syncing) { if (!silent) syncAgain = true; return Promise.resolve(); }
+  syncing = true; refreshLive();
+  return api("list").then(function (d) {
+    S.offline = false; hideBanner();
+    if (S.stale) showBanner("warn", "⚠️ The Apps Script Code.gs is outdated (tags and sections will not show). Paste the new Code.gs → Deploy → Manage deployments → ✏️ → New version → Deploy.", false);
+    else if (d.warnings && d.warnings.length) showBanner("warn", "⚠️ " + d.warnings[0] + (d.warnings.length > 1 ? "  (+" + (d.warnings.length - 1) + " aur)" : ""), false);
+    if (S.busy) return;                         // ek write chal raha hai; uska apna sync baad me aayega
+    var changed = applyData(d, false);
+    saveCache();
+    if (changed || !silent) renderAll();
+  }).catch(function (e) {
+    var m = (e && e.message) || "";
+    if (m === "AUTH_REQUIRED") return;
+    if (m === "OFFLINE") { S.offline = true; if (!S.loaded) showBanner("warn", "Offline — showing cached data."); }
+    else { showBanner("err", friendly(e), true); }
+    if (!S.loaded) { S.failed = true; renderAll(); }
+  }).then(function () { syncing = false; refreshLive(); if (syncAgain) { syncAgain = false; return sync(false); } });
+}
+function showBanner(kind, txt, retry) { var b = $("banner"); b.className = "banner show " + kind; $("bannerTxt").textContent = txt; $("bannerBtn").style.display = retry ? "" : "none"; }
+function hideBanner() { $("banner").className = "banner"; }
+$("bannerBtn").onclick = function () { sync(false); };
+
+setInterval(function () { if (!document.hidden && navigator.onLine !== false && !S.busy && gasUrl()) sync(true); }, POLL_MS);
+setInterval(refreshLive, 5000);
+document.addEventListener("visibilitychange", function () {
+  if (document.hidden) { AUTH.hiddenAt = Date.now(); return; }
+  if (AUTH.on && AUTH.token && !AUTH.locked && AUTH.hiddenAt) {
+    var mins = Number(lsGet(LS.lockmin) || 1), away = Date.now() - AUTH.hiddenAt;
+    if (mins >= 0 && away >= mins * 60000) { lockApp(); return; }
+  }
+  if (!document.hidden && gasUrl()) sync(true);
+});
+window.addEventListener("online", function () { S.offline = false; toast("Back online", "ok"); sync(true); });
+window.addEventListener("offline", function () { S.offline = true; refreshLive(); toast("Offline — showing cached commands"); });
+
+/* ───────────── write queue (optimistic UI) ───────────── */
+function enqueue(job) {
+  S.busy++; refreshLive();
+  S.queue = S.queue.then ? S.queue : Promise.resolve();
+  S.queue = S.queue.then(job).catch(function (e) { toast(friendly(e), "bad", 4200); if ((e && e.message) === "EDIT_KEY_REQUIRED") { S.key = ""; lsDel(LS.key); } })
+    .then(function () { S.busy--; if (!S.busy) return sync(false); });
+  return S.queue;
+}
+S.queue = Promise.resolve();
+function canEdit() { if (S.role === "viewer") { toast("You have read-only access (viewer)", "bad"); return false; } if (S.offline || navigator.onLine === false) { toast("Offline — add/edit needs an internet connection", "bad"); return false; } if (S.locked && !S.key) { openKey(); return false; } return true; }
+function pick(it) { return { cmd: it.cmd, tag: it.tag || "", category: it.category || "", purpose: it.purpose || "", example: it.example || "" }; }
+
+/* ───────────── render ───────────── */
+function counts() { var c = {}; S.items.forEach(function (i) { c[i.tab] = (c[i.tab] || 0) + 1; }); return c; }
+function renderTabs() {
+  var c = counts(), total = S.items.length, html = "", mob = "";
+  function btn(name, label, icon, n) {
+    var on = S.tab === name ? " on" : "";
+    html += '<button class="tabbtn' + on + '" data-tab="' + esc(name) + '"><span class="ic">' + icon + '</span><span class="nm">' + esc(label) + '</span><span class="ct">' + n + '</span></button>';
+    mob += '<button class="chip' + on + '" data-tab="' + esc(name) + '">' + icon + " " + esc(label) + " <b>" + n + "</b></button>";
+  }
+  btn("__all", "All commands", "⌘", total);
+  btn("__fav", "Favourites", "⭐", S.items.filter(function (i) { return i.favorite; }).length);
+  S.tabs.forEach(function (t) { btn(t.name, t.name.replace(/_/g, " "), tabIcon(t.name), c[t.name] || 0); });
+  $("sideTabs").innerHTML = html; $("mobTabs").innerHTML = mob;
+  var onChip = $("mobTabs").querySelector(".on"); if (onChip && onChip.scrollIntoView) { try { onChip.scrollIntoView({ inline: "center", block: "nearest" }); } catch (e) {} }
+}
+function visibleBase() { return S.items.filter(function (i) { return S.tab === "__all" || (S.tab === "__fav" ? i.favorite : i.tab === S.tab); }); }
+function renderCats() {
+  var base = visibleBase(), cm = {}, tm = {}, tcase = {};
+  base.forEach(function (i) {
+    var k = dv(i.category).trim(); if (k) cm[k] = (cm[k] || 0) + 1;
+    tagsOf(i).forEach(function (x) { var l = x.toLowerCase(); tm[l] = (tm[l] || 0) + 1; tcase[l] = tcase[l] || x; });
+  });
+  var cn = Object.keys(cm).sort(function (a, b) { return a.localeCompare(b); });
+  var tn = Object.keys(tm).sort(function (a, b) { return tcase[a].localeCompare(tcase[b]); });
+  if (S.cat && !cm[S.cat]) S.cat = "";
+  if (S.tag && !tm[S.tag.toLowerCase()]) S.tag = "";
+  var h = '<option value="">All categories (' + cn.length + ")</option>";
+  cn.forEach(function (n) { h += '<option value="' + esc(n) + '"' + (S.cat === n ? " selected" : "") + ">" + esc(n) + " (" + cm[n] + ")</option>"; });
+  $("cats").innerHTML = h;
+  var g = '<option value="">All tags (' + tn.length + ")</option>";
+  tn.forEach(function (l) { g += '<option value="' + esc(tcase[l]) + '"' + (S.tag && S.tag.toLowerCase() === l ? " selected" : "") + ">" + esc(tcase[l]) + " (" + tm[l] + ")</option>"; });
+  $("tags").innerHTML = g;
+  $("clrF").style.display = (S.cat || S.tag) ? "" : "none";
+}
+$("cats").onchange = function () { S.cat = this.value; renderCats(); renderGrid(); };
+$("tags").onchange = function () { S.tag = this.value; renderCats(); renderGrid(); };
+$("clrF").onclick = function () { S.cat = ""; S.tag = ""; renderCats(); renderGrid(); };
+function filtered() {
+  var q = S.q.trim().toLowerCase(), terms = q ? q.split(/\s+/) : [];
+  var list = visibleBase().filter(function (i) {
+    if (S.cat && (i.category || "").trim() !== S.cat) return false;
+    if (S.tag && !hasTag(i, S.tag)) return false;
+    if (!terms.length) return true;
+    var hay = (i.cmd + " " + i.category + " " + i.tag + " " + i.purpose + " " + i.example + " " + i.tab).toLowerCase();
+    return terms.every(function (t) { return hay.indexOf(t) >= 0; });
+  });
+  if (S.sort === "az") list.sort(function (a, b) { return a.cmd.localeCompare(b.cmd); });
+  else if (S.sort === "cat") list.sort(function (a, b) { return (a.category || "~").localeCompare(b.category || "~") || a.cmd.localeCompare(b.cmd); });
+  else if (S.sort === "new") list.sort(function (a, b) { return (b.tmp ? 1 : 0) - (a.tmp ? 1 : 0) || String(b.created_at || "").localeCompare(String(a.created_at || "")) || (b.row || 0) - (a.row || 0); });
+  else if (S.sort === "upd") list.sort(function (a, b) { return (b.tmp ? 1 : 0) - (a.tmp ? 1 : 0) || String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || "")); });
+  else if (S.sort === "fav") list.sort(function (a, b) { return (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0); });
+  return list;
+}
+function card(i, idx) {
+  var q = S.q.trim(), cat = dv(i.category), ex = dv(i.example), pu = dv(i.purpose), tg = tagsOf(i), w = when(i);
+  return '<article class="card' + (i.tmp ? " pending" : "") + (i.favorite ? " isfav" : "") + '" data-i="' + idx + '" style="--h:' + hue(cat || i.tab) + ';animation-delay:' + Math.min(idx, 12) * 18 + 'ms">' +
+    '<header>' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Show this category">' + hl(cat, q) + "</span>" : "") +
+    (S.tab === "__all" || S.tab === "__fav" ? '<span class="tagtab">' + esc(i.tab) + "</span>" : "") +
+    '<div class="acts"><button class="star' + (i.favorite ? " on" : "") + '" data-act="fav" aria-label="Favourite" title="Favourite">' + (i.favorite ? "★" : "☆") + '</button>' +
+    '<button data-act="edit" aria-label="Edit" title="Edit">' + ICON.edit + '</button><button class="del" data-act="del" aria-label="Delete" title="Delete">' + ICON.del + "</button></div></header>" +
+    '<div class="cmd" data-act="copy-cmd" title="Click to copy"><pre>' + hl(i.cmd, q) + '</pre><span class="cp">' + ICON.copy + "</span></div>" +
+    (pu ? '<p class="purpose">' + hl(pu, q) + "</p>" : "") +
+    (ex ? '<div class="ex"><span class="lbl">Example</span><div class="body" data-act="copy-ex" title="Click to copy"><pre>' + hl(ex, q) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
+    ((tg.length || w) ? '<div class="cardfoot"><div class="tags">' + tg.map(function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Show this tag">' + hl(x, q) + "</span>"; }).join("") + '</div>' +
+      (w ? '<span class="when" title="' + esc(i.updated_at || i.created_at) + '">' + esc(w) + "</span>" : "") + "</div>" : "") +
+    "</article>";
+}
+var shown = [];
+var VBY = {
+  list:{view:"list"}, expanded:{view:"list", all:true}, cards:{view:"grid"},
+  compact:{view:"grid", f:"f-cmd"}, purpose:{view:"grid", f:"f-pu"}, example:{view:"grid", f:"f-ex"},
+  bycat:{view:"list", group:"category"}, bytag:{view:"list", group:"tag"}
+};
+S.vby = "list";
+function applyVby(v, noRender) {
+  if (!VBY[v]) v = "list";
+  var d = VBY[v]; S.vby = v; S.view = d.view; S.expandAll = !!d.all; S.fclass = d.f || "";
+  if (d.group) { S.group = d.group; $("group").value = d.group; lsSet(LS.group, d.group); }
+  lsSet("cmdn_vby", v); lsSet(LS.view, d.view);
+  if ($("vby")) $("vby").value = v;
+  if (!noRender) { renderSide(); renderGrid(); }
+}
+function rowItem(i, idx) {
+  var q = S.q.trim(), cat = dv(i.category), ex = dv(i.example), pu = dv(i.purpose), tg = tagsOf(i), w = when(i);
+  var key = i.id || (i.tab + ":" + i.row), open = !!S.expandAll || !!S.openRows[key];
+  var tagp = function (x) { return '<span class="tgp" data-act="ftag" data-v="' + esc(x) + '" title="Show this tag">' + hl(x, q) + "</span>"; };
+  return '<article class="rw' + (open ? " open" : "") + (i.tmp ? " pending" : "") + '" data-i="' + idx + '" data-k="' + esc(key) + '" style="--h:' + hue(cat || i.tab) + '">' +
+    '<div class="rsum" data-act="open"><button class="rs star' + (i.favorite ? " on" : "") + '" data-act="fav" aria-label="Favourite">' + (i.favorite ? "★" : "☆") + "</button>" +
+    '<div class="rc" title="' + esc(i.cmd) + '">' + hl(i.cmd, q) + "</div>" +
+    '<div class="rp">' + hl(pu, q) + "</div>" +
+    '<div class="rt">' + tg.slice(0, 3).map(tagp).join("") + (tg.length > 3 ? '<span class="tgp" style="cursor:default">+' + (tg.length - 3) + "</span>" : "") + "</div>" +
+    '<div class="rg">' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '" title="Show this category">' + hl(cat, q) + "</span>" : "") + "</div>" +
+    '<span class="chev">▼</span></div>' +
+    '<div class="rdet">' +
+    '<div class="kv"><span>Command</span><div class="box" data-act="copy-cmd" title="Click to copy"><pre>' + esc(i.cmd) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" +
+    (pu ? '<div class="kv"><span>Purpose</span><div>' + esc(pu) + "</div></div>" : "") +
+    (ex ? '<div class="kv"><span>Example</span><div class="box" data-act="copy-ex" title="Click to copy"><pre>' + esc(ex) + '</pre><span class="cp">' + ICON.copy + "</span></div></div>" : "") +
+    '<div class="kv"><span>Category</span><div class="meta">' + (cat ? '<span class="badge" data-act="fcat" data-v="' + esc(cat) + '">' + esc(cat) + "</span>" : "—") + '<span class="tagtab">' + esc(i.tab) + "</span></div></div>" +
+    '<div class="kv"><span>Tags</span><div class="meta">' + (tg.length ? tg.map(tagp).join("") : "—") + "</div></div>" +
+    (w ? '<div class="kv"><span>When</span><div class="meta"><span class="when">' + esc(w) + (i.created_at ? " · created " + esc(String(i.created_at).slice(0, 10)) : "") + "</span></div></div>" : "") +
+    '<div class="ra"><button data-act="edit">' + ICON.edit + ' Edit</button><button class="del" data-act="del">' + ICON.del + " Delete</button></div>" +
+    "</div></article>";
+}
+function groupKeys(it) {
+  if (S.group === "tag") { var tg = tagsOf(it); return tg.length ? tg : ["Untagged"]; }
+  if (S.group === "category") return [dv(it.category) || "Uncategorized"];
+  return [it.tab];
+}
+function renderGrid() {
+  var g = $("grid");
+  var rows = S.view === "list"; g.className = "grid" + (rows ? " rows" : "") + (S.fclass ? " " + S.fclass : "");
+  if (!S.loaded && S.failed) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">📡</div><h3>Could not load data</h3><p>Read the message above, then press Retry.</p></div>'; $("count").textContent = ""; return; }
+  if (!S.loaded) { g.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>'; $("count").textContent = ""; return; }
+  var list = filtered();
+  $("count").textContent = list.length + (list.length === 1 ? " item" : " items");
+  if (!list.length) {
+    shown = [];
+    var any = S.items.length > 0;
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">' + (any ? "🔍" : "📝") + "</div><h3>" + (any ? "Nothing found" : "No commands yet") + "</h3><p>" +
+      (any ? "Try a different search or filter." : "Press ＋ Add and save your first command.") + "</p></div>";
+    return;
+  }
+  shown = [];
+  var draw = rows ? rowItem : card, head = rows ? '<div class="rhead"><span></span><span>cmds</span><span>purpose</span><span>tag</span><span>category</span><span></span></div>' : "";
+  if (S.group === "none") { shown = list; g.innerHTML = head + list.map(draw).join(""); return; }
+  var groups = {}, order = [];
+  list.forEach(function (it) { groupKeys(it).forEach(function (k) { var l = k.toLowerCase(); if (!groups[l]) { groups[l] = { name: k, items: [] }; order.push(l); } groups[l].items.push(it); }); });
+  order.sort(function (a, b) {
+    var ea = /^(untagged|uncategorized)$/.test(a), eb = /^(untagged|uncategorized)$/.test(b);
+    return ea !== eb ? (ea ? 1 : -1) : groups[a].name.localeCompare(groups[b].name);
+  });
+  var html = "";
+  order.forEach(function (l) {
+    var gr = groups[l], key = S.group + ":" + l, shut = !!S.shut[key];
+    html += '<div class="grp' + (shut ? " shut" : "") + '" data-grp="' + esc(key) + '"><span class="chev">▼</span><h3' + (S.group === "tag" && l !== "untagged" ? ' class="tg"' : "") + ">" + esc(gr.name) + '</h3><span class="n">' + gr.items.length + "</span></div>";
+    if (!shut) gr.items.forEach(function (it) { shown.push(it); html += draw(it, shown.length - 1); });
+  });
+  g.innerHTML = head + html;
+}
+function renderTitle() {
+  var nm = S.tab === "__all" ? "All commands" : S.tab === "__fav" ? "⭐ Favourites" : S.tab.replace(/_/g, " ");
+  $("title").firstChild.nodeValue = nm + " ";
+  document.title = (S.tab === "__all" ? "" : nm + " · ") + "CMD Notes";
+}
+function renderSide() {
+  $("sheetLink").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("sheetLink").href = S.sheetUrl;
+  $("lockBtn").style.display = S.locked && !S.key ? "" : "none";
+  $("fab").disabled = false; $("addTop").disabled = false;
+  $("vGrid").classList.toggle("on", S.vby === "cards"); $("vList").classList.toggle("on", S.vby === "list");
+}
+function renderAll() { renderTabs(); renderCats(); renderTitle(); renderSide(); renderGrid(); }
+
+/* ───────────── interactions (click aur keys) ───────────── */
+function setTab(name) { S.tab = name; S.cat = ""; S.tag = ""; lsSet(LS.tab, name); renderAll(); $("main").scrollTo({ top: 0 }); }
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-tab]"); if (t && (t.closest("#sideTabs") || t.closest("#mobTabs"))) return setTab(t.getAttribute("data-tab"));
+  var gh = e.target.closest("[data-grp]"); if (gh) { var gk = gh.getAttribute("data-grp"); S.shut[gk] = !S.shut[gk]; renderGrid(); return; }
+  var cl = e.target.closest("[data-close]"); if (cl) return closeAll();
+  if (e.target.classList && e.target.classList.contains("ov")) return closeAll();
+  var a = e.target.closest("[data-act]"); if (!a) return;
+  var art = a.closest(".card,.rw"); if (!art) return;
+  var it = shown[+art.getAttribute("data-i")]; if (!it) return;
+  var act = a.getAttribute("data-act");
+  if (act === "open") { if (S.expandAll) return; var k = art.getAttribute("data-k"); S.openRows[k] = !S.openRows[k]; art.classList.toggle("open", !!S.openRows[k]); return; }
+  if (act === "fcat") { S.cat = a.getAttribute("data-v"); renderCats(); renderGrid(); return; }
+  if (act === "ftag") { S.tag = a.getAttribute("data-v"); renderCats(); renderGrid(); return; }
+  if (act === "fav") return toggleFav(it);
+  if (act === "edit") return openEdit(it);
+  if (act === "del") return askDelete(it);
+  if (act === "copy-cmd") return copy(it.cmd, a);
+  if (act === "copy-ex") return copy(it.example, a);
+});
+function copy(text, el) {
+  function done() {
+    var b = el.querySelector(".cp"); if (b) { var old = b.innerHTML; b.innerHTML = ICON.ok; b.classList.add("done"); setTimeout(function () { b.innerHTML = old; b.classList.remove("done"); }, 1100); }
+    toast("Copied", "ok", 1200);
+  }
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  function fallback() {
+    var ta = document.createElement("textarea"); ta.value = text; ta.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch (e) { toast("Copy failed — select the text manually", "bad"); } ta.remove();
+  }
+}
+var qEl = $("q");
+qEl.addEventListener("input", function () { S.q = qEl.value; $("searchBox").classList.toggle("has", !!S.q); renderGrid(); });
+$("qClr").onclick = function () { qEl.value = ""; S.q = ""; $("searchBox").classList.remove("has"); renderGrid(); qEl.focus(); };
+$("sort").onchange = function () { S.sort = this.value; lsSet(LS.sort, S.sort); renderGrid(); };
+$("group").onchange = function () { S.group = this.value; lsSet(LS.group, S.group); if (S.vby === "bycat" || S.vby === "bytag") { S.vby = "list"; $("vby").value = "list"; lsSet("cmdn_vby", "list"); } renderGrid(); };
+$("vGrid").onclick = function () { applyVby("cards"); };
+$("vList").onclick = function () { applyVby("list"); };
+$("vby").onchange = function () { applyVby(this.value); };
+$("themeBtn").onclick = function () { setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"); };
+function setTheme(t) { document.documentElement.setAttribute("data-theme", t); lsSet(LS.theme, t); var m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === "dark" ? "#0b1114" : "#f2f5f6"; }
+
+function toggleFav(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Still saving… please wait");
+  it.favorite = !it.favorite; renderAll();
+  var orig = pick(it), id = it.id, row = it.row, tab = it.tab, f = it.favorite;
+  enqueue(function () { return api("favorite", { tab: tab, id: id, row: row, orig: orig, favorite: f }).then(function () { toast(f ? "⭐ Favourite" : "Favourite hata diya", "ok", 1400); }); });
+}
+/* ── modals (popup windows) ── */
+function openOv(id) { $(id).classList.add("show"); }
+function closeAll() { document.querySelectorAll(".ov.show").forEach(function (o) { o.classList.remove("show"); }); S.editing = null; S.delItem = null; if ($("setup").style.display === "flex" && gasUrl()) $("setup").style.display = "none"; }
+function fillTabSelect(sel) {
+  $("fTab").innerHTML = S.tabs.map(function (t) { return '<option value="' + esc(t.name) + '">' + esc(t.name.replace(/_/g, " ")) + "</option>"; }).join("");
+  if (sel) $("fTab").value = sel;
+}
+function tagSugRender(tab) {
+  var cnt = {}, cs = {};
+  S.items.forEach(function (i) { tagsOf(i).forEach(function (x) { var l = x.toLowerCase(); cnt[l] = (cnt[l] || 0) + (!tab || i.tab === tab ? 2 : 1); cs[l] = cs[l] || x; }); });
+  var cur = tagsOf({ tag: $("fTag").value }).map(function (x) { return x.toLowerCase(); });
+  var names = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a] || a.localeCompare(b); }).slice(0, 14);
+  $("tagSug").innerHTML = names.map(function (l) { return '<button type="button" class="' + (cur.indexOf(l) >= 0 ? "on" : "") + '" data-sug="' + esc(cs[l]) + '">' + esc(cs[l]) + "</button>"; }).join("");
+}
+$("tagSug").addEventListener("click", function (e) {
+  var b = e.target.closest("[data-sug]"); if (!b) return;
+  var v = b.getAttribute("data-sug"), list = tagsOf({ tag: $("fTag").value }), l = v.toLowerCase();
+  var idx = list.findIndex(function (x) { return x.toLowerCase() === l; });
+  if (idx >= 0) list.splice(idx, 1); else list.push(v);
+  $("fTag").value = list.join(", "); tagSugRender($("fTab").value);
+});
+$("fTag").addEventListener("input", function () { tagSugRender($("fTab").value); });
+function fillCatList() {}
+var DEF_CATS = ["Windows", "Linux", "Cisco"], DEF_TAGS = ["Files & Folders", "Network", "System", "Services", "Users", "Security", "Storage", "Troubleshooting"];
+function comboOptions(id) {
+  var cnt = {}, cs = {}, add = function (x, n) { x = dv(x).trim(); if (!x) return; var l = x.toLowerCase(); cnt[l] = (cnt[l] || 0) + n; cs[l] = cs[l] || x; };
+  if (id === "fCat") { DEF_CATS.forEach(function (x) { add(x, 0); }); S.tabs.forEach(function (tb) { add(tb.name.replace(/_/g, " "), 0); }); S.items.forEach(function (i) { add(i.category, 1); }); }
+  else { DEF_TAGS.forEach(function (x) { add(x, 0); }); S.items.forEach(function (i) { tagsOf(i).forEach(function (x) { add(x, 1); }); }); }
+  return Object.keys(cnt).sort(function (a, b) { return cs[a].localeCompare(cs[b]); }).map(function (l) { return { name: cs[l], n: cnt[l] }; });
+}
+function comboRender(cb) {
+  var id = cb.getAttribute("data-for"), inp = $(id), multi = !!cb.getAttribute("data-multi"), panel = cb.querySelector(".cpanel");
+  var picked = multi ? tagsOf({ tag: inp.value }).map(function (x) { return x.toLowerCase(); }) : [];
+  var q = (multi ? inp.value.split(/[,;|]/).pop() : inp.value).trim().toLowerCase();
+  var opts = comboOptions(id).filter(function (o) { return !q || o.name.toLowerCase().indexOf(q) >= 0 || picked.indexOf(o.name.toLowerCase()) >= 0; });
+  panel.innerHTML = opts.length ? opts.map(function (o) {
+    var on = multi ? picked.indexOf(o.name.toLowerCase()) >= 0 : inp.value.trim().toLowerCase() === o.name.toLowerCase();
+    return '<div class="opt' + (on ? " sel" : "") + '" data-v="' + esc(o.name) + '"><span class="ck">' + (on ? "✓" : "") + "</span>" + esc(o.name) + (o.n ? '<span class="n">' + o.n + "</span>" : "") + "</div>";
+  }).join("") : '<div class="none">No match — type a new name</div>';
+}
+function comboOpen(cb, yes) {
+  document.querySelectorAll(".combo.open").forEach(function (c) { if (c !== cb) c.classList.remove("open"); });
+  if (yes) { comboRender(cb); cb.classList.add("open"); } else cb.classList.remove("open");
+}
+document.querySelectorAll(".combo").forEach(function (cb) {
+  var inp = cb.querySelector("input"), multi = !!cb.getAttribute("data-multi");
+  inp.addEventListener("focus", function () { comboOpen(cb, true); });
+  inp.addEventListener("click", function () { comboOpen(cb, true); });
+  inp.addEventListener("input", function () { comboOpen(cb, true); if (multi) tagSugRender($("fTab").value); });
+  inp.addEventListener("keydown", function (e) { if (e.key === "Escape" && cb.classList.contains("open")) { e.stopPropagation(); comboOpen(cb, false); } });
+  cb.querySelector(".cbtn").addEventListener("click", function () { var o = cb.classList.contains("open"); comboOpen(cb, !o); if (!o) inp.focus(); });
+  cb.querySelector(".cpanel").addEventListener("mousedown", function (e) {
+    e._inCombo = true; var o = e.target.closest(".opt"); if (!o) return; e.preventDefault();
+    var v = o.getAttribute("data-v");
+    if (multi) {
+      var list = tagsOf({ tag: inp.value }), l = v.toLowerCase(), ix = list.findIndex(function (x) { return x.toLowerCase() === l; });
+      if (ix >= 0) list.splice(ix, 1); else list.push(v);
+      inp.value = list.length ? list.join(", ") + ", " : ""; comboRender(cb); tagSugRender($("fTab").value);
+    } else { inp.value = v; comboOpen(cb, false); }
+  });
+});
+document.addEventListener("mousedown", function (e) { if (!e._inCombo && !e.target.closest(".combo")) document.querySelectorAll(".combo.open").forEach(function (c) { c.classList.remove("open"); }); });
+function openAdd() {
+  if (!canEdit()) return;
+  if (!S.tabs.length) return toast("Wait for the sheet to load, or create a new section first", "bad");
+  S.editing = null;
+  $("editTitle").textContent = "New command"; $("delBtn").style.display = "none"; $("fTab").disabled = false;
+  fillTabSelect(S.tab !== "__all" && S.tab !== "__fav" ? S.tab : (lsGet(LS.tab) && S.tabs.some(function (t) { return t.name === lsGet(LS.tab); }) ? lsGet(LS.tab) : S.tabs[0].name));
+  fillCatList($("fTab").value);
+  $("fCmd").value = ""; $("fCat").value = S.cat || ""; $("fTag").value = S.tag || ""; $("fPurpose").value = ""; $("fEx").value = ""; $("fFav").checked = S.tab === "__fav"; $("editErr").style.display = "none"; tagSugRender($("fTab").value);
+  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+}
+function openEdit(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Still saving… please wait");
+  S.editing = it;
+  $("editTitle").textContent = "Edit command"; $("delBtn").style.display = ""; fillTabSelect(it.tab); $("fTab").disabled = true;
+  fillCatList(it.tab);
+  $("fCmd").value = it.cmd; $("fCat").value = dv(it.category); $("fTag").value = tagsOf(it).join(", "); $("fPurpose").value = dv(it.purpose); $("fEx").value = dv(it.example); $("fFav").checked = !!it.favorite; $("editErr").style.display = "none"; tagSugRender(it.tab);
+  openOv("editOv"); setTimeout(function () { $("fCmd").focus(); }, 60);
+}
+$("fTab").onchange = function () { fillCatList(this.value); tagSugRender(this.value); };
+$("fab").onclick = openAdd; $("addTop").onclick = openAdd;
+$("editForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var d = { cmd: $("fCmd").value, category: $("fCat").value, tag: tagsOf({ tag: $("fTag").value }).join(", "), purpose: $("fPurpose").value, example: $("fEx").value, favorite: $("fFav").checked };
+  if (!d.cmd.trim()) { var er = $("editErr"); er.textContent = "A command is required."; er.style.display = "block"; $("fCmd").focus(); return; }
+  var tab = $("fTab").value, it = S.editing;
+  closeAll();
+  if (it) {
+    var orig = pick(it), row = it.row, id = it.id;
+    Object.assign(it, d, { tmp: true, updated_at: new Date().toISOString() }); renderAll();
+    enqueue(function () { return api("update", Object.assign({ tab: it.tab, row: row, id: id, orig: orig }, d)).then(function () { toast("Saved ✓", "ok"); }); });
+  } else {
+    S.items.push(Object.assign({ tab: tab, row: 0, id: "", tmp: true, created_at: new Date().toISOString(), updated_at: "" }, d)); renderAll();
+    enqueue(function () { return api("add", Object.assign({ tab: tab }, d)).then(function () { toast("Added ✓", "ok"); }); });
+  }
+});
+$("editForm").addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); $("editForm").requestSubmit(); } });
+$("delBtn").onclick = function () { var it = S.editing; closeAll(); if (it) askDelete(it); };
+function askDelete(it) {
+  if (!canEdit()) return;
+  if (it.tmp) return toast("Still saving… please wait");
+  S.delItem = it; $("confCmd").textContent = it.cmd; openOv("confOv");
+}
+$("confYes").onclick = function () {
+  var it = S.delItem; closeAll(); if (!it) return;
+  S.items = S.items.filter(function (x) { return x !== it; }); renderAll();
+  enqueue(function () { return api("delete", { tab: it.tab, row: it.row, id: it.id, orig: pick(it) }).then(function () { toast("Deleted", "ok"); }); });
+};
+/* naya tab */
+$("newTabBtn").onclick = function () { if (!canEdit()) return; $("tName").value = ""; $("tabErr").style.display = "none"; openOv("tabOv"); setTimeout(function () { $("tName").focus(); }, 60); };
+$("tabForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var n = $("tName").value.trim(); if (!n) return;
+  closeAll(); enqueue(function () { return api("addTab", { name: n }).then(function () { S.tab = n; lsSet(LS.tab, n); toast("Section created ✓", "ok"); }); });
+});
+/* unlock */
+function openKey() { $("kIn").value = ""; $("keyErr").style.display = "none"; openOv("keyOv"); setTimeout(function () { $("kIn").focus(); }, 60); }
+$("lockBtn").onclick = openKey;
+$("keyForm").addEventListener("submit", function (e) {
+  e.preventDefault(); var k = $("kIn").value;
+  S.key = k;
+  api("checkKey", { key: k }).then(function (r) { if (r.ok) { lsSet(LS.key, k); closeAll(); renderSide(); toast("Unlocked ✓", "ok"); } else { S.key = ""; $("keyErr").textContent = "Wrong password."; $("keyErr").style.display = "block"; } })
+    .catch(function (er) { S.key = ""; $("keyErr").textContent = friendly(er); $("keyErr").style.display = "block"; });
+});
+/* setup */
+function showSetup(cancelable) { $("sUrl").value = gasUrl(); $("sErr").style.display = "none"; $("sCancel").style.display = cancelable ? "" : "none"; $("setup").style.display = "flex"; }
+$("setupBtn").onclick = function () { showSetup(true); };
+(function () {
+  var mb = $("moreBtn"), mm = $("moreMenu");
+  function close() { mm.hidden = true; mb.setAttribute("aria-expanded", "false"); }
+  mb.onclick = function (e) {
+    e.stopPropagation();
+    if (!mm.hidden) return close();
+    var sl = $("sheetLink"); $("moreSheet").style.display = S.sheetUrl ? "" : "none"; if (S.sheetUrl) $("moreSheet").href = S.sheetUrl;
+    $("moreLock").hidden = $("lockBtn").style.display === "none";
+    $("moreSec").hidden = $("secBtn").style.display === "none";
+    $("moreLock").textContent = $("lockBtn").textContent;
+    $("moreInstall").hidden = !$("installBtn").classList.contains("show");
+    mm.hidden = false; mb.setAttribute("aria-expanded", "true");
+  };
+  mm.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) { close(); $(b.getAttribute("data-go")).click(); } else if (e.target.closest("a")) close();
+  });
+  document.addEventListener("click", function (e) { if (!mm.hidden && !e.target.closest("#moreMenu")) close(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+})();
+$("sCancel").onclick = function () { $("setup").style.display = "none"; };
+$("setupForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  var v = $("sUrl").value.trim().split("?")[0].split("#")[0];
+  if (!validUrl(v)) { $("sErr").textContent = "Enter a URL like https://script.google.com/…/exec."; $("sErr").style.display = "block"; return; }
+  lsSet(LS.url, v); lsDel(LS.cache); location.reload();
+});
+/* keyboard shortcuts */
+document.addEventListener("keydown", function (e) {
+  var typing = /input|textarea|select/i.test((e.target.tagName || ""));
+  if (e.key === "Escape") { if (document.querySelector(".ov.show")) closeAll(); else if (S.q) $("qClr").click(); return; }
+  if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "/") { e.preventDefault(); qEl.focus(); qEl.select(); }
+  else if (e.key === "n") { e.preventDefault(); openAdd(); }
+});
+
+/* ───────────── PWA: install, service worker aur URL params ───────────── */
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.navigator.standalone === true;
+}
+function isIOSSafari() {
+  var ua = navigator.userAgent, isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream, isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua);
+  return isIOS && isSafari;
+}
+var deferredInstallPrompt = null, installBtn = $("installBtn");
+window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferredInstallPrompt = e; if (!isStandalone()) installBtn.classList.add("show"); });
+window.addEventListener("appinstalled", function () { deferredInstallPrompt = null; installBtn.classList.remove("show"); toast("✅ App installed", "ok"); });
+installBtn.onclick = async function () {
+  if (!deferredInstallPrompt) {
+    if (isIOSSafari()) $("iosBanner").classList.add("show"); else toast("Browser menu → Install app / Add to Home screen", "", 4500);
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  try { await deferredInstallPrompt.userChoice; } catch (e) {}
+  deferredInstallPrompt = null; installBtn.classList.remove("show");
+};
+$("iosOk").onclick = function () { $("iosBanner").classList.remove("show"); };
+if (!isStandalone() && isIOSSafari()) installBtn.classList.add("show");     // iOS kabhi beforeinstallprompt event nahi bhejta
+
+if ("serviceWorker" in navigator && !window.__HUB) {
+  var hadCtl = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", function () { if (hadCtl) toast("🚀 App updated — reload for the latest", "ok", 5000); hadCtl = true; });
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").then(function (reg) { setInterval(function () { reg.update(); }, 60 * 60 * 1000); }).catch(function () {});
+  });
+}
+
+/* ───────────── app start ───────────── */
+function matchTab(param) {
+  param = String(param || "").toLowerCase().replace(/[^a-z0-9]/g, ""); if (!param) return null;
+  var names = S.tabs.map(function (t) { return t.name; });
+  for (var i = 0; i < names.length; i++) if (names[i].toLowerCase().replace(/[^a-z0-9]/g, "") === param) return names[i];
+  for (i = 0; i < names.length; i++) { var n = names[i].toLowerCase().replace(/[^a-z0-9]/g, ""); if (n.indexOf(param) === 0 || param.indexOf(n) === 0) return names[i]; }
+  if (/^(lin|lun)/.test(param)) for (i = 0; i < names.length; i++) if (/lin|lun/i.test(names[i])) return names[i];
+  if (/^ccn/.test(param)) for (i = 0; i < names.length; i++) if (/ccn/i.test(names[i])) return names[i];
+  return null;
+}
+var params = new URLSearchParams(location.search);
+var wantTab = params.get("tab"), wantNew = params.get("new") === "1";
+if (params.get("source") === "pwa" || isStandalone()) { lsSet("cmdn_launches", String((parseInt(lsGet("cmdn_launches"), 10) || 0) + 1)); }
+if (params.get("setup") === "1") { lsDel(LS.url); }
+
+setTheme(lsGet(LS.theme) || (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+S.sort = lsGet(LS.sort) || "sheet"; $("sort").value = S.sort; S.view = lsGet(LS.view) === "grid" ? "grid" : "list";
+S.group = lsGet(LS.group) || "tag"; $("group").value = S.group;
+applyVby(lsGet("cmdn_vby") || (lsGet(LS.view) === "grid" ? "cards" : "list"), true);
+S.tab = lsGet(LS.tab) || "__all";
+
+function loadCacheNow() {
+  try { var c = JSON.parse(lsGet(LS.cache) || "null"); if (c && c.items) { applyData(c, true); S.lastSync = c.ts || 0; } } catch (e) {}
+}
+function afterFirstLoad() {
+  if (wantTab) { var m = matchTab(wantTab); if (m) { S.tab = m; lsSet(LS.tab, m); } wantTab = null; renderAll(); }
+  if (wantNew) { wantNew = false; setTimeout(openAdd, 250); }
+}
+function startApp() {
+  loadCacheNow();
+  renderAll();
+  if (S.loaded) afterFirstLoad();
+  sync(false).then(function () { if (!S.loaded) return; afterFirstLoad(); });
+  if (S.offline === false && navigator.onLine === false) { S.offline = true; refreshLive(); }
+}
+if (!gasUrl()) { renderAll(); showSetup(false); }
+else if (AUTH.on) {                                    // PIN / fingerprint se unlock hone tak data chhupa rehta hai
+  renderAll();
+  if (AUTH.token) showLock("unlock");
+  else { showLock("login"); api("ping").then(function (r) { if (r && r.auth === false) { AUTH.on = false; lsSet(LS.auth, "0"); AUTH.locked = false; $("lock").classList.remove("show"); startApp(); } }).catch(function () {}); }
+}
+else { startApp(); }
+
+
+/* ───────────── Hub bridge ───────────── */
+(function () {
+  if (!window.__HUB) return;
+  function post(m) { try { parent.postMessage(Object.assign({ hub: true, module: "cmd" }, m), location.origin); } catch (e) {} }
+  window.__cmdHub = {
+    goto: function (tab) { if (tab === "__all" || tab === "__fav") return setTab(tab); var m = matchTab(tab); if (m) setTab(m); },
+    search: function (q) { qEl.value = q || ""; S.q = qEl.value; $("searchBox").classList.toggle("has", !!S.q); renderGrid(); },
+    setup: function () { showSetup(true); },
+    add: function () { openAdd(); },
+    theme: function (t) { if (t) setTheme(t); }
+  };
+  var _setTab = setTab;
+  setTab = function (n) { _setTab(n); post({ type: "state", item: n }); };
+  window.addEventListener("message", function (e) {
+    if (e.origin !== location.origin) return;
+    var m = e.data; if (!m || !m.hub) return;
+    var H = window.__cmdHub;
+    if (m.type === "init") { H.theme(m.theme); if (m.item === "__all" || m.item === "__fav") { S.tab = m.item; lsSet(LS.tab, m.item); renderAll(); } else if (m.item) { wantTab = m.item; if (S.loaded) { H.goto(m.item); wantTab = null; } } }
+    else if (m.type === "goto") H.goto(m.item);
+    else if (m.type === "theme") H.theme(m.theme);
+    else if (m.type === "search") H.search(m.q);
+    else if (m.type === "setup") H.setup();
+    else if (m.type === "add") H.add();
+  });
+  post({ type: "ready" });
+})();
+
+})();
+</script>
+</body>
+</html>

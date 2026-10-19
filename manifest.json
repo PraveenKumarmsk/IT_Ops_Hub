@@ -1,0 +1,28 @@
+{
+  "name": "IT Ops Hub — Network Planner, CMD Notes, IT Ops Center",
+  "short_name": "IT Ops Hub",
+  "description": "One app for network planning (IPv4 VLSM + IPv6), command notes synced with Google Sheets, and IT operations tools.",
+  "id": "./index.html",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0b1114",
+  "theme_color": "#0b1114",
+  "lang": "en-IN",
+  "categories": ["productivity", "utilities", "developer"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "IP Plan (IPv4)", "short_name": "IP Plan", "url": "./index.html#/planner/plan", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "IPv6 Plan", "short_name": "IPv6", "url": "./index.html#/planner/v6", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "CMD Notes", "short_name": "CMD Notes", "url": "./index.html#/cmd/__all", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "IT Ops Center", "short_name": "Ops", "url": "./index.html#/ops/dashboard", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
