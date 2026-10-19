@@ -1,4 +1,4 @@
-# IT Ops Hub — deploy guide (Hinglish)
+# IT Ops Hub — deploy guide
 
 Ek app: **Network Planner Pro** (IPv4 VLSM + naya **IPv6 Plan**), **CMD Notes** (Google Sheet + naya **View by**), **IT Ops Center** (Lab Manager, Diagram Builder, Work Tracker hata diye).
 
