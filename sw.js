@@ -1,5 +1,5 @@
 /* IT Ops Hub — service worker.  Bump VERSION on every release so installed apps update. */
-const VERSION = "v1.0.0";
+const VERSION = "v1.1.0";
 const CACHE = "ithub-" + VERSION;
 const SHELL = [
   "./", "index.html", "manifest.json",
